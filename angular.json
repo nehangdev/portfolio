@@ -24,14 +24,10 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.css"
-            ],
+            "styles": ["src/styles.css"],
             "server": "src/main.server.ts",
             "outputMode": "static",
-            "allowedCommonJsDependencies": [
-              "prismjs"
-            ]
+            "allowedCommonJsDependencies": ["prismjs"]
           },
           "configurations": {
             "production": {

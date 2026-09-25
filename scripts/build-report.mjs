@@ -17,7 +17,12 @@ const ORIGIN = `http://localhost:${PORT}`;
 const LIGHTHOUSE_PAGES = ['/', '/work/event-driven'];
 const RUNS = 3;
 
-const sh = (cmd) => execSync(cmd, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 64 * 1024 * 1024 });
+const sh = (cmd) =>
+  execSync(cmd, {
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+    maxBuffer: 64 * 1024 * 1024,
+  });
 const strip = (s) => s.replace(/\x1b\[[0-9;]*m/g, '');
 const kb = (bytes) => Math.round((bytes / 1024) * 10) / 10;
 const gz = (path) => gzipSync(readFileSync(path)).length;
@@ -34,12 +39,19 @@ const routes = Number(/Prerendered (\d+) static routes/.exec(buildOut)?.[1] ?? 0
 const server = spawn(`npx serve ${DIST} -l ${PORT}`, { stdio: 'ignore', shell: true });
 const stopServer = () => {
   if (process.platform === 'win32') {
-    try { execSync(`taskkill /pid ${server.pid} /T /F`, { stdio: 'ignore' }); } catch {}
+    try {
+      execSync(`taskkill /pid ${server.pid} /T /F`, { stdio: 'ignore' });
+    } catch {}
   } else server.kill();
 };
 process.on('exit', stopServer);
 for (let i = 0; i < 60; i++) {
-  try { await fetch(ORIGIN); break; } catch { await new Promise((r) => setTimeout(r, 500)); }
+  try {
+    await fetch(ORIGIN);
+    break;
+  } catch {
+    await new Promise((r) => setTimeout(r, 500));
+  }
 }
 
 try {
@@ -48,7 +60,11 @@ try {
   const indexHtml = readFileSync(`${DIST}/index.html`, 'utf8');
   const initialJs = [...indexHtml.matchAll(/(?:src|href)="([^"]+\.js)"/g)].map((m) => m[1]);
   const homeInitialJs = kb(initialJs.reduce((n, f) => n + gz(`${DIST}/${f}`), 0));
-  const css = kb(readdirSync(DIST).filter((f) => f.endsWith('.css')).reduce((n, f) => n + gz(`${DIST}/${f}`), 0));
+  const css = kb(
+    readdirSync(DIST)
+      .filter((f) => f.endsWith('.css'))
+      .reduce((n, f) => n + gz(`${DIST}/${f}`), 0),
+  );
   const font = kb(statSync('public/fonts/fira-code-latin.woff2').size);
   const elementJs = kb(gz('public/elements/live-chart.js'));
 
@@ -66,7 +82,8 @@ try {
   log('running unit tests');
   const unitOut = strip(sh('npx ng test portfolio --watch=false'));
   const unitPassed = Number(/Tests\s+(\d+) passed/.exec(unitOut)?.[1] ?? 0);
-  if (/failed/.test(/Tests\s+[^\n]*/.exec(unitOut)?.[0] ?? '')) throw new Error('unit tests failed');
+  if (/failed/.test(/Tests\s+[^\n]*/.exec(unitOut)?.[0] ?? ''))
+    throw new Error('unit tests failed');
 
   // 5. End-to-end tests (reuses the server above)
   log('running end-to-end tests');

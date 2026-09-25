@@ -10,7 +10,9 @@ import { chartText } from '../../../content/demos';
     <h3 class="text-lg">{{ t.usageHeading }}</h3>
     <p class="measure mt-1">{{ t.usageIntro }}</p>
     <div class="mt-3"><app-code-block [code]="t.usage" language="html" /></div>
-    <p class="mt-3"><a href="/work/live-chart/sandbox.html">{{ t.sandbox }}</a></p>
+    <p class="mt-3">
+      <a href="/work/live-chart/sandbox.html">{{ t.sandbox }}</a>
+    </p>
 
     <h3 class="mt-10 text-lg">{{ t.apiHeading }}</h3>
     <div class="mt-3 overflow-x-auto" tabindex="0" [attr.aria-label]="t.apiHeading">

@@ -1,6 +1,16 @@
-import { ApplicationConfig, inject, provideAppInitializer, provideBrowserGlobalErrorListeners } from '@angular/core';
+import {
+  ApplicationConfig,
+  inject,
+  provideAppInitializer,
+  provideBrowserGlobalErrorListeners,
+} from '@angular/core';
 import { ViewportScroller } from '@angular/common';
-import { TitleStrategy, provideRouter, withInMemoryScrolling, withViewTransitions } from '@angular/router';
+import {
+  TitleStrategy,
+  provideRouter,
+  withInMemoryScrolling,
+  withViewTransitions,
+} from '@angular/router';
 import { provideClientHydration } from '@angular/platform-browser';
 import { routes } from './app.routes';
 import { SeoTitleStrategy } from './core/seo';
@@ -12,7 +22,10 @@ export const appConfig: ApplicationConfig = {
     provideRouter(
       routes,
       withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' }),
-      withViewTransitions({ skipInitialTransition: true, onViewTransitionCreated: interruptibleViewTransition }),
+      withViewTransitions({
+        skipInitialTransition: true,
+        onViewTransitionCreated: interruptibleViewTransition,
+      }),
     ),
     provideClientHydration(),
     { provide: TitleStrategy, useClass: SeoTitleStrategy },

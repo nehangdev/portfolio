@@ -32,7 +32,10 @@ import { caseStudies } from '../../content/case-studies';
             <li><a routerLink="/colophon">colophon/</a></li>
           </ul>
           <p class="pt-2">
-            <span class="syn-string" aria-hidden="true">{{ t.prompt }}</span>{{ ' ' }}<a routerLink="/">{{ t.home }}<span class="sr-only"> ({{ t.homeHint }})</span></a
+            <span class="syn-string" aria-hidden="true">{{ t.prompt }}</span
+            >{{ ' '
+            }}<a routerLink="/"
+              >{{ t.home }}<span class="sr-only"> ({{ t.homeHint }})</span></a
             ><span class="terminal-cursor" aria-hidden="true"></span>
           </p>
         </div>

@@ -1,4 +1,14 @@
-import { Component, DOCUMENT, DestroyRef, ElementRef, Injector, afterNextRender, inject, signal, viewChild } from '@angular/core';
+import {
+  Component,
+  DOCUMENT,
+  DestroyRef,
+  ElementRef,
+  Injector,
+  afterNextRender,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { Theme } from '../../core/theme';
 import { sciChartText } from '../../../content/demos';
 
@@ -45,7 +55,11 @@ type State = 'idle' | 'loading' | 'running' | 'failed';
     </div>
 
     @if (state() === 'loading' || state() === 'running') {
-      <div animate.enter="enter-fade" animate.leave="leave-fade" class="mt-4 overflow-hidden rounded border border-rule">
+      <div
+        animate.enter="enter-fade"
+        animate.leave="leave-fade"
+        class="mt-4 overflow-hidden rounded border border-rule"
+      >
         <div #surface class="h-80 w-full"></div>
       </div>
     }
@@ -71,7 +85,9 @@ export class SciChartPanel {
     this.state.set('loading');
     try {
       const S = await this.loadScript();
-      await new Promise<void>((resolve) => afterNextRender(() => resolve(), { injector: this.injector }));
+      await new Promise<void>((resolve) =>
+        afterNextRender(() => resolve(), { injector: this.injector }),
+      );
       const host = this.surfaceEl()?.nativeElement;
       if (!host || this.state() !== 'loading') return;
       await this.start(S, host);
@@ -131,7 +147,11 @@ export class SciChartPanel {
         containsNaN: false,
       });
       sciChartSurface.renderableSeries.add(
-        new S.FastLineRenderableSeries(wasmContext, { dataSeries, stroke: colors[i], strokeThickness: 1.5 }),
+        new S.FastLineRenderableSeries(wasmContext, {
+          dataSeries,
+          stroke: colors[i],
+          strokeThickness: 1.5,
+        }),
       );
       return { dataSeries, y: i * 10 };
     });

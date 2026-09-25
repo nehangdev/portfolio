@@ -24,8 +24,12 @@ for (const scheme of ['light', 'dark'] as const) {
         await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
         await page.waitForLoadState('networkidle');
         await page.waitForTimeout(300);
-        const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
-        expect(results.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target).join(', ')}`)).toEqual([]);
+        const results = await new AxeBuilder({ page })
+          .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
+          .analyze();
+        expect(
+          results.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target).join(', ')}`),
+        ).toEqual([]);
       });
     }
   });

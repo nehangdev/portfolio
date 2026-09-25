@@ -27,7 +27,9 @@ import { buildReport } from '../../content/build-report';
           <div class="editor-tab" aria-hidden="true">{{ log.file }}</div>
           <div class="editor-body space-y-1 px-4 text-sm">
             <p><span class="syn-string" aria-hidden="true">$ </span>{{ log.build }}</p>
-            <p class="syn-string"><span aria-hidden="true">✓ </span>{{ log.prerendered(report.routes) }}</p>
+            <p class="syn-string">
+              <span aria-hidden="true">✓ </span>{{ log.prerendered(report.routes) }}
+            </p>
             <dl class="grid gap-x-6 sm:grid-cols-[minmax(0,1fr)_auto]">
               @for (row of log.sizes; track row.key) {
                 <dt class="text-ink-muted">{{ row.label }}</dt>
@@ -40,16 +42,30 @@ import { buildReport } from '../../content/build-report';
               }
             </dl>
 
-            <p class="pt-3"><span class="syn-string" aria-hidden="true">$ </span>{{ log.unitCmd }}</p>
-            <p class="syn-string"><span aria-hidden="true">✓ </span>{{ log.unit(report.unit.passed) }}</p>
+            <p class="pt-3">
+              <span class="syn-string" aria-hidden="true">$ </span>{{ log.unitCmd }}
+            </p>
+            <p class="syn-string">
+              <span aria-hidden="true">✓ </span>{{ log.unit(report.unit.passed) }}
+            </p>
 
-            <p class="pt-3"><span class="syn-string" aria-hidden="true">$ </span>{{ log.e2eCmd }}</p>
-            <p class="syn-string"><span aria-hidden="true">✓ </span>{{ log.e2e(report.e2e.passed, report.e2e.skipped) }}</p>
+            <p class="pt-3">
+              <span class="syn-string" aria-hidden="true">$ </span>{{ log.e2eCmd }}
+            </p>
+            <p class="syn-string">
+              <span aria-hidden="true">✓ </span>{{ log.e2e(report.e2e.passed, report.e2e.skipped) }}
+            </p>
 
-            <p class="pt-3"><span class="syn-string" aria-hidden="true">$ </span>{{ log.lighthouseCmd }}</p>
+            <p class="pt-3">
+              <span class="syn-string" aria-hidden="true">$ </span>{{ log.lighthouseCmd }}
+            </p>
             <div class="overflow-x-auto" tabindex="0" [attr.aria-label]="log.lighthouseLabel">
               <table class="w-full min-w-[34rem] text-left">
-                <caption class="sr-only">{{ log.lighthouseLabel }}</caption>
+                <caption class="sr-only">
+                  {{
+                    log.lighthouseLabel
+                  }}
+                </caption>
                 <thead>
                   <tr class="text-ink-muted">
                     @for (c of log.columns; track c) {
@@ -71,7 +87,9 @@ import { buildReport } from '../../content/build-report';
               </table>
             </div>
 
-            <p class="pt-3 italic text-ink-muted">{{ log.footer(report.measuredOn, report.commit) }}</p>
+            <p class="pt-3 italic text-ink-muted">
+              {{ log.footer(report.measuredOn, report.commit) }}
+            </p>
           </div>
         </figure>
       </section>

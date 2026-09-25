@@ -31,7 +31,12 @@ const LABELS = ['PDF', 'XML', 'CSV', 'DOC'];
 const RATE_WINDOW = 5;
 const DEAD_LETTER_KEEP = 50;
 
-export const DEFAULTS: ModelOptions = { arrivalRate: 2.6, serviceTime: 0.5, failureRate: 0.08, seed: 7 };
+export const DEFAULTS: ModelOptions = {
+  arrivalRate: 2.6,
+  serviceTime: 0.5,
+  failureRate: 0.08,
+  seed: 7,
+};
 
 /** Small seeded PRNG (mulberry32) so every run looks the same. */
 export function rng(seed: number): () => number {
@@ -87,7 +92,8 @@ export class QueueModel {
 
   /** Change settings while running. Fewer workers put their in-flight messages back at the front. */
   configure(changes: Partial<Omit<ModelOptions, 'seed'>>): void {
-    const rateChanged = changes.arrivalRate !== undefined && changes.arrivalRate !== this.opts.arrivalRate;
+    const rateChanged =
+      changes.arrivalRate !== undefined && changes.arrivalRate !== this.opts.arrivalRate;
     Object.assign(this.opts, changes);
     if (changes.workers !== undefined) this.setWorkers(changes.workers);
     if (rateChanged) this.nextArrival = this.time + this.interArrival();

@@ -5,7 +5,10 @@ import { profile } from '../content/profile';
 
 describe('App shell', () => {
   it('renders the skip link, main landmark and site name', async () => {
-    await TestBed.configureTestingModule({ imports: [App], providers: [provideRouter([])] }).compileComponents();
+    await TestBed.configureTestingModule({
+      imports: [App],
+      providers: [provideRouter([])],
+    }).compileComponents();
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const el = fixture.nativeElement as HTMLElement;

@@ -14,7 +14,9 @@
     "prebuild": "npm run build:element",
     "prestart": "npm run build:element",
     "og": "node scripts/og.mjs",
-    "report": "node scripts/build-report.mjs"
+    "report": "node scripts/build-report.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "private": true,
   "packageManager": "npm@11.19.0",

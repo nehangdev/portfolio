@@ -29,14 +29,20 @@ import { projects, projectsText } from '../../content/projects';
               <p class="mt-2 text-sm text-ink-muted">
                 <span class="font-semibold">{{ projectsText.roleLabel }}:</span> {{ p.role }}
               </p>
-              <ul [attr.aria-label]="projectsText.stackLabel" class="mt-2 flex flex-wrap gap-x-4 gap-y-2">
+              <ul
+                [attr.aria-label]="projectsText.stackLabel"
+                class="mt-2 flex flex-wrap gap-x-4 gap-y-2"
+              >
                 @for (s of p.stack; track s) {
                   <li class="stack-tag">{{ s }}</li>
                 }
               </ul>
               @if (p.caseStudy) {
                 <p class="mt-3 text-sm">
-                  <a [routerLink]="'/work/' + p.caseStudy">{{ projectsText.caseStudyLink }}<span class="sr-only">{{ projectsText.caseStudyAbout }} {{ p.name }}</span></a>
+                  <a [routerLink]="'/work/' + p.caseStudy"
+                    >{{ projectsText.caseStudyLink
+                    }}<span class="sr-only">{{ projectsText.caseStudyAbout }} {{ p.name }}</span></a
+                  >
                 </p>
               }
             </li>
@@ -48,7 +54,8 @@ import { projects, projectsText } from '../../content/projects';
         <ul class="space-y-2">
           @for (e of education; track e.degree) {
             <li>
-              <span class="font-semibold">{{ e.degree }}</span>, {{ e.school }},
+              <span class="font-semibold">{{ e.degree }}</span
+              >, {{ e.school }},
               <time [attr.datetime]="e.year">{{ e.year }}</time>
             </li>
           }

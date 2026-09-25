@@ -12,6 +12,10 @@ import { Component, computed, input } from '@angular/core';
 export class Lane {
   readonly heading = input.required<string>();
   protected readonly headingId = computed(
-    () => 'h-' + this.heading().toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+    () =>
+      'h-' +
+      this.heading()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-'),
   );
 }

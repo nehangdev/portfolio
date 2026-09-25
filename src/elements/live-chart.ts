@@ -15,7 +15,18 @@ import {
   viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { EMPTY, animationFrames, combineLatest, distinctUntilChanged, fromEvent, interval, map, shareReplay, startWith, switchMap } from 'rxjs';
+import {
+  EMPTY,
+  animationFrames,
+  combineLatest,
+  distinctUntilChanged,
+  fromEvent,
+  interval,
+  map,
+  shareReplay,
+  startWith,
+  switchMap,
+} from 'rxjs';
 
 const HZ = 10;
 const MAX_SECONDS = 300;
@@ -42,7 +53,11 @@ const PAD = { top: 12, right: 64, bottom: 24, left: 10 };
       <span class="spacer"></span>
       <div class="windows" role="group" aria-label="Time window">
         @for (w of windows; track w.s) {
-          <button type="button" [attr.aria-pressed]="currentWindow() === w.s" (click)="setWindow(w.s)">
+          <button
+            type="button"
+            [attr.aria-pressed]="currentWindow() === w.s"
+            (click)="setWindow(w.s)"
+          >
             {{ w.label }}
           </button>
         }
@@ -83,11 +98,23 @@ const PAD = { top: 12, right: 64, bottom: 24, left: 10 };
       padding: 0.55rem 0.75rem;
       border-bottom: 1px solid var(--nlc-grid, #b9c3ca);
     }
-    .label { font-weight: 600; }
-    .price { font-weight: 700; font-size: 1.15em; }
-    .change { color: var(--nlc-muted, #4a5868); }
-    .spacer { flex: 1; }
-    .windows { display: inline-flex; gap: 0.25rem; }
+    .label {
+      font-weight: 600;
+    }
+    .price {
+      font-weight: 700;
+      font-size: 1.15em;
+    }
+    .change {
+      color: var(--nlc-muted, #4a5868);
+    }
+    .spacer {
+      flex: 1;
+    }
+    .windows {
+      display: inline-flex;
+      gap: 0.25rem;
+    }
     button {
       font: inherit;
       font-weight: 600;
@@ -109,8 +136,19 @@ const PAD = { top: 12, right: 64, bottom: 24, left: 10 };
       outline: 2px solid var(--nlc-line, #1f6f78);
       outline-offset: 2px;
     }
-    .plot { flex: 1; min-height: 12rem; position: relative; }
-    canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y; }
+    .plot {
+      flex: 1;
+      min-height: 12rem;
+      position: relative;
+    }
+    canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      touch-action: pan-y;
+    }
   `,
 })
 export class LiveChart {
@@ -125,13 +163,18 @@ export class LiveChart {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private readonly destroyRef = inject(DestroyRef);
   private readonly canvas = viewChild.required<ElementRef<HTMLCanvasElement>>('canvas');
-  private readonly reduced = this.doc.defaultView?.matchMedia('(prefers-reduced-motion: reduce)').matches ?? false;
+  private readonly reduced =
+    this.doc.defaultView?.matchMedia('(prefers-reduced-motion: reduce)').matches ?? false;
 
   private readonly userPaused = signal<boolean | null>(null);
-  protected readonly isPaused = computed(() => this.userPaused() ?? (this.paused() || this.reduced));
+  protected readonly isPaused = computed(
+    () => this.userPaused() ?? (this.paused() || this.reduced),
+  );
   private readonly chosenWindow = signal<number | null>(null);
   protected readonly currentWindow = computed(
-    () => this.chosenWindow() ?? (WINDOWS.some((w) => w.s === this.windowSeconds()) ? this.windowSeconds() : 60),
+    () =>
+      this.chosenWindow() ??
+      (WINDOWS.some((w) => w.s === this.windowSeconds()) ? this.windowSeconds() : 60),
   );
 
   // Ring buffer of simulated time (seconds) and price.
@@ -155,7 +198,8 @@ export class LiveChart {
     return `${pct >= 0 ? '+' : ''}${pct.toFixed(2)}% over ${WINDOWS.find((w) => w.s === win)?.label}`;
   });
   protected readonly summary = computed(
-    () => `${this.label()} chart, last price ${this.announced().toFixed(2)}. Arrow keys move the crosshair.`,
+    () =>
+      `${this.label()} chart, last price ${this.announced().toFixed(2)}. Arrow keys move the crosshair.`,
   );
 
   /** True while not paused and the tab is visible. */
@@ -326,7 +370,9 @@ export class LiveChart {
     const bg = color('--nlc-bg', '#f3f6f8');
 
     // Scroll smoothly between ticks while running.
-    const drift = this.isPaused() ? 0 : Math.min(1 / HZ, (performance.now() - this.lastTickAt) / 1000);
+    const drift = this.isPaused()
+      ? 0
+      : Math.min(1 / HZ, (performance.now() - this.lastTickAt) / 1000);
     const now = this.clock + drift;
     const win = this.currentWindow();
     const t0 = now - win;

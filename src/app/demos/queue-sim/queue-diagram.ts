@@ -34,7 +34,10 @@ import { hero } from '../../../content/pages';
             <span class="h-px w-4 flex-none bg-rule"></span>
             @for (i of workers; track i) {
               <span class="rounded-md border-[1.5px] border-ink-muted p-1.5"
-                ><span class="block h-4 w-8 rounded-full" [class]="i === 2 ? 'bg-signal' : 'bg-queue'"></span
+                ><span
+                  class="block h-4 w-8 rounded-full"
+                  [class]="i === 2 ? 'bg-signal' : 'bg-queue'"
+                ></span
               ></span>
             }
           </div>

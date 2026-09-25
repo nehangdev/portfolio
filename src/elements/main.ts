@@ -7,7 +7,10 @@ import { LiveChart } from './live-chart';
 createApplication({ providers: [provideZonelessChangeDetection()] })
   .then((app) => {
     if (!customElements.get('nehang-live-chart')) {
-      customElements.define('nehang-live-chart', createCustomElement(LiveChart, { injector: app.injector }));
+      customElements.define(
+        'nehang-live-chart',
+        createCustomElement(LiveChart, { injector: app.injector }),
+      );
     }
   })
   .catch((err) => console.error(err));

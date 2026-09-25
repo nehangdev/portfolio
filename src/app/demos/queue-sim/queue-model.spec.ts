@@ -30,7 +30,10 @@ describe('QueueModel', () => {
   });
 
   it('retries failures instead of dropping them', () => {
-    const model = run(new QueueModel('event', { arrivalRate: 2, serviceTime: 0.3, failureRate: 0.5, seed: 3 }), 30);
+    const model = run(
+      new QueueModel('event', { arrivalRate: 2, serviceTime: 0.3, failureRate: 0.5, seed: 3 }),
+      30,
+    );
     const busy = model.workers.filter((w) => w.msg).length;
     // With half of all attempts failing, nothing is lost: every arrival is done, queued or in progress.
     expect(model.arrived).toBe(model.completed + model.queue.length + busy);

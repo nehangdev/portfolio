@@ -16,7 +16,8 @@ export function interruptibleViewTransition({ transition }: ViewTransitionInfo):
     return;
   }
   const skip = () => transition.skipTransition();
-  for (const type of INTERRUPTING) win.addEventListener(type, skip, { capture: true, passive: true, once: true });
+  for (const type of INTERRUPTING)
+    win.addEventListener(type, skip, { capture: true, passive: true, once: true });
   transition.finished.finally(() => {
     for (const type of INTERRUPTING) win.removeEventListener(type, skip, { capture: true });
   });

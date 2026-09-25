@@ -29,7 +29,8 @@ export const pipelineText = {
 export const pipelineSteps: PipelineStep[] = [
   {
     title: 'Requirement analysis',
-    summary: 'Break the scenario into who, what and the expected results, and flag anything unclear.',
+    summary:
+      'Break the scenario into who, what and the expected results, and flag anything unclear.',
     artifactTitle: 'Structured requirement',
     artifact: {
       kind: 'fields',
@@ -37,10 +38,14 @@ export const pipelineSteps: PipelineStep[] = [
         { label: 'Actor', value: 'Signed-in shopper' },
         { label: 'Precondition', value: 'Shopper is signed in and the cart is empty' },
         { label: 'Action', value: 'Add one product to the cart from the product list' },
-        { label: 'Expected', value: 'Header badge shows 1. Cart page lists the product with its price' },
+        {
+          label: 'Expected',
+          value: 'Header badge shows 1. Cart page lists the product with its price',
+        },
         {
           label: 'Open question',
-          value: 'Adding the same product twice: badge 2 with one line of quantity 2, or two lines?',
+          value:
+            'Adding the same product twice: badge 2 with one line of quantity 2, or two lines?',
         },
       ],
     },
@@ -54,8 +59,14 @@ export const pipelineSteps: PipelineStep[] = [
       items: [
         { label: 'Routes', value: '/products, /cart' },
         { label: 'UI areas', value: 'Product list, header cart badge, cart page' },
-        { label: 'Test folder', value: 'tests/e2e/shop (existing: product-list.spec.ts, checkout.spec.ts)' },
-        { label: 'Conventions', value: 'Page objects in tests/pages, fixtures in tests/fixtures, cart tests tagged @cart' },
+        {
+          label: 'Test folder',
+          value: 'tests/e2e/shop (existing: product-list.spec.ts, checkout.spec.ts)',
+        },
+        {
+          label: 'Conventions',
+          value: 'Page objects in tests/pages, fixtures in tests/fixtures, cart tests tagged @cart',
+        },
       ],
     },
   },
@@ -75,13 +86,20 @@ export const pipelineSteps: PipelineStep[] = [
   },
   {
     title: 'Page-object and fixture discovery',
-    summary: 'Match each step to page objects and fixtures that already exist, and note what is missing.',
+    summary:
+      'Match each step to page objects and fixtures that already exist, and note what is missing.',
     artifactTitle: 'Reuse plan',
     artifact: {
       kind: 'fields',
       items: [
-        { label: 'Reuse', value: 'ProductListPage (tests/pages/product-list.page.ts): open(), addToCart(name)' },
-        { label: 'Reuse', value: 'CartPage (tests/pages/cart.page.ts): open(), lines(), line(name)' },
+        {
+          label: 'Reuse',
+          value: 'ProductListPage (tests/pages/product-list.page.ts): open(), addToCart(name)',
+        },
+        {
+          label: 'Reuse',
+          value: 'CartPage (tests/pages/cart.page.ts): open(), lines(), line(name)',
+        },
         { label: 'Reuse', value: 'Fixture signedInShopper (tests/fixtures/auth.ts)' },
         { label: 'Add', value: 'Header.cartBadge locator on the existing Header page object' },
       ],

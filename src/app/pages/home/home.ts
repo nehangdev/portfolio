@@ -31,13 +31,28 @@ function shortHash(text: string): string {
         </h1>
         <p class="mt-4 text-lg text-ink-muted sm:text-xl">{{ profile.tagline }}</p>
         <div class="mt-8 flex flex-wrap gap-3">
-          <a routerLink="/" fragment="work" class="btn btn-primary relative overflow-hidden" appCta="arrow" ctaAttention>
+          <a
+            routerLink="/"
+            fragment="work"
+            class="btn btn-primary relative overflow-hidden"
+            appCta="arrow"
+            ctaAttention
+          >
             <span>{{ home.actions.work }}</span>
-            <span data-cta-icon class="inline-flex"><ng-icon name="tablerArrowRight" size="1.2rem" aria-hidden="true" /></span>
+            <span data-cta-icon class="inline-flex"
+              ><ng-icon name="tablerArrowRight" size="1.2rem" aria-hidden="true"
+            /></span>
             <span data-cta-sheen class="cta-sheen" aria-hidden="true"></span>
           </a>
-          <a [href]="profile.resumeUrl" [attr.download]="profile.resumeFileName" class="btn" appCta="download">
-            <span data-cta-icon class="inline-flex"><ng-icon name="tablerDownload" size="1.2rem" aria-hidden="true" /></span>
+          <a
+            [href]="profile.resumeUrl"
+            [attr.download]="profile.resumeFileName"
+            class="btn"
+            appCta="download"
+          >
+            <span data-cta-icon class="inline-flex"
+              ><ng-icon name="tablerDownload" size="1.2rem" aria-hidden="true"
+            /></span>
             <span>{{ home.actions.resume }}</span>
           </a>
         </div>
@@ -70,11 +85,18 @@ function shortHash(text: string): string {
             <li class="grid gap-3 py-6 first:pt-0 md:grid-cols-[minmax(0,1fr)_13rem] md:gap-8">
               <div>
                 <h3 class="text-lg">
-                  <a [routerLink]="'/work/' + w.slug" [style.view-transition-name]="'cs-' + w.slug">{{ w.title }}</a>
+                  <a
+                    [routerLink]="'/work/' + w.slug"
+                    [style.view-transition-name]="'cs-' + w.slug"
+                    >{{ w.title }}</a
+                  >
                 </h3>
                 <p class="measure mt-1">{{ w.outcome }}</p>
               </div>
-              <ul [attr.aria-label]="home.work.stackLabel" class="flex flex-wrap content-start gap-x-3 gap-y-2">
+              <ul
+                [attr.aria-label]="home.work.stackLabel"
+                class="flex flex-wrap content-start gap-x-3 gap-y-2"
+              >
                 @for (t of w.stack; track t) {
                   <li class="stack-tag">{{ t }}</li>
                 }
@@ -96,8 +118,10 @@ function shortHash(text: string): string {
                   <p class="text-sm" aria-hidden="true">
                     <span class="syn-type">{{ e.hash }}</span>
                     @if (first) {
-                      {{ ' ' }}<span class="syn-punct">(</span><span class="syn-tag">HEAD -&gt; </span
-                      ><span class="syn-string">{{ home.timeline.branch }}</span><span class="syn-punct">)</span>
+                      {{ ' ' }}<span class="syn-punct">(</span
+                      ><span class="syn-tag">HEAD -&gt; </span
+                      ><span class="syn-string">{{ home.timeline.branch }}</span
+                      ><span class="syn-punct">)</span>
                     }
                   </p>
                   <h3 class="text-lg">
@@ -141,7 +165,9 @@ export class Home {
   protected readonly hero = hero;
   protected readonly work = caseStudies;
   /** Newest first, like `git log`, each with a short hash derived from its dates. */
-  protected readonly gitLog = [...timeline].reverse().map((e) => ({ ...e, hash: shortHash(e.start + e.title) }));
+  protected readonly gitLog = [...timeline]
+    .reverse()
+    .map((e) => ({ ...e, hash: shortHash(e.start + e.title) }));
 
   constructor() {
     // JSON-LD Person schema, home page only.

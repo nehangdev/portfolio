@@ -1,4 +1,14 @@
-import { Component, DOCUMENT, ElementRef, computed, effect, inject, model, signal, viewChild } from '@angular/core';
+import {
+  Component,
+  DOCUMENT,
+  ElementRef,
+  computed,
+  effect,
+  inject,
+  model,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { Theme } from '../core/theme';
 import { palette } from '../../content/pages';
@@ -23,7 +33,13 @@ interface Command {
 @Component({
   selector: 'app-command-palette',
   template: `
-    <dialog #dialog class="palette" [attr.aria-label]="t.label" (close)="open.set(false)" (click)="onDialogClick($event)">
+    <dialog
+      #dialog
+      class="palette"
+      [attr.aria-label]="t.label"
+      (close)="open.set(false)"
+      (click)="onDialogClick($event)"
+    >
       <div class="palette-panel">
         <div class="palette-search">
           <input
@@ -91,9 +107,21 @@ export class CommandPalette {
     const dark = this.theme.current() === 'dark';
     return [
       { id: 'home', label: c.home, group: g.page, run: go('/') },
-      ...caseStudies.map((cs) => ({ id: cs.slug, label: cs.title, group: g.caseStudy, keywords: cs.stack.join(' '), run: go(`/work/${cs.slug}`) })),
+      ...caseStudies.map((cs) => ({
+        id: cs.slug,
+        label: cs.title,
+        group: g.caseStudy,
+        keywords: cs.stack.join(' '),
+        run: go(`/work/${cs.slug}`),
+      })),
       { id: 'about', label: c.about, group: g.page, run: go('/about') },
-      { id: 'colophon', label: c.colophon, group: g.page, keywords: 'build tests lighthouse', run: go('/colophon') },
+      {
+        id: 'colophon',
+        label: c.colophon,
+        group: g.page,
+        keywords: 'build tests lighthouse',
+        run: go('/colophon'),
+      },
       {
         id: 'theme',
         label: dark ? c.toLight : c.toDark,
@@ -101,12 +129,36 @@ export class CommandPalette {
         keywords: 'theme dark light mode',
         run: () => this.theme.toggle(),
       },
-      { id: 'email', label: c.copyEmail, group: g.action, keywords: 'contact mail', run: () => this.copyEmail() },
-      { id: 'resume', label: c.resume, group: g.action, keywords: 'cv pdf', run: () => this.doc.location.assign(profile.resumeUrl) },
-      { id: 'sandbox', label: c.sandbox, group: g.page, keywords: 'web component element', run: () => this.doc.location.assign('/work/live-chart/sandbox.html') },
+      {
+        id: 'email',
+        label: c.copyEmail,
+        group: g.action,
+        keywords: 'contact mail',
+        run: () => this.copyEmail(),
+      },
+      {
+        id: 'resume',
+        label: c.resume,
+        group: g.action,
+        keywords: 'cv pdf',
+        run: () => this.doc.location.assign(profile.resumeUrl),
+      },
+      {
+        id: 'sandbox',
+        label: c.sandbox,
+        group: g.page,
+        keywords: 'web component element',
+        run: () => this.doc.location.assign('/work/live-chart/sandbox.html'),
+      },
       { id: 'github', label: c.github, group: g.link, run: visit(profile.links.github) },
       { id: 'linkedin', label: c.linkedin, group: g.link, run: visit(profile.links.linkedin) },
-      { id: 'source', label: c.source, group: g.link, keywords: 'repo code', run: visit(profile.repoUrl) },
+      {
+        id: 'source',
+        label: c.source,
+        group: g.link,
+        keywords: 'repo code',
+        run: visit(profile.repoUrl),
+      },
     ];
   });
 

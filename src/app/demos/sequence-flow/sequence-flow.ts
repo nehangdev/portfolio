@@ -1,4 +1,13 @@
-import { Component, ElementRef, afterRenderEffect, computed, inject, input, signal, viewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  afterRenderEffect,
+  computed,
+  inject,
+  input,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { animate } from 'motion';
 import { Motion } from '../../core/media';
 import { CodeBlock } from '../../ui/code-block';
@@ -29,17 +38,45 @@ let nextId = 0;
           <p class="px-1">{{ l }}</p>
         }
       </div>
-      <svg [attr.viewBox]="'0 0 ' + width() + ' ' + height()" class="mt-2 block h-auto w-full" aria-hidden="true">
+      <svg
+        [attr.viewBox]="'0 0 ' + width() + ' ' + height()"
+        class="mt-2 block h-auto w-full"
+        aria-hidden="true"
+      >
         <defs>
-          <marker [id]="uid + '-head'" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <marker
+            [id]="uid + '-head'"
+            viewBox="0 0 10 10"
+            refX="9"
+            refY="5"
+            markerWidth="7"
+            markerHeight="7"
+            orient="auto-start-reverse"
+          >
             <path d="M0 0 10 5 0 10z" style="fill: var(--queue)" />
           </marker>
-          <marker [id]="uid + '-past'" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <marker
+            [id]="uid + '-past'"
+            viewBox="0 0 10 10"
+            refX="9"
+            refY="5"
+            markerWidth="7"
+            markerHeight="7"
+            orient="auto-start-reverse"
+          >
             <path d="M0 0 10 5 0 10z" style="fill: var(--ink-muted)" />
           </marker>
         </defs>
         @for (l of flow().lifelines; track l; let i = $index) {
-          <line [attr.x1]="x(i)" [attr.x2]="x(i)" y1="0" [attr.y2]="height()" stroke-dasharray="4 4" vector-effect="non-scaling-stroke" style="stroke: var(--rule)" />
+          <line
+            [attr.x1]="x(i)"
+            [attr.x2]="x(i)"
+            y1="0"
+            [attr.y2]="height()"
+            stroke-dasharray="4 4"
+            vector-effect="non-scaling-stroke"
+            style="stroke: var(--rule)"
+          />
         }
         @for (s of arrows(); track $index; let i = $index) {
           <line
@@ -53,13 +90,21 @@ let nextId = 0;
             [style.stroke]="i === current() ? 'var(--queue)' : 'var(--ink-muted)'"
           />
         }
-        <circle #token r="5" cx="0" [attr.cy]="y(current())" [style.transform]="'translateX(' + x(step().to) + 'px)'" style="fill: var(--signal)" />
+        <circle
+          #token
+          r="5"
+          cx="0"
+          [attr.cy]="y(current())"
+          [style.transform]="'translateX(' + x(step().to) + 'px)'"
+          style="fill: var(--signal)"
+        />
       </svg>
     </figure>
 
     <div class="mt-5 min-h-24">
       <p class="text-sm text-ink-muted" aria-live="polite">
-        {{ c.stepOf(current() + 1, flow().steps.length) }}: <span class="font-semibold text-ink">{{ step().title }}</span>
+        {{ c.stepOf(current() + 1, flow().steps.length) }}:
+        <span class="font-semibold text-ink">{{ step().title }}</span>
       </p>
       <p class="measure mt-1">{{ step().detail }}</p>
     </div>
@@ -72,11 +117,22 @@ let nextId = 0;
     }
 
     <div class="mt-4 flex flex-wrap gap-3">
-      <button type="button" class="btn" [disabled]="current() === 0" (click)="current.set(current() - 1)">{{ c.prev }}</button>
+      <button
+        type="button"
+        class="btn"
+        [disabled]="current() === 0"
+        (click)="current.set(current() - 1)"
+      >
+        {{ c.prev }}
+      </button>
       @if (current() < flow().steps.length - 1) {
-        <button type="button" class="btn btn-primary" (click)="current.set(current() + 1)">{{ c.next }}</button>
+        <button type="button" class="btn btn-primary" (click)="current.set(current() + 1)">
+          {{ c.next }}
+        </button>
       } @else {
-        <button type="button" class="btn btn-primary" (click)="current.set(0)">{{ c.restart }}</button>
+        <button type="button" class="btn btn-primary" (click)="current.set(0)">
+          {{ c.restart }}
+        </button>
       }
     </div>
   `,

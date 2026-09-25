@@ -11,7 +11,12 @@ export const eventSimText = {
     play: 'Play',
     reset: 'Reset',
   },
-  stats: { waiting: 'Waiting', processed: 'Processed', deadLettered: 'Dead-lettered', rate: 'Per second' },
+  stats: {
+    waiting: 'Waiting',
+    processed: 'Processed',
+    deadLettered: 'Dead-lettered',
+    rate: 'Per second',
+  },
   canvasText: {
     incoming: 'Incoming',
     workers: (n: number) => (n === 1 ? '1 consumer' : `${n} consumers`),
@@ -49,12 +54,32 @@ export const chartText = {
   apiHeading: 'API',
   apiColumns: ['Name', 'Kind', 'What it does'],
   api: [
-    ['window-seconds', 'Attribute', 'Visible time window in seconds: 30, 60 or 300. Defaults to 60.'],
+    [
+      'window-seconds',
+      'Attribute',
+      'Visible time window in seconds: 30, 60 or 300. Defaults to 60.',
+    ],
     ['label', 'Attribute', 'Series name shown in the toolbar and read by screen readers.'],
-    ['paused', 'Attribute', 'Present to start paused. The element starts paused anyway if the system asks for reduced motion.'],
-    ['seed', 'Attribute', 'Seed for the synthetic price walk, so a page looks the same on every load.'],
-    ['pausechange', 'Event', 'Fires when the chart is paused or resumed. event.detail is true when paused.'],
-    ['--nlc-bg, --nlc-fg, --nlc-muted, --nlc-line, --nlc-grid', 'CSS property', 'Colours. The element reads them from its host, so a page can theme it.'],
+    [
+      'paused',
+      'Attribute',
+      'Present to start paused. The element starts paused anyway if the system asks for reduced motion.',
+    ],
+    [
+      'seed',
+      'Attribute',
+      'Seed for the synthetic price walk, so a page looks the same on every load.',
+    ],
+    [
+      'pausechange',
+      'Event',
+      'Fires when the chart is paused or resumed. event.detail is true when paused.',
+    ],
+    [
+      '--nlc-bg, --nlc-fg, --nlc-muted, --nlc-line, --nlc-grid',
+      'CSS property',
+      'Colours. The element reads them from its host, so a page can theme it.',
+    ],
     ['toolbar, plot', 'CSS part', 'Style the toolbar and plot area from outside with ::part().'],
   ],
   fallback: 'A live, streaming price chart appears here when JavaScript is on.',
@@ -97,7 +122,12 @@ export const sequenceControls = {
 export const ssoText: SequenceFlowContent = {
   lifelines: ['Browser', 'App A', 'Azure AD B2C', 'App B'],
   steps: [
-    { from: 0, to: 1, title: 'Open App A', detail: 'Someone opens App A. It has no session for them yet.' },
+    {
+      from: 0,
+      to: 1,
+      title: 'Open App A',
+      detail: 'Someone opens App A. It has no session for them yet.',
+    },
     {
       from: 1,
       to: 2,
@@ -120,9 +150,15 @@ export const ssoText: SequenceFlowContent = {
       from: 1,
       to: 2,
       title: 'Exchange for tokens',
-      detail: 'App A exchanges the code with B2C for an ID token and an access token, and signs them in.',
+      detail:
+        'App A exchanges the code with B2C for an ID token and an access token, and signs them in.',
     },
-    { from: 0, to: 3, title: 'Open App B', detail: 'Later they open App B, which has no session for them either.' },
+    {
+      from: 0,
+      to: 3,
+      title: 'Open App B',
+      detail: 'Later they open App B, which has no session for them either.',
+    },
     {
       from: 3,
       to: 2,
@@ -133,7 +169,8 @@ export const ssoText: SequenceFlowContent = {
       from: 2,
       to: 3,
       title: 'Signed in silently',
-      detail: 'B2C sends a code straight back without asking for a password. App B signs them in. That is single sign-on.',
+      detail:
+        'B2C sends a code straight back without asking for a password. App B signs them in. That is single sign-on.',
     },
   ],
   figureLabel: 'Sequence diagram of single sign-on across two apps with Azure AD B2C',
@@ -154,7 +191,8 @@ export const clientCredentialsText: SequenceFlowContent & { heading: string; int
       from: 0,
       to: 1,
       title: 'Ask for a token',
-      detail: 'The billing service sends its client ID and secret to the identity service, and asks only for the scope it needs.',
+      detail:
+        'The billing service sends its client ID and secret to the identity service, and asks only for the scope it needs.',
       artifact: {
         language: 'http',
         label: 'Token request',
@@ -169,7 +207,8 @@ grant_type=client_credentials&client_id=billing-service&client_secret=•••�
       from: 1,
       to: 0,
       title: 'Receive a short-lived token',
-      detail: 'The identity service checks the client and its allowed scopes, then issues a signed access token that expires within the hour.',
+      detail:
+        'The identity service checks the client and its allowed scopes, then issues a signed access token that expires within the hour.',
       artifact: {
         language: 'json',
         label: 'Token response',
@@ -185,7 +224,8 @@ grant_type=client_credentials&client_id=billing-service&client_secret=•••�
       from: 0,
       to: 2,
       title: 'Call the API with the token',
-      detail: 'The billing service sends the token as a Bearer header. It reuses the same token until it expires.',
+      detail:
+        'The billing service sends the token as a Bearer header. It reuses the same token until it expires.',
       artifact: {
         language: 'http',
         label: 'API request',
@@ -198,7 +238,8 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjFGM0Mi…`,
       from: 2,
       to: 1,
       title: 'Check the signature',
-      detail: 'The API validates the token against the identity service’s public signing keys, fetched once and cached, then checks issuer, audience, expiry and scope. No round trip per request.',
+      detail:
+        'The API validates the token against the identity service’s public signing keys, fetched once and cached, then checks issuer, audience, expiry and scope. No round trip per request.',
       artifact: {
         language: 'json',
         label: 'Decoded token claims',
@@ -215,7 +256,8 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjFGM0Mi…`,
       from: 2,
       to: 0,
       title: 'Return the data',
-      detail: 'The token is valid and carries the orders.read scope, so the API answers. A token without that scope would get 403 Forbidden.',
+      detail:
+        'The token is valid and carries the orders.read scope, so the API answers. A token without that scope would get 403 Forbidden.',
       artifact: {
         language: 'http',
         label: 'API response',

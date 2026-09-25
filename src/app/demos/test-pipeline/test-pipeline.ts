@@ -1,4 +1,12 @@
-import { Component, ElementRef, afterRenderEffect, computed, inject, signal, viewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  afterRenderEffect,
+  computed,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { animate } from 'motion';
 import { Motion } from '../../core/media';
 import { CodeBlock } from '../../ui/code-block';
@@ -32,14 +40,18 @@ import { pipelineSteps, pipelineText } from '../../../content/pipeline-steps';
       </ol>
 
       <div class="min-w-0">
-        <p class="sr-only" aria-live="polite">{{ t.stepOf(current() + 1, steps.length) }}: {{ step().title }}</p>
+        <p class="sr-only" aria-live="polite">
+          {{ t.stepOf(current() + 1, steps.length) }}: {{ step().title }}
+        </p>
         <div #panel>
           <h3 class="text-lg">{{ step().title }}</h3>
           <p class="text-ink-muted">{{ step().summary }}</p>
           <p class="mt-5 text-sm font-semibold">{{ step().artifactTitle }}</p>
           @switch (step().artifact.kind) {
             @case ('fields') {
-              <dl class="mt-2 grid gap-x-5 gap-y-2 border-t border-rule pt-3 sm:grid-cols-[9rem_minmax(0,1fr)]">
+              <dl
+                class="mt-2 grid gap-x-5 gap-y-2 border-t border-rule pt-3 sm:grid-cols-[9rem_minmax(0,1fr)]"
+              >
                 @for (f of fields(); track $index) {
                   <dt class="text-sm text-ink-muted">{{ f.label }}</dt>
                   <dd>{{ f.value }}</dd>
@@ -47,7 +59,11 @@ import { pipelineSteps, pipelineText } from '../../../content/pipeline-steps';
               </dl>
             }
             @case ('cases') {
-              <div class="mt-2 overflow-x-auto" tabindex="0" [attr.aria-label]="step().artifactTitle">
+              <div
+                class="mt-2 overflow-x-auto"
+                tabindex="0"
+                [attr.aria-label]="step().artifactTitle"
+              >
                 <table class="w-full min-w-[32rem] border-collapse text-left">
                   <thead>
                     <tr class="border-b border-rule text-sm text-ink-muted">
@@ -70,14 +86,23 @@ import { pipelineSteps, pipelineText } from '../../../content/pipeline-steps';
             }
             @case ('code') {
               <div class="mt-2">
-                <app-code-block [code]="code().code" [language]="code().lang" [label]="step().artifactTitle" />
+                <app-code-block
+                  [code]="code().code"
+                  [language]="code().lang"
+                  [label]="step().artifactTitle"
+                />
               </div>
             }
           }
         </div>
 
         <div class="mt-6 flex flex-wrap items-center gap-3">
-          <button type="button" class="btn" [disabled]="current() === 0" (click)="current.set(current() - 1)">
+          <button
+            type="button"
+            class="btn"
+            [disabled]="current() === 0"
+            (click)="current.set(current() - 1)"
+          >
             {{ t.prev }}
           </button>
           <button
@@ -126,7 +151,11 @@ export class TestPipeline {
         return;
       }
       if (!this.reduced()) {
-        animate(this.panel().nativeElement, { opacity: [0, 1], y: [8, 0] }, { duration: 0.25, ease: 'easeOut' });
+        animate(
+          this.panel().nativeElement,
+          { opacity: [0, 1], y: [8, 0] },
+          { duration: 0.25, ease: 'easeOut' },
+        );
       }
     });
   }

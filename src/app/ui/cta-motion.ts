@@ -1,4 +1,12 @@
-import { DestroyRef, Directive, ElementRef, afterNextRender, booleanAttribute, inject, input } from '@angular/core';
+import {
+  DestroyRef,
+  Directive,
+  ElementRef,
+  afterNextRender,
+  booleanAttribute,
+  inject,
+  input,
+} from '@angular/core';
 import { Motion } from '../core/media';
 
 const SPRING = { type: 'spring', stiffness: 380, damping: 22, mass: 0.6 } as const;
@@ -74,7 +82,12 @@ export class CtaMotion {
         ? setTimeout(() => {
             if (hovering || scrollY > 80) return;
             animate(el, { scale: [1, 1.06, 1, 1.03, 1] }, { duration: 1.2, ease: 'easeInOut' });
-            if (sheen) animate(sheen, { x: ['-120%', '360%'] }, { duration: 1, delay: 0.15, ease: 'easeInOut' });
+            if (sheen)
+              animate(
+                sheen,
+                { x: ['-120%', '360%'] },
+                { duration: 1, delay: 0.15, ease: 'easeInOut' },
+              );
             nudgeIcon();
           }, 1400)
         : undefined;

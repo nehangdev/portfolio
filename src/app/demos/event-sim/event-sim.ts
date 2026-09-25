@@ -1,4 +1,13 @@
-import { Component, ElementRef, computed, effect, inject, signal, untracked, viewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  computed,
+  effect,
+  inject,
+  signal,
+  untracked,
+  viewChild,
+} from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { tablerPlayerPause, tablerPlayerPlay, tablerRefresh } from '@ng-icons/tabler-icons';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -23,31 +32,67 @@ const SERVICE_TIME = 0.8;
           <label for="es-arrival" class="font-semibold">{{ t.controls.arrival }}</label>
           <output for="es-arrival">{{ arrival() }} {{ t.controls.arrivalUnit }}</output>
         </div>
-        <input id="es-arrival" type="range" min="0.5" max="8" step="0.5" [value]="arrival()" (input)="setArrival($event)" class="accent-queue" />
+        <input
+          id="es-arrival"
+          type="range"
+          min="0.5"
+          max="8"
+          step="0.5"
+          [value]="arrival()"
+          (input)="setArrival($event)"
+          class="accent-queue"
+        />
       </div>
       <div class="grid gap-1">
         <div class="flex justify-between gap-2">
           <label for="es-consumers" class="font-semibold">{{ t.controls.consumers }}</label>
           <output for="es-consumers">{{ consumers() }}</output>
         </div>
-        <input id="es-consumers" type="range" min="1" max="6" step="1" [value]="consumers()" (input)="setConsumers($event)" class="accent-queue" />
+        <input
+          id="es-consumers"
+          type="range"
+          min="1"
+          max="6"
+          step="1"
+          [value]="consumers()"
+          (input)="setConsumers($event)"
+          class="accent-queue"
+        />
       </div>
       <div class="grid gap-1">
         <div class="flex justify-between gap-2">
           <label for="es-failure" class="font-semibold">{{ t.controls.failure }}</label>
           <output for="es-failure">{{ failure() }}%</output>
         </div>
-        <input id="es-failure" type="range" min="0" max="40" step="5" [value]="failure()" (input)="setFailure($event)" class="accent-queue" />
+        <input
+          id="es-failure"
+          type="range"
+          min="0"
+          max="40"
+          step="5"
+          [value]="failure()"
+          (input)="setFailure($event)"
+          class="accent-queue"
+        />
       </div>
     </div>
 
     <div class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
       <label class="inline-flex min-h-11 cursor-pointer items-center gap-2">
-        <input type="checkbox" [checked]="retry()" (change)="setRetry($event)" class="size-5 accent-queue" />
+        <input
+          type="checkbox"
+          [checked]="retry()"
+          (change)="setRetry($event)"
+          class="size-5 accent-queue"
+        />
         {{ t.controls.retry }}
       </label>
       <button type="button" class="btn" (click)="paused.set(!paused())">
-        <ng-icon [name]="paused() ? 'tablerPlayerPlay' : 'tablerPlayerPause'" size="1.1rem" aria-hidden="true" />
+        <ng-icon
+          [name]="paused() ? 'tablerPlayerPlay' : 'tablerPlayerPause'"
+          size="1.1rem"
+          aria-hidden="true"
+        />
         {{ paused() ? t.controls.play : t.controls.pause }}
       </button>
       <button type="button" class="btn" (click)="reset()">
@@ -66,7 +111,12 @@ const SERVICE_TIME = 0.8;
     </dl>
 
     <div class="sim-stage h-[22rem]">
-      <canvas #canvas role="img" [attr.aria-label]="t.canvasLabel(consumers())" class="block size-full"></canvas>
+      <canvas
+        #canvas
+        role="img"
+        [attr.aria-label]="t.canvasLabel(consumers())"
+        class="block size-full"
+      ></canvas>
     </div>
   `,
 })

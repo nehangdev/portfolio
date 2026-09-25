@@ -19,7 +19,8 @@ export class SeoTitleStrategy extends TitleStrategy {
     const description = (route.data['description'] as string | undefined) ?? '';
     const path = snapshot.url.split(/[?#]/)[0];
     const url = profile.siteUrl + (path === '/' ? '/' : path);
-    const image = profile.siteUrl + ((route.data['image'] as string | undefined) ?? '/og/default.png');
+    const image =
+      profile.siteUrl + ((route.data['image'] as string | undefined) ?? '/og/default.png');
 
     this.titleService.setTitle(title);
     for (const [attr, key, content] of [

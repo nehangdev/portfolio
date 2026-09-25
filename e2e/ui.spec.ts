@@ -43,7 +43,10 @@ test.describe('phone menu', () => {
   });
 
   test('works without JavaScript (native popover)', async ({ browser }) => {
-    const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 375, height: 740 } });
+    const context = await browser.newContext({
+      javaScriptEnabled: false,
+      viewport: { width: 375, height: 740 },
+    });
     const page = await context.newPage();
     await page.goto('/');
     await page.getByRole('button', { name: 'Open menu' }).click();
@@ -88,7 +91,9 @@ test.describe('call-to-action motion', () => {
     await page.goto('/');
     const cta = page.getByRole('link', { name: 'Read the case studies' });
     // Motion writes an inline transform while the cue plays.
-    await expect.poll(() => cta.evaluate((el) => (el as HTMLElement).style.transform), { timeout: 4000 }).toMatch(/scale/);
+    await expect
+      .poll(() => cta.evaluate((el) => (el as HTMLElement).style.transform), { timeout: 4000 })
+      .toMatch(/scale/);
   });
 
   test.describe('with reduced motion', () => {
@@ -145,13 +150,17 @@ test.describe('page transitions', () => {
     await expect.poll(() => durations(page).then((d) => d.length)).toBe(1);
     // Measured from the key press: the animation (about 220ms) must not run on after it.
     // Rendering the new page can't be skipped, so this excludes time spent before the press.
-    const endedAt = await page.evaluate(() => (window as unknown as { __vtEnd: number[] }).__vtEnd[0]);
+    const endedAt = await page.evaluate(
+      () => (window as unknown as { __vtEnd: number[] }).__vtEnd[0],
+    );
     expect(endedAt - pressedAt).toBeLessThan(150);
   });
 });
 
 test.describe('developer touches', () => {
-  test('In short reads as an editor file but screen readers get just the paragraphs', async ({ page }) => {
+  test('In short reads as an editor file but screen readers get just the paragraphs', async ({
+    page,
+  }) => {
     await page.goto('/');
     const panel = page.locator('app-markup-panel');
     await expect(panel.getByText('in-short.html')).toBeVisible();
@@ -186,7 +195,9 @@ test.describe('developer touches', () => {
 
   test('the 404 terminal echoes the missing path and lists real pages', async ({ page }) => {
     await page.goto('/nowhere/at-all');
-    await expect(page.getByText('bash: cd: /nowhere/at-all: No such file or directory')).toBeVisible();
+    await expect(
+      page.getByText('bash: cd: /nowhere/at-all: No such file or directory'),
+    ).toBeVisible();
     const list = page.getByRole('list', { name: 'Pages you can open' });
     await list.getByRole('link', { name: 'live-chart/' }).click();
     await expect(page).toHaveURL(/\/work\/live-chart$/);
@@ -201,7 +212,10 @@ test.describe('developer touches', () => {
 });
 
 test.describe('command palette', () => {
-  test('opens with Ctrl+K, filters, and navigates with the keyboard', async ({ page, isMobile }) => {
+  test('opens with Ctrl+K, filters, and navigates with the keyboard', async ({
+    page,
+    isMobile,
+  }) => {
     test.skip(isMobile, 'keyboard shortcut; the header button is tested below');
     await page.goto('/');
     await page.locator('body').press('Control+k');
@@ -210,7 +224,9 @@ test.describe('command palette', () => {
     const input = dialog.getByRole('combobox', { name: 'Search pages and actions' });
     await expect(input).toBeFocused();
     await input.fill('chart');
-    await expect(dialog.getByRole('option').first()).toHaveText(/A real-time chart that runs anywhere/);
+    await expect(dialog.getByRole('option').first()).toHaveText(
+      /A real-time chart that runs anywhere/,
+    );
     await expect(dialog.getByRole('option').first()).toHaveAttribute('aria-selected', 'true');
     await input.press('Enter');
     await expect(page).toHaveURL(/\/work\/live-chart$/);
@@ -261,7 +277,9 @@ test.describe('command palette', () => {
   });
 });
 
-test('the colophon shows the build log with sizes, tests and Lighthouse scores', async ({ page }) => {
+test('the colophon shows the build log with sizes, tests and Lighthouse scores', async ({
+  page,
+}) => {
   await page.goto('/colophon');
   await expect(page.getByRole('heading', { level: 2, name: 'Build log' })).toBeVisible();
   await expect(page.getByText(/pages prerendered to static HTML/)).toBeVisible();

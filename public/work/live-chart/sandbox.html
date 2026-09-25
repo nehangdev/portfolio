@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
     <title>Live chart sandbox | Nehang Shah</title>
-    <meta name="description" content="The nehang-live-chart Web Component on a plain HTML page, with no framework around it." />
+    <meta
+      name="description"
+      content="The nehang-live-chart Web Component on a plain HTML page, with no framework around it."
+    />
     <link rel="canonical" href="https://nehang.is-a.dev/work/live-chart/sandbox.html" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <!-- The whole integration: one module script, then the tag below. -->
@@ -30,7 +33,10 @@
         margin: 0 auto;
         max-width: 60rem;
         padding: 1.5rem 1rem 3rem;
-        font: 16px/1.5 Georgia, 'Times New Roman', serif;
+        font:
+          16px/1.5 Georgia,
+          'Times New Roman',
+          serif;
         background: var(--bg);
         color: var(--fg);
       }
@@ -69,17 +75,22 @@
       <h1>Live chart sandbox</h1>
       <p>
         This page has no Angular app and no build step. It loads one script and uses
-        <code>&lt;nehang-live-chart&gt;</code> like any other HTML element. The colours, font and toolbar tint
-        come from this page's own CSS.
+        <code>&lt;nehang-live-chart&gt;</code> like any other HTML element. The colours, font and
+        toolbar tint come from this page's own CSS.
       </p>
 
       <nehang-live-chart window-seconds="30" label="Sandbox series" seed="3"></nehang-live-chart>
       <noscript><p>The chart needs JavaScript.</p></noscript>
 
-      <p id="log" aria-live="polite">Pause or resume the chart to see its <code>pausechange</code> event here.</p>
+      <p id="log" aria-live="polite">
+        Pause or resume the chart to see its <code>pausechange</code> event here.
+      </p>
 
       <h2>The markup</h2>
-      <pre tabindex="0" aria-label="Markup"><code>&lt;script type="module" src="/elements/live-chart.js"&gt;&lt;/script&gt;
+      <pre
+        tabindex="0"
+        aria-label="Markup"
+      ><code>&lt;script type="module" src="/elements/live-chart.js"&gt;&lt;/script&gt;
 
 &lt;nehang-live-chart window-seconds="30" label="Sandbox series" seed="3"&gt;&lt;/nehang-live-chart&gt;
 

@@ -30,7 +30,9 @@ test.describe('hero simulation', () => {
     await expect(page.locator('output')).not.toHaveText('0.0', { timeout: 5000 });
   });
 
-  test('does not shift the layout when the simulation replaces the placeholder', async ({ page }) => {
+  test('does not shift the layout when the simulation replaces the placeholder', async ({
+    page,
+  }) => {
     await page.goto('/');
     await page.getByRole('button', { name: 'Synchronous' }).waitFor();
     const cls = await page.evaluate(
@@ -38,7 +40,10 @@ test.describe('hero simulation', () => {
         new Promise<number>((resolve) => {
           let total = 0;
           new PerformanceObserver((list) => {
-            for (const e of list.getEntries() as unknown as { value: number; hadRecentInput: boolean }[]) {
+            for (const e of list.getEntries() as unknown as {
+              value: number;
+              hadRecentInput: boolean;
+            }[]) {
               if (!e.hadRecentInput) total += e.value;
             }
           }).observe({ type: 'layout-shift', buffered: true });
@@ -55,7 +60,9 @@ test.describe('reduced motion', () => {
   test('shows the static diagram instead of the animation', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
-    await expect(page.getByText('Synchronous processing compared with event-driven processing')).toBeVisible();
+    await expect(
+      page.getByText('Synchronous processing compared with event-driven processing'),
+    ).toBeVisible();
     await expect(page.locator('canvas')).toHaveCount(0);
   });
 });
@@ -70,7 +77,9 @@ test.describe('without JavaScript', () => {
       await expect(page.getByRole('heading', { level: 2, name: heading })).toBeVisible();
     }
     await expect(page.getByText('Career break')).toBeVisible();
-    await expect(page.getByText('Synchronous processing compared with event-driven processing')).toBeVisible();
+    await expect(
+      page.getByText('Synchronous processing compared with event-driven processing'),
+    ).toBeVisible();
   });
 });
 
@@ -88,10 +97,16 @@ test('no phone number in any page', async ({ request }) => {
   }
 });
 
-test('the résumé is published, is a PDF, and downloads with a clear filename', async ({ page, request }) => {
+test('the résumé is published, is a PDF, and downloads with a clear filename', async ({
+  page,
+  request,
+}) => {
   const res = await request.get('/resume.pdf');
   expect(res.status()).toBe(200);
   expect((await res.body()).subarray(0, 5).toString()).toBe('%PDF-');
   await page.goto('/');
-  await expect(page.getByRole('link', { name: 'Download résumé' })).toHaveAttribute('download', 'Nehang-Shah-Resume.pdf');
+  await expect(page.getByRole('link', { name: 'Download résumé' })).toHaveAttribute(
+    'download',
+    'Nehang-Shah-Resume.pdf',
+  );
 });

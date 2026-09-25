@@ -1,13 +1,21 @@
 import { Component, afterNextRender, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { tablerBrandGithub, tablerBrandLinkedin, tablerCheck, tablerCopy, tablerMail } from '@ng-icons/tabler-icons';
+import {
+  tablerBrandGithub,
+  tablerBrandLinkedin,
+  tablerCheck,
+  tablerCopy,
+  tablerMail,
+} from '@ng-icons/tabler-icons';
 import { home } from '../../../content/pages';
 import { profile } from '../../../content/profile';
 
 @Component({
   selector: 'app-contact',
   imports: [NgIcon],
-  viewProviders: [provideIcons({ tablerBrandGithub, tablerBrandLinkedin, tablerCheck, tablerCopy, tablerMail })],
+  viewProviders: [
+    provideIcons({ tablerBrandGithub, tablerBrandLinkedin, tablerCheck, tablerCopy, tablerMail }),
+  ],
   template: `
     <p class="measure text-lg">{{ c.lead }}</p>
     <ul class="mt-6 grid gap-4">
@@ -23,7 +31,11 @@ import { profile } from '../../../content/profile';
             [attr.aria-label]="c.copy"
             [title]="c.copy"
           >
-            <ng-icon [name]="copied() ? 'tablerCheck' : 'tablerCopy'" size="1.2rem" aria-hidden="true" />
+            <ng-icon
+              [name]="copied() ? 'tablerCheck' : 'tablerCopy'"
+              size="1.2rem"
+              aria-hidden="true"
+            />
           </button>
           <span role="status" class="text-sm text-ink-muted">{{ status() }}</span>
         } @else {
@@ -31,12 +43,24 @@ import { profile } from '../../../content/profile';
         }
       </li>
       <li class="flex items-center gap-3">
-        <ng-icon name="tablerBrandLinkedin" size="1.5rem" class="flex-none text-queue" aria-hidden="true" />
+        <ng-icon
+          name="tablerBrandLinkedin"
+          size="1.5rem"
+          class="flex-none text-queue"
+          aria-hidden="true"
+        />
         <span class="sr-only">{{ c.linkedin }}:</span>
-        <a [href]="profile.links.linkedin" class="break-all">{{ display(profile.links.linkedin) }}</a>
+        <a [href]="profile.links.linkedin" class="break-all">{{
+          display(profile.links.linkedin)
+        }}</a>
       </li>
       <li class="flex items-center gap-3">
-        <ng-icon name="tablerBrandGithub" size="1.5rem" class="flex-none text-queue" aria-hidden="true" />
+        <ng-icon
+          name="tablerBrandGithub"
+          size="1.5rem"
+          class="flex-none text-queue"
+          aria-hidden="true"
+        />
         <span class="sr-only">{{ c.github }}:</span>
         <a [href]="profile.links.github" class="break-all">{{ display(profile.links.github) }}</a>
       </li>

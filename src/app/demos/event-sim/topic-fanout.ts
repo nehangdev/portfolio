@@ -30,14 +30,20 @@ interface Row {
     <p class="measure mt-1">{{ t.intro }}</p>
     <div class="mt-4 flex flex-wrap items-center gap-4">
       <button type="button" class="btn" (click)="paused.set(!paused())">
-        <ng-icon [name]="paused() ? 'tablerPlayerPlay' : 'tablerPlayerPause'" size="1.1rem" aria-hidden="true" />
+        <ng-icon
+          [name]="paused() ? 'tablerPlayerPlay' : 'tablerPlayerPause'"
+          size="1.1rem"
+          aria-hidden="true"
+        />
         {{ paused() ? t.play : t.pause }}
       </button>
       <p class="font-semibold">{{ t.published(published()) }}</p>
     </div>
     <ul class="mt-4 divide-y divide-rule border-y border-rule">
       @for (row of rows(); track row.name) {
-        <li class="grid items-center gap-3 py-4 sm:grid-cols-[9rem_minmax(0,1fr)_auto_7rem] sm:gap-5">
+        <li
+          class="grid items-center gap-3 py-4 sm:grid-cols-[9rem_minmax(0,1fr)_auto_7rem] sm:gap-5"
+        >
           <div>
             <p class="font-semibold">{{ row.name }}</p>
             <p class="text-sm text-ink-muted">{{ t.consumers(row.workers) }}</p>
@@ -52,7 +58,9 @@ interface Row {
           </div>
           <div class="flex gap-1.5" aria-hidden="true">
             @for (p of row.progress; track $index) {
-              <span class="relative h-6 w-10 overflow-hidden rounded border-[1.5px] border-ink-muted">
+              <span
+                class="relative h-6 w-10 overflow-hidden rounded border-[1.5px] border-ink-muted"
+              >
                 <span class="absolute inset-y-0 left-0 bg-signal" [style.width.%]="p"></span>
               </span>
             }
@@ -118,7 +126,9 @@ export class TopicFanout {
         more: Math.max(0, m.queue.length - DOTS),
         waiting: m.queue.length,
         done: m.completed,
-        progress: m.workers.map((w) => (w.msg ? 100 * (1 - Math.max(0, w.remaining) / w.total) : 0)),
+        progress: m.workers.map((w) =>
+          w.msg ? 100 * (1 - Math.max(0, w.remaining) / w.total) : 0,
+        ),
       })),
     );
   }

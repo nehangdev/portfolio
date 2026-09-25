@@ -6,7 +6,8 @@ import { mkdirSync, readFileSync } from 'node:fs';
 import { caseStudies } from '../src/content/case-studies.ts';
 import { profile } from '../src/content/profile.ts';
 
-const font = 'data:font/woff2;base64,' + readFileSync('public/fonts/fira-code-latin.woff2').toString('base64');
+const font =
+  'data:font/woff2;base64,' + readFileSync('public/fonts/fira-code-latin.woff2').toString('base64');
 const escape = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
 
 const page = (title, lead) => `<!doctype html><html><head><style>

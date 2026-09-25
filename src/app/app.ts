@@ -82,10 +82,19 @@ import { profile } from '../content/profile';
             [attr.aria-label]="theme.current() === 'dark' ? nav.themeToLight : nav.themeToDark"
             class="icon-btn invisible in-[.js]:visible"
           >
-            <ng-icon [name]="theme.current() === 'dark' ? 'tablerSun' : 'tablerMoon'" size="1.35rem" aria-hidden="true" />
+            <ng-icon
+              [name]="theme.current() === 'dark' ? 'tablerSun' : 'tablerMoon'"
+              size="1.35rem"
+              aria-hidden="true"
+            />
           </button>
           <!-- Native popover: opens and light-dismisses without any JavaScript. -->
-          <button type="button" popovertarget="mobile-nav" [attr.aria-label]="nav.openMenu" class="icon-btn sm:hidden">
+          <button
+            type="button"
+            popovertarget="mobile-nav"
+            [attr.aria-label]="nav.openMenu"
+            class="icon-btn sm:hidden"
+          >
             <ng-icon name="tablerMenu2" size="1.35rem" aria-hidden="true" />
           </button>
         </div>
@@ -134,24 +143,43 @@ import { profile } from '../content/profile';
     </main>
 
     <footer class="wrap mt-8">
-      <div class="flex flex-wrap items-center justify-between gap-4 border-t border-rule py-8 text-sm text-ink-muted">
+      <div
+        class="flex flex-wrap items-center justify-between gap-4 border-t border-rule py-8 text-sm text-ink-muted"
+      >
         <p class="inline-flex items-center gap-2">
           <ng-icon name="tablerMapPin" size="1.1rem" aria-hidden="true" />
-          <span><span class="sr-only">{{ footer.location }}: </span>{{ profile.location }}</span>
+          <span
+            ><span class="sr-only">{{ footer.location }}: </span>{{ profile.location }}</span
+          >
         </p>
         <ul class="flex items-center gap-1">
           <li>
-            <a [href]="profile.links.github" class="icon-btn" [attr.aria-label]="footer.github" [title]="footer.github">
+            <a
+              [href]="profile.links.github"
+              class="icon-btn"
+              [attr.aria-label]="footer.github"
+              [title]="footer.github"
+            >
               <ng-icon name="tablerBrandGithub" size="1.35rem" aria-hidden="true" />
             </a>
           </li>
           <li>
-            <a [href]="profile.links.linkedin" class="icon-btn" [attr.aria-label]="footer.linkedin" [title]="footer.linkedin">
+            <a
+              [href]="profile.links.linkedin"
+              class="icon-btn"
+              [attr.aria-label]="footer.linkedin"
+              [title]="footer.linkedin"
+            >
               <ng-icon name="tablerBrandLinkedin" size="1.35rem" aria-hidden="true" />
             </a>
           </li>
           <li>
-            <a [href]="profile.repoUrl" class="icon-btn" [attr.aria-label]="footer.source" [title]="footer.source">
+            <a
+              [href]="profile.repoUrl"
+              class="icon-btn"
+              [attr.aria-label]="footer.source"
+              [title]="footer.source"
+            >
               <ng-icon name="tablerCode" size="1.35rem" aria-hidden="true" />
             </a>
           </li>

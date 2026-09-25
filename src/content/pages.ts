@@ -81,7 +81,14 @@ export const home = {
   intro: {
     heading: 'In short',
     /** The intro is shown as an editor file. See ui/markup-panel.ts. */
-    editor: { file: 'in-short.html', tag: 'section', attrs: [['class', 'intro'], ['lang', 'en']] as [string, string][] },
+    editor: {
+      file: 'in-short.html',
+      tag: 'section',
+      attrs: [
+        ['class', 'intro'],
+        ['lang', 'en'],
+      ] as [string, string][],
+    },
     paragraphs: [
       'I have spent 8.5 years designing and building enterprise web applications end to end. On the backend that means .NET and Azure. On the front, Angular is my main tool, alongside React and Blazor WebAssembly and Server, with Umbraco and NopCommerce when a project needs a CMS or a commerce platform.',
       'Most of my recent work is on insurance and digital-marketplace platforms: event-driven processing on Azure Service Bus, single sign-on with Azure AD B2C, real-time dashboards, and test automation.',
@@ -110,7 +117,8 @@ export const home = {
     copy: 'Copy address',
     copied: 'Address copied',
     copyFailed: 'Could not copy. Select the address instead.',
-    noScript: 'The email address is added by JavaScript to keep it away from scrapers. LinkedIn and GitHub work without it.',
+    noScript:
+      'The email address is added by JavaScript to keep it away from scrapers. LinkedIn and GitHub work without it.',
     linkedin: 'LinkedIn',
     github: 'GitHub',
   },
@@ -142,7 +150,8 @@ export const hero = {
     syncTitle: 'Synchronous',
     syncBody: 'One worker handles one document at a time. The rest wait.',
     eventTitle: 'Event-driven',
-    eventBody: 'A queue feeds three workers in parallel. Failures go back on the queue and are retried.',
+    eventBody:
+      'A queue feeds three workers in parallel. Failures go back on the queue and are retried.',
   },
 };
 
@@ -231,11 +240,16 @@ export const colophon = {
       ],
     },
   ],
-  source: { heading: 'Source', text: 'The full source is public on GitHub.', link: 'View the repository' },
+  source: {
+    heading: 'Source',
+    text: 'The full source is public on GitHub.',
+    link: 'View the repository',
+  },
   buildLog: {
     heading: 'Build log',
     file: 'build.log',
-    intro: 'Real numbers from the last measured build, not claims. The script that produces them is in the repository.',
+    intro:
+      'Real numbers from the last measured build, not claims. The script that produces them is in the repository.',
     build: 'npm run build',
     prerendered: (n: number) => `${n} pages prerendered to static HTML`,
     sizes: [
@@ -250,11 +264,13 @@ export const colophon = {
     unit: (n: number) => `${n} unit tests passed`,
     e2eCmd: 'npx playwright test',
     e2e: (passed: number, skipped: number) =>
-      `${passed} end-to-end and accessibility checks passed on desktop and mobile` + (skipped ? `, ${skipped} skipped on purpose` : ''),
+      `${passed} end-to-end and accessibility checks passed on desktop and mobile` +
+      (skipped ? `, ${skipped} skipped on purpose` : ''),
     lighthouseCmd: 'lighthouse --preset=mobile   # median of 3 runs',
     lighthouseLabel: 'Lighthouse scores, mobile',
     columns: ['Page', 'Performance', 'Accessibility', 'Best practices', 'SEO'],
-    footer: (date: string, commit: string) => `# Measured on ${date} at commit ${commit}. Regenerate with: npm run report`,
+    footer: (date: string, commit: string) =>
+      `# Measured on ${date} at commit ${commit}. Regenerate with: npm run report`,
   },
 };
 

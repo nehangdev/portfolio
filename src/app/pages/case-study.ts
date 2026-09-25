@@ -9,7 +9,13 @@ import { TestPipeline } from '../demos/test-pipeline/test-pipeline';
 import { LiveChartDemo } from '../demos/live-chart/live-chart-demo';
 import { LiveChartDocs } from '../demos/live-chart/live-chart-docs';
 import { SequenceFlow } from '../demos/sequence-flow/sequence-flow';
-import { Block, CaseStudy, CaseStudyBody, caseStudies, caseStudyText } from '../../content/case-studies';
+import {
+  Block,
+  CaseStudy,
+  CaseStudyBody,
+  caseStudies,
+  caseStudyText,
+} from '../../content/case-studies';
 import { caseStudyBodies } from '../../content/case-study-bodies';
 import { pipelineSteps } from '../../content/pipeline-steps';
 import { clientCredentialsText, ssoText } from '../../content/demos';
@@ -49,13 +55,19 @@ function flatten(b: Block): FlatBlock {
         <nav [attr.aria-label]="text.breadcrumb" class="text-sm">
           <ol class="crumbs">
             <li>
-              <a routerLink="/" class="syn-tag">~<span class="sr-only"> ({{ text.homeHint }})</span></a>
+              <a routerLink="/" class="syn-tag"
+                >~<span class="sr-only"> ({{ text.homeHint }})</span></a
+              >
             </li>
-            <li><a routerLink="/" fragment="work">{{ text.workFolder }}</a></li>
+            <li>
+              <a routerLink="/" fragment="work">{{ text.workFolder }}</a>
+            </li>
             <li aria-current="page" class="syn-string">{{ cs.slug }}.md</li>
           </ol>
         </nav>
-        <h1 class="mt-3 text-3xl sm:text-[3.5rem]" [style.view-transition-name]="'cs-' + cs.slug">{{ cs.title }}</h1>
+        <h1 class="mt-3 text-3xl sm:text-[3.5rem]" [style.view-transition-name]="'cs-' + cs.slug">
+          {{ cs.title }}
+        </h1>
         <p class="measure mt-4 text-lg">{{ cs.outcome }}</p>
       </header>
 
@@ -114,7 +126,9 @@ function flatten(b: Block): FlatBlock {
                 <div>
                   <ol class="measure list-decimal space-y-3 pl-6">
                     @for (s of pipelineSteps; track s.title) {
-                      <li><span class="font-semibold">{{ s.title }}.</span> {{ s.summary }}</li>
+                      <li>
+                        <span class="font-semibold">{{ s.title }}.</span> {{ s.summary }}
+                      </li>
                     }
                   </ol>
                   <p class="mt-3 text-sm text-ink-muted">{{ text.staticNote }}</p>
@@ -125,7 +139,9 @@ function flatten(b: Block): FlatBlock {
               @defer (on viewport) {
                 <app-live-chart-demo />
               } @placeholder {
-                <div class="live-chart grid place-items-center rounded border border-rule bg-paper-raised p-6">
+                <div
+                  class="live-chart grid place-items-center rounded border border-rule bg-paper-raised p-6"
+                >
                   <p class="text-ink-muted">{{ text.staticNote }}</p>
                 </div>
               }
@@ -138,7 +154,9 @@ function flatten(b: Block): FlatBlock {
                 <div>
                   <ol class="measure list-decimal space-y-3 pl-6">
                     @for (s of sso.steps; track $index) {
-                      <li><span class="font-semibold">{{ s.title }}.</span> {{ s.detail }}</li>
+                      <li>
+                        <span class="font-semibold">{{ s.title }}.</span> {{ s.detail }}
+                      </li>
                     }
                   </ol>
                   <p class="mt-3 text-sm text-ink-muted">{{ text.staticNote }}</p>
@@ -153,7 +171,9 @@ function flatten(b: Block): FlatBlock {
                 <div>
                   <ol class="measure list-decimal space-y-3 pl-6">
                     @for (s of clientCredentials.steps; track $index) {
-                      <li><span class="font-semibold">{{ s.title }}.</span> {{ s.detail }}</li>
+                      <li>
+                        <span class="font-semibold">{{ s.title }}.</span> {{ s.detail }}
+                      </li>
                     }
                   </ol>
                   <p class="mt-3 text-sm text-ink-muted">{{ text.staticNote }}</p>
@@ -166,7 +186,9 @@ function flatten(b: Block): FlatBlock {
 
       <nav [attr.aria-label]="text.next" class="border-t border-rule py-10">
         <p class="text-sm text-ink-muted">{{ text.next }}</p>
-        <a [routerLink]="'/work/' + next.slug" class="mt-1 inline-block text-xl font-semibold">{{ next.title }}</a>
+        <a [routerLink]="'/work/' + next.slug" class="mt-1 inline-block text-xl font-semibold">{{
+          next.title
+        }}</a>
       </nav>
     </article>
   `,
@@ -187,6 +209,9 @@ export class CaseStudyPage {
     this.cs = caseStudies[i];
     this.next = caseStudies[(i + 1) % caseStudies.length];
     this.body = caseStudyBodies[this.cs.slug];
-    this.sections = this.body.sections.map((s) => ({ heading: s.heading, blocks: s.blocks.map(flatten) }));
+    this.sections = this.body.sections.map((s) => ({
+      heading: s.heading,
+      blocks: s.blocks.map(flatten),
+    }));
   }
 }

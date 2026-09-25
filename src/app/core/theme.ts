@@ -12,7 +12,7 @@ export class Theme {
   private readonly root = inject(DOCUMENT).documentElement;
   private readonly systemDark = mediaQuery('(prefers-color-scheme: dark)');
   private readonly chosen = signal<ThemeName | null>(
-    (this.root.getAttribute('data-theme') as ThemeName | null),
+    this.root.getAttribute('data-theme') as ThemeName | null,
   );
 
   readonly current = computed<ThemeName>(

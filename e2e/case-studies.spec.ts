@@ -15,7 +15,10 @@ async function openDemo(page: Page, slug: string): Promise<void> {
 test('home rows link to every case study', async ({ page }) => {
   await page.goto('/');
   for (const s of studies) {
-    await expect(page.getByRole('link', { name: s.title })).toHaveAttribute('href', `/work/${s.slug}`);
+    await expect(page.getByRole('link', { name: s.title })).toHaveAttribute(
+      'href',
+      `/work/${s.slug}`,
+    );
   }
   await page.getByRole('link', { name: studies[0].title }).click();
   await expect(page).toHaveURL(/\/work\/event-driven$/);
@@ -32,7 +35,9 @@ test.describe('without JavaScript', () => {
       for (const h of ['Context', 'Problem', 'What I did', 'Result', 'Stack']) {
         await expect(page.getByRole('heading', { level: 2, name: h })).toBeVisible();
       }
-      await expect(page.getByText('Static preview. The interactive version needs JavaScript.').first()).toBeVisible();
+      await expect(
+        page.getByText('Static preview. The interactive version needs JavaScript.').first(),
+      ).toBeVisible();
     });
   }
 });
@@ -46,7 +51,9 @@ test.describe('event-driven simulator', () => {
     await sim.getByRole('slider', { name: /Consumers/ }).fill('6');
     await expect(sim.getByRole('img', { name: /6 consumers/ })).toBeVisible();
     const dead = sim.locator('dt', { hasText: 'Dead-lettered' }).locator('+ dd');
-    await expect.poll(async () => Number(await dead.textContent()), { timeout: 10_000 }).toBeGreaterThan(0);
+    await expect
+      .poll(async () => Number(await dead.textContent()), { timeout: 10_000 })
+      .toBeGreaterThan(0);
   });
 
   test('topic fans out and keeps publishing', async ({ page }) => {
@@ -130,16 +137,24 @@ test.describe('reduced motion', () => {
   test('simulators and the chart start paused', async ({ page }) => {
     await openDemo(page, 'event-driven');
     await expect(page.locator('app-event-sim').getByRole('button', { name: 'Play' })).toBeVisible();
-    await expect(page.locator('app-topic-fanout').getByRole('button', { name: 'Play' })).toBeVisible();
+    await expect(
+      page.locator('app-topic-fanout').getByRole('button', { name: 'Play' }),
+    ).toBeVisible();
     await openDemo(page, 'live-chart');
-    await expect(page.locator('nehang-live-chart').getByRole('button', { name: 'Resume' })).toBeVisible();
+    await expect(
+      page.locator('nehang-live-chart').getByRole('button', { name: 'Resume' }),
+    ).toBeVisible();
   });
 });
 
-test('client credentials flow shows the real request, token and response at each step', async ({ page }) => {
+test('client credentials flow shows the real request, token and response at each step', async ({
+  page,
+}) => {
   await openDemo(page, 'identity');
   // The second diagram loads when it scrolls into view.
-  await page.getByRole('heading', { name: 'Service to service: the client credentials flow' }).scrollIntoViewIfNeeded();
+  await page
+    .getByRole('heading', { name: 'Service to service: the client credentials flow' })
+    .scrollIntoViewIfNeeded();
   const flow = page.locator('app-sequence-flow').nth(1);
   await expect(flow.getByText('Step 1 of 5')).toBeVisible();
   await expect(flow.locator('pre')).toContainText('grant_type=client_credentials');
@@ -149,15 +164,21 @@ test('client credentials flow shows the real request, token and response at each
   await expect(flow.getByText('Check the signature')).toBeVisible();
   await expect(flow.locator('pre')).toContainText('"aud": "orders-api"');
   // The two diagrams on the page keep separate arrowheads.
-  const markerIds = await page.locator('app-sequence-flow marker').evaluateAll((ms) => ms.map((m) => m.id));
+  const markerIds = await page
+    .locator('app-sequence-flow marker')
+    .evaluateAll((ms) => ms.map((m) => m.id));
   expect(new Set(markerIds).size).toBe(markerIds.length);
 });
 
 test('about lists the résumé projects and links the ones with case studies', async ({ page }) => {
   await page.goto('/about');
-  const section = page.locator('section', { has: page.getByRole('heading', { level: 2, name: 'Projects' }) });
+  const section = page.locator('section', {
+    has: page.getByRole('heading', { level: 2, name: 'Projects' }),
+  });
   await expect(section.getByRole('heading', { level: 3 })).toHaveCount(9);
   await expect(section.getByText('Electronic document system')).toBeVisible();
-  await section.getByRole('link', { name: 'Read the case study about Financial charts dashboard' }).click();
+  await section
+    .getByRole('link', { name: 'Read the case study about Financial charts dashboard' })
+    .click();
   await expect(page).toHaveURL(/\/work\/live-chart$/);
 });

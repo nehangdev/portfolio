@@ -21,7 +21,11 @@ import { injectFrames } from '../sim-loop';
     } @else {
       <div class="sim-frame">
         <div class="flex flex-wrap items-center gap-3">
-          <div role="group" [attr.aria-label]="t.modeGroup" class="inline-flex rounded-[3px] border-[1.5px] border-ink">
+          <div
+            role="group"
+            [attr.aria-label]="t.modeGroup"
+            class="inline-flex rounded-[3px] border-[1.5px] border-ink"
+          >
             @for (m of modes; track m) {
               <button
                 type="button"
@@ -34,16 +38,27 @@ import { injectFrames } from '../sim-loop';
             }
           </div>
           <button type="button" class="btn min-h-10" (click)="paused.set(!paused())">
-            <ng-icon [name]="paused() ? 'tablerPlayerPlay' : 'tablerPlayerPause'" size="1.1rem" aria-hidden="true" />
+            <ng-icon
+              [name]="paused() ? 'tablerPlayerPlay' : 'tablerPlayerPause'"
+              size="1.1rem"
+              aria-hidden="true"
+            />
             {{ paused() ? t.play : t.pause }}
           </button>
           <p class="ml-auto">
-            <output class="inline-block min-w-[2.2ch] text-right text-xl font-bold">{{ rate() }}</output>
+            <output class="inline-block min-w-[2.2ch] text-right text-xl font-bold">{{
+              rate()
+            }}</output>
             <span class="text-sm text-ink-muted"> {{ t.rateUnit }}</span>
           </p>
         </div>
         <div class="sim-stage">
-          <canvas #canvas role="img" [attr.aria-label]="t.canvasLabel[mode()]" class="block size-full"></canvas>
+          <canvas
+            #canvas
+            role="img"
+            [attr.aria-label]="t.canvasLabel[mode()]"
+            class="block size-full"
+          ></canvas>
         </div>
       </div>
     }

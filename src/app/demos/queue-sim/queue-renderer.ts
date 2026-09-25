@@ -168,7 +168,8 @@ export class QueueRenderer {
       targets.set(msg.id, { msg, x, y: laneY - msgH / 2 });
     });
     model.workers.forEach((wk, i) => {
-      if (wk.msg) targets.set(wk.msg.id, { msg: wk.msg, x: workerX + 10, y: workerY(i) - msgH / 2 - 3 });
+      if (wk.msg)
+        targets.set(wk.msg.id, { msg: wk.msg, x: workerX + 10, y: workerY(i) - msgH / 2 - 3 });
     });
 
     // Tray cells: processed documents in the done tray, the latest dead letters below it.
@@ -202,7 +203,11 @@ export class QueueRenderer {
     for (const [id, target] of targets) {
       let s = this.sprites.get(id);
       if (s?.dead) continue;
-      if (!s) this.sprites.set(id, (s = { x: -msgW * 2, y: target.y, doneFor: null, slot: 0, dead: false }));
+      if (!s)
+        this.sprites.set(
+          id,
+          (s = { x: -msgW * 2, y: target.y, doneFor: null, slot: 0, dead: false }),
+        );
       s.x += (target.x - s.x) * k;
       s.y += (target.y - s.y) * k;
       const failed = target.msg.failedAt !== null && model.time - target.msg.failedAt < FAIL_FLASH;
@@ -248,7 +253,15 @@ export class QueueRenderer {
     }
   }
 
-  private pill(x: number, y: number, w: number, h: number, label: string, fill: string, text: string): void {
+  private pill(
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    label: string,
+    fill: string,
+    text: string,
+  ): void {
     const { ctx } = this;
     ctx.fillStyle = fill;
     ctx.beginPath();

@@ -24,7 +24,8 @@ export const caseStudyBodies: Record<CaseStudy['slug'], CaseStudyBody> = {
           'I moved the processing onto Azure Service Bus. Receiving a document now means publishing a message and returning. The work happens in consumers that read from the bus.',
           {
             lang: 'diff-csharp',
-            caption: 'The shape of the change, simplified and written for this page. Not client code.',
+            caption:
+              'The shape of the change, simplified and written for this page. Not client code.',
             code: ` [HttpPost("documents")]
  public async Task<IActionResult> Upload(DocumentUploaded document)
  {
@@ -165,9 +166,7 @@ await processor.StartProcessingAsync();`,
       },
       {
         heading: 'Result',
-        blocks: [
-          'The charting modules run inside the Blazor WebAssembly app, from one codebase.',
-        ],
+        blocks: ['The charting modules run inside the Blazor WebAssembly app, from one codebase.'],
       },
     ],
     demo: {
@@ -176,7 +175,7 @@ await processor.StartProcessingAsync();`,
         'The chart below is <nehang-live-chart>, a Web Component built for this page. The page loads it the way any other site would, with a script tag and an HTML element. It draws synthetic prices on a canvas by hand, with no chart library.',
     },
   },
-  'identity': {
+  identity: {
     sections: [
       {
         heading: 'Context',

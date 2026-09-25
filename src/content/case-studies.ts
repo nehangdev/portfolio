@@ -53,7 +53,15 @@ export const caseStudies: CaseStudy[] = [
       'A streaming financial chart built in Angular 14, packaged as Web Components and reused inside a Blazor WebAssembly app.',
     description:
       'Case study: packaging Angular charting modules as Web Components for a Blazor WebAssembly app, with a live, framework-agnostic chart element.',
-    stack: ['Angular', 'Angular Elements', 'RxJS', 'Web Components', 'Blazor WASM', '.NET microservices', 'Docker'],
+    stack: [
+      'Angular',
+      'Angular Elements',
+      'RxJS',
+      'Web Components',
+      'Blazor WASM',
+      '.NET microservices',
+      'Docker',
+    ],
   },
   {
     slug: 'identity',
