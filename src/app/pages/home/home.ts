@@ -67,7 +67,7 @@ import { caseStudies } from '../../../content/case-studies';
               </div>
               <ul [attr.aria-label]="home.work.stackLabel" class="flex flex-wrap content-start gap-x-3 gap-y-2">
                 @for (t of w.stack; track t) {
-                  <li class="tag">{{ t }}</li>
+                  <li class="stack-tag">{{ t }}</li>
                 }
               </ul>
             </li>

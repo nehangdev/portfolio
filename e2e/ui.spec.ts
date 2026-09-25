@@ -107,8 +107,9 @@ test.describe('page transitions', () => {
   // Record how long each view transition takes, from start to finished.
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
-      const w = window as unknown as { __vt: number[]; __vtStarted: boolean };
+      const w = window as unknown as { __vt: number[]; __vtEnd: number[]; __vtStarted: boolean };
       w.__vt = [];
+      w.__vtEnd = [];
       w.__vtStarted = false;
       const orig = document.startViewTransition?.bind(document);
       if (!orig) return;
@@ -116,7 +117,10 @@ test.describe('page transitions', () => {
         const start = performance.now();
         w.__vtStarted = true;
         const vt = orig(arg);
-        vt.finished.then(() => w.__vt.push(performance.now() - start));
+        vt.finished.then(() => {
+          w.__vt.push(performance.now() - start);
+          w.__vtEnd.push(performance.now());
+        });
         return vt;
       }) as typeof document.startViewTransition;
     });
@@ -136,9 +140,12 @@ test.describe('page transitions', () => {
     await page.goto('/');
     await page.getByRole('link', { name: 'Event-driven document processing' }).click();
     await page.waitForFunction(() => (window as unknown as { __vtStarted: boolean }).__vtStarted);
+    const pressedAt = await page.evaluate(() => performance.now());
     await page.keyboard.press('ArrowDown');
     await expect.poll(() => durations(page).then((d) => d.length)).toBe(1);
-    // The un-interrupted transition runs about 220ms; interrupted, it ends almost at once.
-    expect((await durations(page))[0]).toBeLessThan(150);
+    // Measured from the key press: the animation (about 220ms) must not run on after it.
+    // Rendering the new page can't be skipped, so this excludes time spent before the press.
+    const endedAt = await page.evaluate(() => (window as unknown as { __vtEnd: number[] }).__vtEnd[0]);
+    expect(endedAt - pressedAt).toBeLessThan(150);
   });
 });

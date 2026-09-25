@@ -141,7 +141,7 @@
   }
 
   /* Stack tags. Plain text with a lane-coloured underline, not pills. */
-  .tag {
+  .stack-tag {
     font-size: var(--text-sm);
     color: var(--ink-muted);
     border-bottom: 2px solid var(--rule);
@@ -397,5 +397,58 @@
       transparent
     );
     transform: translateX(-120%);
+  }
+}
+
+@layer components {
+  /* Prism tokens in code samples, mapped onto the syntax colour tokens. */
+  .code .token.comment,
+  .code .token.prolog,
+  .code .token.doctype {
+    color: var(--ink-muted);
+    font-style: italic;
+  }
+
+  .code .token.keyword,
+  .code .token.boolean,
+  .code .token.important {
+    color: var(--syn-keyword);
+  }
+
+  .code .token.string,
+  .code .token.char,
+  .code .token.attr-value,
+  .code .token.template-string {
+    color: var(--syn-string);
+  }
+
+  .code .token.function,
+  .code .token.method {
+    color: var(--syn-fn);
+  }
+
+  .code .token.class-name,
+  .code .token.builtin,
+  .code .token.namespace {
+    color: var(--syn-type);
+  }
+
+  .code .token.number,
+  .code .token.constant {
+    color: var(--syn-attr);
+  }
+
+  .code .token.tag {
+    color: var(--syn-tag);
+  }
+
+  .code .token.attr-name {
+    color: var(--syn-attr);
+    font-style: italic;
+  }
+
+  .code .token.punctuation,
+  .code .token.operator {
+    color: var(--ink-muted);
   }
 }

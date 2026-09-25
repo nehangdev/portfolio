@@ -77,7 +77,7 @@ function flatten(b: Block): FlatBlock {
       <section appLane [heading]="text.stackHeading">
         <ul [attr.aria-label]="text.stackLabel" class="flex flex-wrap gap-x-4 gap-y-2">
           @for (s of cs.stack; track s) {
-            <li class="tag">{{ s }}</li>
+            <li class="stack-tag">{{ s }}</li>
           }
         </ul>
       </section>

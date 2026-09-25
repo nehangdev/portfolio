@@ -14,6 +14,13 @@
   --signal: #d99a1e;
   --fault: #b8412f;
   --rule: #b9c3ca;
+  /* Syntax colours for code samples. Each clears 5:1 on --paper-raised. */
+  --syn-keyword: #7a3e9d;
+  --syn-string: #2f6f12;
+  --syn-fn: #1d5fa8;
+  --syn-type: #7a5200;
+  --syn-tag: #1f6f78;
+  --syn-attr: #9a4a00;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -27,6 +34,12 @@
     --signal: #e3a83a;
     --fault: #ee8a76;
     --rule: #26313c;
+    --syn-keyword: #c678dd;
+    --syn-string: #98c379;
+    --syn-fn: #61afef;
+    --syn-type: #e5c07b;
+    --syn-tag: #56b6c2;
+    --syn-attr: #e5a56b;
   }
 }
 
@@ -40,4 +53,10 @@
   --signal: #e3a83a;
   --fault: #ee8a76;
   --rule: #26313c;
+  --syn-keyword: #c678dd;
+  --syn-string: #98c379;
+  --syn-fn: #61afef;
+  --syn-type: #e5c07b;
+  --syn-tag: #56b6c2;
+  --syn-attr: #e5a56b;
 }
