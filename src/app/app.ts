@@ -1,5 +1,7 @@
 import { Component, DOCUMENT, afterNextRender, inject, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { filter, map } from 'rxjs';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
   tablerArrowUp,
@@ -14,6 +16,7 @@ import {
   tablerSun,
   tablerX,
 } from '@ng-icons/tabler-icons';
+import { SmoothScroll } from './core/smooth-scroll';
 import { Theme } from './core/theme';
 import { CommandPalette } from './ui/command-palette';
 import { CtaMotion } from './ui/cta-motion';
@@ -108,15 +111,19 @@ import { profile } from '../content/profile';
           </button>
           <button
             type="button"
-            (click)="theme.toggle()"
+            (click)="toggleTheme()"
             [attr.aria-label]="theme.current() === 'dark' ? nav.themeToLight : nav.themeToDark"
             class="icon-btn invisible in-[.js]:visible"
           >
-            <ng-icon
-              [name]="theme.current() === 'dark' ? 'tablerSun' : 'tablerMoon'"
-              size="1.35rem"
-              aria-hidden="true"
-            />
+            @if (theme.current() === 'dark') {
+              <span class="inline-flex" [animate.enter]="iconSwap()"
+                ><ng-icon name="tablerSun" size="1.35rem" aria-hidden="true"
+              /></span>
+            } @else {
+              <span class="inline-flex" [animate.enter]="iconSwap()"
+                ><ng-icon name="tablerMoon" size="1.35rem" aria-hidden="true"
+              /></span>
+            }
           </button>
           <!-- Native popover: opens and light-dismisses without any JavaScript. -->
           <button
@@ -146,8 +153,8 @@ import { profile } from '../content/profile';
         </button>
       </div>
       <ul class="mt-4 grid">
-        @for (link of nav.links; track link.label) {
-          <li>
+        @for (link of nav.links; track link.label; let i = $index) {
+          <li class="menu-item" [style.--i]="i">
             <a
               [routerLink]="link.path"
               [fragment]="link.fragment"
@@ -178,9 +185,9 @@ import { profile } from '../content/profile';
       It fades in once the page has scrolled (CSS scroll-driven animation, see base.css).
     -->
     <div class="back-to-top-rail wrap">
+      <!-- A plain link (not routerLink), so the router can't turn the glide into a jump. -->
       <a
-        [routerLink]="[]"
-        fragment="main"
+        [href]="currentPath() + '#main'"
         (click)="backToTop($event)"
         [attr.aria-label]="nav.backToTop"
         [title]="nav.backToTop"
@@ -251,9 +258,21 @@ export class App {
   protected readonly palette = palette;
   protected readonly paletteRequested = signal(false);
   protected readonly paletteOpen = signal(false);
+  /** Empty until the first click, so the icon doesn't spin on page load in dark mode. */
+  protected readonly iconSwap = signal('');
   protected readonly footer = footer;
   protected readonly profile = profile;
   private readonly doc = inject(DOCUMENT);
+  private readonly smoothScroll = inject(SmoothScroll);
+  private readonly router = inject(Router);
+  /** The current page's path, for the back-to-top link's no-JavaScript href. */
+  protected readonly currentPath = toSignal(
+    this.router.events.pipe(
+      filter((e) => e instanceof NavigationEnd),
+      map((e) => e.urlAfterRedirects.split(/[?#]/)[0]),
+    ),
+    { initialValue: this.router.url.split(/[?#]/)[0] },
+  );
 
   constructor() {
     afterNextRender(() =>
@@ -263,6 +282,11 @@ export class App {
         'font: 13px "Fira Code", monospace',
       ),
     );
+  }
+
+  protected toggleTheme(): void {
+    this.iconSwap.set('icon-swap');
+    this.theme.toggle();
   }
 
   protected openPalette(): void {
@@ -280,11 +304,10 @@ export class App {
   }
 
   /** Scroll to the top (smoothly unless reduced motion) and hand focus back to the content. */
-  protected backToTop(e: Event): void {
+  /** Glide to the top, then hand keyboard focus back to the content. */
+  protected async backToTop(e: Event): Promise<void> {
     e.preventDefault();
-    const win = this.doc.defaultView;
-    const reduced = win?.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    win?.scrollTo({ top: 0, behavior: reduced ? 'instant' : 'smooth' });
+    await this.smoothScroll.toY(0);
     this.doc.getElementById('main')?.focus({ preventScroll: true });
   }
 

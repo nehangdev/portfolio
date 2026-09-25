@@ -263,16 +263,18 @@
     view-transition-name: site-header;
   }
 
+  /* The underline is always there but transparent, so it can fade and slide in on hover. */
   .nav-link {
     color: var(--ink);
-    text-decoration: none;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.55em;
   }
 
   .nav-link:hover,
   .nav-active {
-    text-decoration: underline;
     text-decoration-color: var(--queue);
-    text-decoration-thickness: 2px;
     text-underline-offset: 0.35em;
   }
 
@@ -393,7 +395,9 @@
     isolation: isolate;
     overflow: hidden;
     background: transparent;
-    transition: color 0.22s;
+    transition:
+      color var(--dur-base) var(--ease-standard),
+      scale var(--dur-fast) var(--ease-standard);
   }
 
   .btn-cta::before {
@@ -404,7 +408,7 @@
     background: var(--ink);
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform var(--dur-base) var(--ease-standard);
   }
 
   .btn-cta:hover,
@@ -679,13 +683,19 @@
     background: var(--paper-raised);
     color: var(--ink);
     box-shadow: 0 24px 64px rgb(0 0 0 / 0.35);
+    /* Closed state; [open] below. Transitions run both ways, so closing fades out too. */
+    opacity: 0;
+    translate: 0 -0.5rem;
+    transition:
+      opacity var(--dur-base) var(--ease-standard),
+      translate var(--dur-base) var(--ease-standard),
+      overlay var(--dur-base) allow-discrete,
+      display var(--dur-base) allow-discrete;
+  }
+
+  .palette[open] {
     opacity: 1;
     translate: 0 0;
-    transition:
-      opacity 0.15s ease-out,
-      translate 0.15s ease-out,
-      overlay 0.15s allow-discrete,
-      display 0.15s allow-discrete;
   }
 
   @starting-style {
@@ -696,7 +706,21 @@
   }
 
   .palette::backdrop {
+    background: rgb(0 0 0 / 0);
+    transition:
+      background-color var(--dur-base) var(--ease-standard),
+      overlay var(--dur-base) allow-discrete,
+      display var(--dur-base) allow-discrete;
+  }
+
+  .palette[open]::backdrop {
     background: rgb(0 0 0 / 0.5);
+  }
+
+  @starting-style {
+    .palette[open]::backdrop {
+      background: rgb(0 0 0 / 0);
+    }
   }
 
   .palette-panel {
@@ -739,10 +763,27 @@
   }
 
   .palette-list {
+    position: relative;
     flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;
     padding: 0.4rem;
+  }
+
+  /* The highlight that glides between options (positioned by CommandPalette). */
+  .palette-indicator {
+    position: absolute;
+    top: 0.4rem;
+    left: 0.4rem;
+    right: 0.4rem;
+    border-left: 2px solid var(--queue);
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--queue) 16%, transparent);
+    pointer-events: none;
+    transition:
+      translate var(--dur-fast) var(--ease-standard),
+      height var(--dur-fast) var(--ease-standard),
+      opacity var(--dur-fast) var(--ease-standard);
   }
 
   .palette-option {
@@ -753,11 +794,6 @@
     border-left: 2px solid transparent;
     border-radius: 4px;
     cursor: pointer;
-  }
-
-  .palette-option[aria-selected='true'] {
-    background: color-mix(in srgb, var(--queue) 16%, transparent);
-    border-left-color: var(--queue);
   }
 
   .palette-empty,
@@ -845,5 +881,152 @@
   /* Scroll-linked, so it only moves as the reader scrolls. */
   .back-to-top {
     animation-duration: auto !important;
+  }
+}
+
+@layer base {
+  /* Hover and state changes ease instead of snapping (timing tokens in tokens.css). */
+  a,
+  button,
+  [role='option'] {
+    transition-property:
+      color, background-color, border-color, text-decoration-color, text-decoration-thickness,
+      text-underline-offset, opacity, box-shadow, scale;
+    transition-duration: var(--dur-fast);
+    transition-timing-function: var(--ease-standard);
+  }
+}
+
+@layer components {
+  /* Press feedback: every button gives a little under the finger or mouse. */
+  .btn:active,
+  .icon-btn:active,
+  .back-to-top:active {
+    scale: 0.97;
+  }
+}
+
+@layer components {
+  /* Theme switch: a slightly longer cross-fade than page changes. */
+  .theme-switching::view-transition-old(root),
+  .theme-switching::view-transition-new(root) {
+    animation-duration: 250ms;
+  }
+
+  /* Sun/moon swap after a click (Angular animate.enter). */
+  .icon-swap {
+    animation: icon-swap 320ms var(--ease-out-expo);
+  }
+
+  @keyframes icon-swap {
+    from {
+      opacity: 0;
+      rotate: -90deg;
+      scale: 0.6;
+    }
+  }
+
+  /* The copy button's check mark. */
+  .icon-pop {
+    animation: icon-pop 300ms var(--ease-out-expo);
+  }
+
+  @keyframes icon-pop {
+    0% {
+      scale: 0.4;
+      opacity: 0;
+    }
+    60% {
+      scale: 1.15;
+      opacity: 1;
+    }
+  }
+}
+
+@layer components {
+  /* Phone menu: links cascade in, 40ms apart, as the sheet opens. */
+  .mobile-nav:popover-open .menu-item {
+    animation: menu-item-in var(--dur-slow) var(--ease-out-expo) both;
+    animation-delay: calc(60ms + var(--i, 0) * 40ms);
+  }
+
+  @keyframes menu-item-in {
+    from {
+      opacity: 0;
+      translate: 0 -0.5rem;
+    }
+  }
+}
+
+@layer components {
+  /* Scroll reveal (ui/reveal.ts): blocks below the fold fade in and lift 16px once reached. */
+  .reveal {
+    transition:
+      opacity var(--dur-slow) var(--ease-out-expo) var(--reveal-delay, 0ms),
+      translate var(--dur-slow) var(--ease-out-expo) var(--reveal-delay, 0ms);
+  }
+
+  .reveal-pending {
+    opacity: 0;
+    translate: 0 16px;
+  }
+
+  /* Selected work: the whole row is the link, with a hover tint and an arrow that slides in. */
+  .work-row {
+    position: relative;
+    border-radius: 6px;
+    transition:
+      background-color var(--dur-base) var(--ease-standard),
+      opacity var(--dur-slow) var(--ease-out-expo) var(--reveal-delay, 0ms),
+      translate var(--dur-slow) var(--ease-out-expo) var(--reveal-delay, 0ms);
+  }
+
+  .work-link {
+    text-decoration: none;
+  }
+
+  .work-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  .work-arrow {
+    display: inline-flex;
+    margin-left: 0.4em;
+    vertical-align: -0.1em;
+    opacity: 0;
+    translate: -6px 0;
+    transition:
+      opacity var(--dur-base) var(--ease-standard),
+      translate var(--dur-base) var(--ease-out-expo);
+  }
+
+  .work-row:hover,
+  .work-row:focus-within {
+    background: color-mix(in srgb, var(--paper-raised) 70%, transparent);
+  }
+
+  .work-row:hover .work-link,
+  .work-link:focus-visible {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+
+  .work-row:hover .work-arrow,
+  .work-row:focus-within .work-arrow {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  /* Keyboard focus rings the whole row, since the whole row is the target. */
+  .work-link:focus-visible {
+    outline: none;
+  }
+
+  .work-row:has(.work-link:focus-visible) {
+    outline: 2px solid var(--queue);
+    outline-offset: 4px;
   }
 }

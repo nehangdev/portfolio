@@ -5,6 +5,7 @@ import { tablerArrowRight } from '@ng-icons/tabler-icons';
 import { Lane } from '../../ui/lane';
 import { CtaMotion } from '../../ui/cta-motion';
 import { MarkupPanel } from '../../ui/markup-panel';
+import { Reveal } from '../../ui/reveal';
 import { Contact } from './contact';
 import { QueueSim } from '../../demos/queue-sim/queue-sim';
 import { QueueDiagram } from '../../demos/queue-sim/queue-diagram';
@@ -21,7 +22,17 @@ function shortHash(text: string): string {
 }
 
 @Component({
-  imports: [RouterLink, NgIcon, Lane, CtaMotion, MarkupPanel, Contact, QueueSim, QueueDiagram],
+  imports: [
+    RouterLink,
+    NgIcon,
+    Lane,
+    CtaMotion,
+    MarkupPanel,
+    Contact,
+    QueueSim,
+    QueueDiagram,
+    Reveal,
+  ],
   viewProviders: [provideIcons({ tablerArrowRight })],
   template: `
     <div class="wrap">
@@ -64,14 +75,21 @@ function shortHash(text: string): string {
       <section appLane id="work" [heading]="home.work.heading">
         <ul class="divide-y divide-rule">
           @for (w of work; track w.slug) {
-            <li class="grid gap-3 py-6 first:pt-0 md:grid-cols-[minmax(0,1fr)_13rem] md:gap-8">
+            <!-- The whole row is clickable: the title's link stretches over it (.work-link::after). -->
+            <li
+              appReveal
+              class="work-row grid gap-3 py-6 first:pt-0 md:grid-cols-[minmax(0,1fr)_13rem] md:gap-8"
+            >
               <div>
                 <h3 class="text-lg">
                   <a
+                    class="work-link"
                     [routerLink]="'/work/' + w.slug"
                     [style.view-transition-name]="'cs-' + w.slug"
-                    >{{ w.title }}</a
-                  >
+                    >{{ w.title
+                    }}<span class="work-arrow" aria-hidden="true"
+                      ><ng-icon name="tablerArrowRight" size="1.1rem" /></span
+                  ></a>
                 </h3>
                 <p class="measure mt-1">{{ w.outcome }}</p>
               </div>
@@ -93,7 +111,7 @@ function shortHash(text: string): string {
         <!-- Career history styled as \`git log --graph\`: newest first, one commit per role. -->
         <ol class="gitlog">
           @for (e of gitLog; track e.start; let first = $first) {
-            <li class="gitlog-item" [class.gitlog-gap]="!e.org">
+            <li appReveal class="gitlog-item" [class.gitlog-gap]="!e.org">
               <span class="gitlog-node" aria-hidden="true">{{ e.org ? '*' : '┊' }}</span>
               <div class="min-w-0">
                 @if (e.org) {

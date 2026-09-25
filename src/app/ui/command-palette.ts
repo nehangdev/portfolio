@@ -2,6 +2,7 @@ import {
   Component,
   DOCUMENT,
   ElementRef,
+  afterRenderEffect,
   computed,
   effect,
   inject,
@@ -60,21 +61,27 @@ interface Command {
           />
           <kbd class="palette-kbd">{{ t.close }}</kbd>
         </div>
-        <ul id="palette-list" role="listbox" [attr.aria-label]="t.listLabel" class="palette-list">
-          @for (c of results(); track c.id; let i = $index) {
-            <li
-              role="option"
-              [id]="'cmd-' + c.id"
-              [attr.aria-selected]="i === activeIndex()"
-              class="palette-option"
-              (click)="run(c)"
-              (pointermove)="activeIndex.set(i)"
-            >
-              <span>{{ c.label }}</span>
-              <span class="flex-none whitespace-nowrap text-sm text-ink-muted">{{ c.group }}</span>
-            </li>
-          }
-        </ul>
+        <!-- One highlight bar glides to the active option instead of each option lighting up. -->
+        <div #scroller class="palette-list">
+          <div #indicator class="palette-indicator" aria-hidden="true"></div>
+          <ul id="palette-list" role="listbox" [attr.aria-label]="t.listLabel" class="relative">
+            @for (c of results(); track c.id; let i = $index) {
+              <li
+                role="option"
+                [id]="'cmd-' + c.id"
+                [attr.aria-selected]="i === activeIndex()"
+                class="palette-option"
+                (click)="run(c)"
+                (pointermove)="activeIndex.set(i)"
+              >
+                <span>{{ c.label }}</span>
+                <span class="flex-none whitespace-nowrap text-sm text-ink-muted">{{
+                  c.group
+                }}</span>
+              </li>
+            }
+          </ul>
+        </div>
         @if (!results().length) {
           <p class="palette-empty">{{ t.empty }}</p>
         }
@@ -96,6 +103,8 @@ export class CommandPalette {
   private readonly doc = inject(DOCUMENT);
   private readonly dialog = viewChild.required<ElementRef<HTMLDialogElement>>('dialog');
   private readonly input = viewChild.required<ElementRef<HTMLInputElement>>('input');
+  private readonly scroller = viewChild.required<ElementRef<HTMLElement>>('scroller');
+  private readonly indicator = viewChild.required<ElementRef<HTMLElement>>('indicator');
 
   private readonly commands = computed<Command[]>(() => {
     const c = this.t.commands;
@@ -176,6 +185,20 @@ export class CommandPalette {
   });
 
   constructor() {
+    // Move the highlight bar to the active option (CSS transitions do the glide).
+    afterRenderEffect(() => {
+      const id = this.activeId();
+      const bar = this.indicator().nativeElement;
+      const option = id ? this.scroller().nativeElement.querySelector<HTMLElement>(`#${id}`) : null;
+      if (!option) {
+        bar.style.opacity = '0';
+        return;
+      }
+      bar.style.opacity = '1';
+      bar.style.height = `${option.offsetHeight}px`;
+      bar.style.translate = `0 ${option.offsetTop}px`;
+    });
+
     effect(() => {
       const d = this.dialog().nativeElement;
       if (this.open() && !d.open) {

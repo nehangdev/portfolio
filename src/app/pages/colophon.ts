@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { Lane } from '../ui/lane';
+import { CountUp } from '../ui/count-up';
 import { colophon } from '../../content/pages';
 import { profile } from '../../content/profile';
 import { buildReport } from '../../content/build-report';
 
 @Component({
-  imports: [Lane],
+  imports: [Lane, CountUp],
   template: `
     <div class="wrap">
       <header class="py-10 sm:py-14">
@@ -45,7 +46,9 @@ import { buildReport } from '../../content/build-report';
               @for (row of log.sizes; track row.key) {
                 <dt class="text-ink-muted">{{ row.label }}</dt>
                 <dd class="mb-1 sm:mb-0 sm:text-right">
-                  <span class="syn-type">{{ report.sizes[row.key] }} KB</span>
+                  <span class="syn-type"
+                    ><span appCountUp>{{ report.sizes[row.key] }}</span> KB</span
+                  >
                   @if (row.key === 'homeAllJs') {
                     <span class="text-ink-muted"> / {{ log.budget(report.sizes.budget) }}</span>
                   }
@@ -88,10 +91,18 @@ import { buildReport } from '../../content/build-report';
                   @for (row of report.lighthouse; track row.path) {
                     <tr>
                       <th scope="row" class="py-1 pr-4 font-normal">{{ row.path }}</th>
-                      <td class="py-1 pr-4 syn-type">{{ row.performance }}</td>
-                      <td class="py-1 pr-4 syn-type">{{ row.accessibility }}</td>
-                      <td class="py-1 pr-4 syn-type">{{ row.bestPractices }}</td>
-                      <td class="py-1 pr-4 syn-type">{{ row.seo }}</td>
+                      <td class="py-1 pr-4 syn-type">
+                        <span appCountUp>{{ row.performance }}</span>
+                      </td>
+                      <td class="py-1 pr-4 syn-type">
+                        <span appCountUp>{{ row.accessibility }}</span>
+                      </td>
+                      <td class="py-1 pr-4 syn-type">
+                        <span appCountUp>{{ row.bestPractices }}</span>
+                      </td>
+                      <td class="py-1 pr-4 syn-type">
+                        <span appCountUp>{{ row.seo }}</span>
+                      </td>
                     </tr>
                   }
                 </tbody>

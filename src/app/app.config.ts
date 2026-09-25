@@ -1,10 +1,4 @@
-import {
-  ApplicationConfig,
-  inject,
-  provideAppInitializer,
-  provideBrowserGlobalErrorListeners,
-} from '@angular/core';
-import { ViewportScroller } from '@angular/common';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import {
   TitleStrategy,
   provideRouter,
@@ -14,6 +8,7 @@ import {
 import { provideClientHydration } from '@angular/platform-browser';
 import { routes } from './app.routes';
 import { SeoTitleStrategy } from './core/seo';
+import { provideScrolling } from './core/scrolling';
 import { interruptibleViewTransition } from './core/view-transitions';
 
 export const appConfig: ApplicationConfig = {
@@ -21,7 +16,9 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(
       routes,
-      withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' }),
+      // Keeps the router's scroll events, but its own scrolling can only jump, so
+      // provideScrolling() handles them instead (gliding to anchors on the same page).
+      withInMemoryScrolling({ anchorScrolling: 'disabled', scrollPositionRestoration: 'disabled' }),
       withViewTransitions({
         skipInitialTransition: true,
         onViewTransitionCreated: interruptibleViewTransition,
@@ -29,7 +26,6 @@ export const appConfig: ApplicationConfig = {
     ),
     provideClientHydration(),
     { provide: TitleStrategy, useClass: SeoTitleStrategy },
-    // The router scrolls to #anchors itself and ignores CSS scroll-padding; clear the sticky header.
-    provideAppInitializer(() => inject(ViewportScroller).setOffset([0, 80])),
+    provideScrolling(),
   ],
 };

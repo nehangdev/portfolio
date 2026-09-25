@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Lane } from '../ui/lane';
+import { Reveal } from '../ui/reveal';
 import { about } from '../../content/pages';
 import { education } from '../../content/experience';
 import { projects, projectsText } from '../../content/projects';
 
 @Component({
-  imports: [Lane, RouterLink],
+  imports: [Lane, RouterLink, Reveal],
   template: `
     <div class="wrap">
       <h1 class="py-10 text-3xl sm:py-14 sm:text-[3.5rem]">{{ about.heading }}</h1>
@@ -23,7 +24,7 @@ import { projects, projectsText } from '../../content/projects';
         <p class="measure">{{ projectsText.intro }}</p>
         <ul class="mt-4 divide-y divide-rule">
           @for (p of projects; track p.name) {
-            <li class="py-5">
+            <li appReveal class="py-5">
               <h3 class="text-lg">{{ p.name }}</h3>
               <p class="measure mt-1">{{ p.summary }}</p>
               <p class="mt-2 text-sm text-ink-muted">

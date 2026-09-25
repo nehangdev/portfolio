@@ -35,11 +35,15 @@ import { profile } from '../../../content/profile';
             [attr.aria-label]="c.copy"
             [title]="c.copy"
           >
-            <ng-icon
-              [name]="copied() ? 'tablerCheck' : 'tablerCopy'"
-              size="1.2rem"
-              aria-hidden="true"
-            />
+            @if (copied()) {
+              <span class="inline-flex" animate.enter="icon-pop"
+                ><ng-icon name="tablerCheck" size="1.2rem" aria-hidden="true"
+              /></span>
+            } @else {
+              <span class="inline-flex"
+                ><ng-icon name="tablerCopy" size="1.2rem" aria-hidden="true"
+              /></span>
+            }
           </button>
           <span role="status" class="col-start-2 col-end-4 text-sm text-ink-muted">{{
             status()

@@ -5,6 +5,13 @@
  * Canvas code reads these with getComputedStyle, so keep them as plain hex (no light-dark()).
  */
 :root {
+  /* Motion timing, shared by CSS transitions and Motion (see ui/motion-tokens.ts). */
+  --dur-fast: 150ms; /* hovers, colour changes */
+  --dur-base: 220ms; /* state changes: open, close, press */
+  --dur-slow: 600ms; /* scroll reveals */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1); /* fast start, long gentle settle */
+
   color-scheme: light;
   --paper: #e7ecef;
   --paper-raised: #f3f6f8;

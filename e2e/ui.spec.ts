@@ -346,3 +346,148 @@ test.describe('back to top', () => {
     expect(b.y + b.height).toBeLessThanOrEqual(footer.y + 1);
   });
 });
+
+test.describe('motion polish', () => {
+  /**
+   * How long the scroll takes to travel, in ms: from the first frame that moved to the first
+   * frame at its final position. A jump is one frame; a glide takes hundreds of ms. Measured in
+   * time, not frame counts, so a busy machine dropping frames doesn't make it flaky.
+   */
+  async function travelTime(
+    page: import('@playwright/test').Page,
+    action: () => Promise<void>,
+    ms = 2500,
+  ) {
+    await page.evaluate((ms) => {
+      const w = window as unknown as { __trace: [number, number][] };
+      w.__trace = [];
+      const t0 = performance.now();
+      const tick = () => {
+        const t = performance.now() - t0;
+        w.__trace.push([t, scrollY]);
+        if (t < ms) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }, ms);
+    await action();
+    await page.waitForTimeout(ms + 100);
+    const trace = await page.evaluate(
+      () => (window as unknown as { __trace: [number, number][] }).__trace,
+    );
+    const [, startY] = trace[0];
+    const endY = trace.at(-1)![1];
+    const moved = trace.find(([, y]) => y !== startY)?.[0] ?? 0;
+    const arrived = trace.find(([, y]) => y === endY)?.[0] ?? 0;
+    return { endY, duration: arrived - moved };
+  }
+
+  test('back to top glides instead of jumping', async ({ page }) => {
+    await page.goto('/about');
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    const { endY, duration } = await travelTime(page, () =>
+      page.getByRole('link', { name: 'Back to top' }).click(),
+    );
+    expect(endY).toBe(0);
+    expect(duration).toBeGreaterThan(400);
+  });
+
+  test('same-page #links glide to their section, below the sticky header', async ({
+    page,
+    isMobile,
+  }) => {
+    test.skip(isMobile, 'the Work link is in the phone menu; same code path');
+    await page.goto('/');
+    const { duration } = await travelTime(page, () =>
+      page.locator('header').getByRole('link', { name: 'Work', exact: true }).click(),
+    );
+    expect(duration).toBeGreaterThan(300);
+    const top = await page.locator('#work').evaluate((el) => el.getBoundingClientRect().top);
+    expect(Math.round(top)).toBe(80);
+  });
+
+  test('normal navigation still starts at the top, instantly', async ({ page }) => {
+    await page.goto('/');
+    await page.evaluate(() => window.scrollTo(0, 1500));
+    await page.goto('/about');
+    await page.locator('footer').getByRole('link', { name: 'GitHub profile' }).waitFor();
+    expect(await page.evaluate(() => scrollY)).toBe(0);
+  });
+
+  test('hovers ease with the shared timing token', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'desktop nav');
+    await page.goto('/');
+    const link = page.locator('header nav').getByRole('link', { name: 'About' });
+    const duration = await link.evaluate((el) => getComputedStyle(el).transitionDuration);
+    expect(duration.split(', ')[0]).toBe('0.15s');
+  });
+
+  test('the palette highlight glides to the active option', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'keyboard');
+    await page.goto('/');
+    await page.locator('body').press('Control+k');
+    const dialog = page.getByRole('dialog', { name: 'Command palette' });
+    await dialog.getByRole('combobox').press('ArrowDown');
+    await expect
+      .poll(async () => {
+        const bar = await dialog.locator('.palette-indicator').evaluate((el) => el.style.translate);
+        const option = await dialog
+          .getByRole('option')
+          .nth(1)
+          .evaluate((el) => el.offsetTop);
+        return bar === `0px ${option}px`;
+      })
+      .toBe(true);
+  });
+
+  test('the whole selected-work row opens its case study', async ({ page }) => {
+    await page.goto('/');
+    // Click the outcome text by position, as a person would: the title's link covers the row.
+    const outcome = page.getByText('Replaced synchronous flows with Azure Service Bus', {
+      exact: false,
+    });
+    await outcome.scrollIntoViewIfNeeded();
+    const box = (await outcome.boundingBox())!;
+    await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+    await expect(page).toHaveURL(/\/work\/event-driven$/);
+  });
+
+  test('blocks below the fold reveal when reached, and a jump never leaves them hidden', async ({
+    page,
+  }) => {
+    await page.goto('/about');
+    const pending = page.locator('.reveal-pending');
+    await expect.poll(() => pending.count()).toBeGreaterThan(0);
+    await page.keyboard.press('End');
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await expect(pending).toHaveCount(0);
+  });
+
+  test('build-log numbers count up to their real values', async ({ page }) => {
+    await page.goto('/colophon');
+    const first = page.locator('[appcountup]').first();
+    const final = (await first.textContent())!.trim();
+    await first.scrollIntoViewIfNeeded();
+    await expect(first).toHaveText(final, { timeout: 3000 });
+  });
+
+  test.describe('with reduced motion', () => {
+    test.use({ reducedMotion: 'reduce' });
+
+    test('nothing is hidden for a reveal and back to top jumps', async ({ page }) => {
+      await page.goto('/about');
+      await expect(page.locator('.reveal-pending')).toHaveCount(0);
+      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+      await page.getByRole('link', { name: 'Back to top' }).click();
+      await expect.poll(() => page.evaluate(() => scrollY), { timeout: 500 }).toBe(0);
+    });
+  });
+});
+
+test.describe('without JavaScript', () => {
+  test.use({ javaScriptEnabled: false });
+
+  test('no content waits for a reveal', async ({ page }) => {
+    await page.goto('/about');
+    await expect(page.locator('.reveal-pending')).toHaveCount(0);
+  });
+});
