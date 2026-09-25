@@ -53,7 +53,7 @@ wrap (max 76rem, 16px gutter on phones)
 
 ## Motion
 
-- The hero simulation and user-triggered demo interactions animate. There are no scroll-triggered entrance effects.
+- The hero simulation and user-triggered demo interactions animate. Blocks below the fold fade in and lift 16px when first reached (staggered 70ms, never under reduced motion or without JavaScript). Back to top and same-page anchors glide; everything else stays instant.
 - **Calls to action (Phase 4.5):** the two hero buttons use Motion, loaded after the page is interactive.
   - Once after load, the primary button plays a single attention cue: a pulse and a light sheen, under 2 seconds. It never repeats, so it stays within WCAG 2.2.2, which requires a pause control for anything that moves on its own for more than 5 seconds.
   - Both buttons have a magnetic pull toward the mouse, a spring on press, and an icon nudge on hover.

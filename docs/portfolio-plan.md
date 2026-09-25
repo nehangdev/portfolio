@@ -128,7 +128,7 @@ No backend, database, API keys, or runtime LLM calls. The backend skill is shown
 
 Unchanged. The hero queue simulation (synchronous vs event-driven) is the one memorable thing. It is also a backend story, which suits the full-stack positioning. Tokens and the reasoning behind them are in `docs/design.md`.
 
-Motion principle, unchanged: animation exists to explain a system or answer a user action. No scroll-triggered entrance effects.
+Motion principle, unchanged: animation exists to explain a system or answer a user action. No scroll-triggered entrance effects (later relaxed in Phase 5.6: a restrained reveal below the fold).
 
 ---
 
@@ -260,6 +260,13 @@ public/   e2e/   docs/{design.md,portfolio-plan.md}   .github/workflows/ci.yml  
 - **"Read the case studies":** outlined, with a left-to-right hover fill (after achiraa.com's hero button), a Motion ripple, and a border pulse. The pulse is three beats (4.2s) each time the button scrolls into view, kept under 5 seconds so it needs no pause control (WCAG 2.2.2), and off under reduced motion. It replaces the magnetic pull and sheen.
 - **The email's copy button** stays on the same line on phones (a grid row; the address steps down a size below sm).
 - **The command palette** lost its second, outer scrollbar: only the results list scrolls.
+
+**Phase 5.6: Motion polish** ✅ done (after reviewing achiraa.com; approved as "all of A, B and C")
+- **Scrolling:** back to top and same-page anchors glide (Motion; any wheel, touch or key cancels it; instant under reduced motion). Normal navigation still starts at the top.
+- **Feedback:** shared hover transitions on links and buttons, a press scale, a theme cross-fade with icon rotate, a copy check-mark pop, a palette fade-out with a gliding highlight, and a staggered phone menu.
+- **Scroll reveals:** this deliberately overrides the earlier "no scroll-triggered entrance" rule, by the owner's choice. Only blocks below the fold fade and lift 16px. Nothing is hidden without JavaScript or under reduced motion, and a block you jump past is revealed anyway.
+- **Selected work:** the whole row is clickable (a stretched link), with a hover arrow.
+- **Colophon numbers** count up. The final values stay in the HTML.
 
 **Phase 6: Deploy + domain**
 - Deploy to Vercel Hobby as a static site (framework preset: Angular; output `dist/portfolio/browser`). Verify the `*.vercel.app` URL.
