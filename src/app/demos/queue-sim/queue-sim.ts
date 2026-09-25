@@ -1,24 +1,13 @@
-import { Component, DOCUMENT, ElementRef, effect, inject, signal, viewChild } from '@angular/core';
-import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
-import {
-  EMPTY,
-  animationFrames,
-  combineLatest,
-  distinctUntilChanged,
-  fromEvent,
-  map,
-  pairwise,
-  sampleTime,
-  share,
-  startWith,
-  switchMap,
-} from 'rxjs';
+import { Component, ElementRef, computed, effect, inject, signal, viewChild } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { map, sampleTime } from 'rxjs';
 import { Motion } from '../../core/media';
 import { Theme } from '../../core/theme';
 import { hero } from '../../../content/pages';
 import { Mode, QueueModel } from './queue-model';
 import { QueueRenderer } from './queue-renderer';
 import { QueueDiagram } from './queue-diagram';
+import { injectFrames } from '../sim-loop';
 
 @Component({
   selector: 'app-queue-sim',
@@ -63,39 +52,11 @@ export class QueueSim {
   protected readonly mode = signal<Mode>('sync');
   protected readonly paused = signal(false);
 
-  private readonly doc = inject(DOCUMENT);
   private readonly theme = inject(Theme);
   private readonly canvas = viewChild<ElementRef<HTMLCanvasElement>>('canvas');
   private model = new QueueModel('sync');
   private renderer: QueueRenderer | null = null;
-
-  /** Runs only while not paused, motion is allowed, and the tab is visible. */
-  private readonly running$ = combineLatest([
-    toObservable(this.paused),
-    toObservable(this.motion.reduced),
-    fromEvent(this.doc, 'visibilitychange').pipe(
-      startWith(null),
-      map(() => this.doc.visibilityState === 'visible'),
-    ),
-  ]).pipe(
-    map(([paused, reduced, visible]) => !paused && !reduced && visible),
-    distinctUntilChanged(),
-  );
-
-  /** Seconds since the previous frame, capped so a stalled frame can't jump the simulation. */
-  private readonly frames$ = this.running$.pipe(
-    switchMap((running) =>
-      running
-        ? animationFrames().pipe(
-            map((f) => f.elapsed),
-            startWith(0),
-            pairwise(),
-            map(([a, b]) => Math.min((b - a) / 1000, 0.1)),
-          )
-        : EMPTY,
-    ),
-    share(),
-  );
+  private readonly frames$ = injectFrames(computed(() => !this.paused() && !this.motion.reduced()));
 
   protected readonly rate = toSignal(
     this.frames$.pipe(

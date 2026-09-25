@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Live chart sandbox | Nehang Shah</title>
+    <meta name="description" content="The nehang-live-chart Web Component on a plain HTML page, with no framework around it." />
+    <link rel="canonical" href="https://nehang.is-a.dev/work/live-chart/sandbox.html" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!-- The whole integration: one module script, then the tag below. -->
+    <script type="module" src="/elements/live-chart.js"></script>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #ffffff;
+        --fg: #1b1b1b;
+        --muted: #595959;
+        --accent: #6a3fb5;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #1c1c1c;
+          --fg: #f0f0f0;
+          --muted: #b3b3b3;
+          --accent: #b99cf0;
+        }
+      }
+      body {
+        margin: 0 auto;
+        max-width: 60rem;
+        padding: 1.5rem 1rem 3rem;
+        font: 16px/1.5 Georgia, 'Times New Roman', serif;
+        background: var(--bg);
+        color: var(--fg);
+      }
+      a {
+        color: var(--accent);
+      }
+      /* Theming from the host page, in a style that has nothing to do with the main site. */
+      nehang-live-chart {
+        height: 22rem;
+        margin-top: 1.5rem;
+        --nlc-bg: var(--bg);
+        --nlc-fg: var(--fg);
+        --nlc-muted: var(--muted);
+        --nlc-line: var(--accent);
+        --nlc-grid: color-mix(in srgb, var(--fg) 20%, transparent);
+        --nlc-font: ui-sans-serif, system-ui, sans-serif;
+      }
+      nehang-live-chart:not(:defined) {
+        display: block;
+      }
+      nehang-live-chart::part(toolbar) {
+        background: color-mix(in srgb, var(--accent) 8%, transparent);
+      }
+      pre {
+        overflow-x: auto;
+        padding: 1rem;
+        border: 1px solid color-mix(in srgb, var(--fg) 20%, transparent);
+      }
+      #log {
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Live chart sandbox</h1>
+      <p>
+        This page has no Angular app and no build step. It loads one script and uses
+        <code>&lt;nehang-live-chart&gt;</code> like any other HTML element. The colours, font and toolbar tint
+        come from this page's own CSS.
+      </p>
+
+      <nehang-live-chart window-seconds="30" label="Sandbox series" seed="3"></nehang-live-chart>
+      <noscript><p>The chart needs JavaScript.</p></noscript>
+
+      <p id="log" aria-live="polite">Pause or resume the chart to see its <code>pausechange</code> event here.</p>
+
+      <h2>The markup</h2>
+      <pre tabindex="0" aria-label="Markup"><code>&lt;script type="module" src="/elements/live-chart.js"&gt;&lt;/script&gt;
+
+&lt;nehang-live-chart window-seconds="30" label="Sandbox series" seed="3"&gt;&lt;/nehang-live-chart&gt;
+
+&lt;script&gt;
+  document.querySelector('nehang-live-chart')
+    .addEventListener('pausechange', (e) =&gt; console.log('paused:', e.detail));
+&lt;/script&gt;</code></pre>
+
+      <p><a href="/work/live-chart">Back to the case study</a></p>
+    </main>
+    <script>
+      document.querySelector('nehang-live-chart').addEventListener('pausechange', function (e) {
+        document.getElementById('log').textContent = 'pausechange: paused is ' + e.detail;
+      });
+    </script>
+  </body>
+</html>

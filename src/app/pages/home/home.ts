@@ -7,7 +7,7 @@ import { QueueDiagram } from '../../demos/queue-sim/queue-diagram';
 import { hero, home } from '../../../content/pages';
 import { profile } from '../../../content/profile';
 import { timeline } from '../../../content/experience';
-import { work } from '../../../content/work';
+import { caseStudies } from '../../../content/case-studies';
 
 @Component({
   imports: [RouterLink, Lane, Contact, QueueSim, QueueDiagram],
@@ -49,7 +49,9 @@ import { work } from '../../../content/work';
           @for (w of work; track w.slug) {
             <li class="grid gap-3 py-6 first:pt-0 md:grid-cols-[minmax(0,1fr)_13rem] md:gap-8">
               <div>
-                <h3 class="text-lg">{{ w.title }}</h3>
+                <h3 class="text-lg">
+                  <a [routerLink]="'/work/' + w.slug" [style.view-transition-name]="'cs-' + w.slug">{{ w.title }}</a>
+                </h3>
                 <p class="measure mt-1">{{ w.outcome }}</p>
               </div>
               <ul [attr.aria-label]="home.work.stackLabel" class="flex flex-wrap content-start gap-x-3 gap-y-2">
@@ -109,7 +111,7 @@ export class Home {
   protected readonly profile = profile;
   protected readonly home = home;
   protected readonly hero = hero;
-  protected readonly work = work;
+  protected readonly work = caseStudies;
   protected readonly timeline = timeline;
 
   constructor() {

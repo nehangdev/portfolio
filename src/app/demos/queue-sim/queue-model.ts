@@ -15,21 +15,26 @@ export interface Worker {
 }
 
 export interface ModelOptions {
-  /** Documents arriving per second. */
+  /** Documents arriving per second. 0 means only what enqueue() adds. */
   arrivalRate: number;
   /** Mean seconds one worker spends on one document. */
   serviceTime: number;
   failureRate: number;
   seed: number;
+  /** Defaults to 1 for sync and 3 for event. */
+  workers?: number;
+  /** Attempts before a message is dead-lettered. Infinity means retry forever. */
+  maxAttempts?: number;
 }
 
 const LABELS = ['PDF', 'XML', 'CSV', 'DOC'];
 const RATE_WINDOW = 5;
+const DEAD_LETTER_KEEP = 50;
 
 export const DEFAULTS: ModelOptions = { arrivalRate: 2.6, serviceTime: 0.5, failureRate: 0.08, seed: 7 };
 
 /** Small seeded PRNG (mulberry32) so every run looks the same. */
-function rng(seed: number): () => number {
+export function rng(seed: number): () => number {
   let a = seed >>> 0;
   return () => {
     a = (a + 0x6d2b79f5) >>> 0;
@@ -41,25 +46,31 @@ function rng(seed: number): () => number {
 
 /**
  * The simulation, with no rendering in it.
- * sync: one worker; a failure is retried in place, blocking everything behind it.
- * event: a queue and three consumers; a failure goes to the back of the queue.
+ * sync: a failure is retried in place, blocking everything behind it.
+ * event: a failure goes to the back of the queue.
+ * Either way, a message that reaches maxAttempts moves to the dead-letter queue.
  */
 export class QueueModel {
   time = 0;
+  completed = 0;
+  deadLettered = 0;
   readonly queue: Msg[] = [];
-  readonly workers: Worker[];
+  readonly workers: Worker[] = [];
+  /** The most recent dead-lettered messages (older ones are only counted). */
+  readonly deadLetter: Msg[] = [];
+  private readonly opts: Required<ModelOptions>;
   private readonly random: () => number;
   private nextArrival: number;
   private nextId = 1;
   private readonly completions: number[] = [];
-  completed = 0;
 
   constructor(
     readonly mode: Mode,
-    private readonly opts: ModelOptions = DEFAULTS,
+    opts: ModelOptions = DEFAULTS,
   ) {
-    this.random = rng(opts.seed);
-    this.workers = Array.from({ length: mode === 'sync' ? 1 : 3 }, () => ({ msg: null, remaining: 0, total: 0 }));
+    this.opts = { workers: mode === 'sync' ? 1 : 3, maxAttempts: Infinity, ...opts };
+    this.random = rng(this.opts.seed);
+    this.setWorkers(this.opts.workers);
     this.nextArrival = this.interArrival();
   }
 
@@ -74,12 +85,26 @@ export class QueueModel {
     return this.completions.length / Math.min(RATE_WINDOW, Math.max(this.time, 1));
   }
 
+  /** Change settings while running. Fewer workers put their in-flight messages back at the front. */
+  configure(changes: Partial<Omit<ModelOptions, 'seed'>>): void {
+    const rateChanged = changes.arrivalRate !== undefined && changes.arrivalRate !== this.opts.arrivalRate;
+    Object.assign(this.opts, changes);
+    if (changes.workers !== undefined) this.setWorkers(changes.workers);
+    if (rateChanged) this.nextArrival = this.time + this.interArrival();
+  }
+
+  enqueue(): Msg {
+    const id = this.nextId++;
+    const msg = { id, label: LABELS[id % LABELS.length], attempts: 0, failedAt: null };
+    this.queue.push(msg);
+    return msg;
+  }
+
   step(dt: number): void {
     this.time += dt;
 
     while (this.nextArrival <= this.time) {
-      const id = this.nextId++;
-      this.queue.push({ id, label: LABELS[id % LABELS.length], attempts: 0, failedAt: null });
+      this.enqueue();
       this.nextArrival += this.interArrival();
     }
 
@@ -88,23 +113,36 @@ export class QueueModel {
       w.remaining -= dt;
       if (w.remaining > 0) continue;
 
-      if (this.random() < this.opts.failureRate) {
-        w.msg.attempts++;
-        w.msg.failedAt = this.time;
-        if (this.mode === 'sync') {
-          this.start(w, w.msg);
-          continue;
-        }
-        this.queue.push(w.msg);
-      } else {
+      const msg = w.msg;
+      w.msg = null;
+      if (this.random() >= this.opts.failureRate) {
         this.completions.push(this.time);
         this.completed++;
+        continue;
       }
-      w.msg = null;
+      msg.attempts++;
+      msg.failedAt = this.time;
+      if (msg.attempts >= this.opts.maxAttempts) {
+        this.deadLettered++;
+        this.deadLetter.push(msg);
+        if (this.deadLetter.length > DEAD_LETTER_KEEP) this.deadLetter.shift();
+      } else if (this.mode === 'sync') {
+        this.start(w, msg);
+      } else {
+        this.queue.push(msg);
+      }
     }
 
     for (const w of this.workers) {
       if (!w.msg && this.queue.length) this.start(w, this.queue.shift()!);
+    }
+  }
+
+  private setWorkers(n: number): void {
+    while (this.workers.length < n) this.workers.push({ msg: null, remaining: 0, total: 0 });
+    while (this.workers.length > n) {
+      const w = this.workers.pop()!;
+      if (w.msg) this.queue.unshift(w.msg);
     }
   }
 
@@ -114,6 +152,7 @@ export class QueueModel {
   }
 
   private interArrival(): number {
+    if (this.opts.arrivalRate <= 0) return Infinity;
     return -Math.log(1 - this.random()) / this.opts.arrivalRate;
   }
 }

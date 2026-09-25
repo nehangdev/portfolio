@@ -7,12 +7,16 @@ interface Sprite {
   doneFor: number | null;
   /** Cell in the done tray. */
   slot: number;
+  /** Shown in the dead-letter tray; removed rather than "completed" when it leaves. */
+  dead: boolean;
 }
 
 export interface CanvasText {
   incoming: string;
   workers: (n: number) => string;
   done: (n: number) => string;
+  /** When set, the right-hand column is split into a done tray and a dead-letter tray. */
+  deadLetter?: (n: number) => string;
 }
 
 interface Palette {
@@ -87,17 +91,22 @@ export class QueueRenderer {
     if (!w || !h) return;
 
     // Geometry, recomputed per frame so resizes need no bookkeeping.
-    const msgH = Math.max(18, Math.min(26, h * 0.11));
+    const n = model.workers.length;
+    const trayTop = PAD + 22;
+    const usable = h - PAD - trayTop;
+    const msgH = Math.max(12, Math.min(26, h * 0.11, usable / n - 26));
     const msgW = msgH * 2;
     const boxW = msgW + 20;
     const boxH = msgH + 22;
-    const n = model.workers.length;
     const doneW = Math.max(msgW + 20, w * 0.16);
     const doneX = w - PAD - doneW;
     const workerX = doneX - 28 - boxW;
-    const rowGap = Math.min((h - 2 * PAD) / n, boxH + 18);
-    const workerY = (i: number) => h / 2 + (i - (n - 1) / 2) * rowGap;
-    const laneY = h / 2;
+    const rowGap = Math.min(usable / n, boxH + 18);
+    const laneY = trayTop + usable / 2;
+    const workerY = (i: number) => laneY + (i - (n - 1) / 2) * rowGap;
+    const dlqLabel = this.text.deadLetter;
+    const doneBottom = dlqLabel ? trayTop + usable * 0.58 : h - PAD;
+    const dlqTop = doneBottom + 26;
     const queueEnd = workerX - (n > 1 ? 56 : 28);
     const slots = Math.max(1, Math.floor((queueEnd - PAD) / (msgW + GAP)));
     const k = 1 - Math.exp(-dt * 12);
@@ -112,12 +121,13 @@ export class QueueRenderer {
       ctx.moveTo(queueEnd, laneY);
       ctx.lineTo(workerX, workerY(i));
       ctx.moveTo(workerX + boxW, workerY(i));
-      ctx.lineTo(doneX, laneY);
+      ctx.lineTo(doneX, (trayTop + doneBottom) / 2);
     }
     ctx.stroke();
     ctx.setLineDash([4, 4]);
     ctx.beginPath();
-    ctx.roundRect(doneX, PAD + 22, doneW, h - 2 * PAD - 22, 6);
+    ctx.roundRect(doneX, trayTop, doneW, doneBottom - trayTop, 6);
+    if (dlqLabel) ctx.roundRect(doneX, dlqTop, doneW, h - PAD - dlqTop, 6);
     ctx.stroke();
     ctx.setLineDash([]);
 
@@ -131,6 +141,10 @@ export class QueueRenderer {
     ctx.fillText(this.text.workers(n), workerX + boxW / 2, PAD + labelSize);
     ctx.textAlign = 'right';
     ctx.fillText(this.text.done(model.completed), w - PAD, PAD + labelSize);
+    if (dlqLabel) {
+      ctx.fillStyle = p.fault;
+      ctx.fillText(dlqLabel(model.deadLettered), w - PAD, dlqTop - 8);
+    }
 
     // Workers, with a progress bar for the document in hand.
     model.workers.forEach((wk, i) => {
@@ -157,13 +171,38 @@ export class QueueRenderer {
       if (wk.msg) targets.set(wk.msg.id, { msg: wk.msg, x: workerX + 10, y: workerY(i) - msgH / 2 - 3 });
     });
 
+    // Tray cells: processed documents in the done tray, the latest dead letters below it.
+    const cellW = msgW / 2;
+    const cellH = msgH / 2;
+    const cols = Math.max(1, Math.floor((doneW - 8) / (cellW + 4)));
+    const rows = Math.max(1, Math.floor((doneBottom - trayTop - 8) / (cellH + 4)));
+    const trayLeft = doneX + (doneW - cols * (cellW + 4) + 4) / 2;
+    const cellX = (slot: number) => trayLeft + (slot % cols) * (cellW + 4);
+
+    if (dlqLabel) {
+      const dlqRows = Math.max(1, Math.floor((h - PAD - dlqTop - 8) / (cellH + 4)));
+      const shown = model.deadLetter.slice(-cols * dlqRows);
+      shown.forEach((msg, j) => {
+        const x = cellX(j);
+        const y = dlqTop + 6 + Math.floor(j / cols) * (cellH + 4);
+        let s = this.sprites.get(msg.id);
+        if (!s) this.sprites.set(msg.id, (s = { x, y, doneFor: null, slot: 0, dead: true }));
+        s.dead = true;
+        s.x += (x - s.x) * k;
+        s.y += (y - s.y) * k;
+        this.pill(s.x, s.y, cellW, cellH, '', p.fault, p.paper);
+        targets.set(msg.id, { msg, x, y });
+      });
+    }
+
     ctx.font = `600 ${Math.round(msgH * 0.46)}px 'Schibsted Grotesk', system-ui, sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
     for (const [id, target] of targets) {
       let s = this.sprites.get(id);
-      if (!s) this.sprites.set(id, (s = { x: -msgW * 2, y: target.y, doneFor: null, slot: 0 }));
+      if (s?.dead) continue;
+      if (!s) this.sprites.set(id, (s = { x: -msgW * 2, y: target.y, doneFor: null, slot: 0, dead: false }));
       s.x += (target.x - s.x) * k;
       s.y += (target.y - s.y) * k;
       const failed = target.msg.failedAt !== null && model.time - target.msg.failedAt < FAIL_FLASH;
@@ -179,22 +218,20 @@ export class QueueRenderer {
 
     // Anything the model no longer holds has been processed: it drops into a tray cell,
     // stays a few seconds, then fades. A faster pipeline keeps the tray fuller.
-    const cellW = msgW / 2;
-    const cellH = msgH / 2;
-    const trayTop = PAD + 22;
-    const cols = Math.max(1, Math.floor((doneW - 8) / (cellW + 4)));
-    const rows = Math.max(1, Math.floor((h - PAD - trayTop - 8) / (cellH + 4)));
-    const trayLeft = doneX + (doneW - cols * (cellW + 4) + 4) / 2;
     for (const [id, s] of this.sprites) {
       if (targets.has(id)) continue;
+      if (s.dead) {
+        this.sprites.delete(id);
+        continue;
+      }
       if (s.doneFor === null) s.slot = this.doneSeq++ % (cols * rows);
       s.doneFor = (s.doneFor ?? 0) + dt;
       if (s.doneFor > DONE_LIFE) {
         this.sprites.delete(id);
         continue;
       }
-      const tx = trayLeft + (s.slot % cols) * (cellW + 4);
-      const ty = h - PAD - 4 - (Math.floor(s.slot / cols) + 1) * (cellH + 4);
+      const tx = cellX(s.slot);
+      const ty = doneBottom - 4 - (Math.floor(s.slot / cols) + 1) * (cellH + 4);
       s.x += (tx - s.x) * k;
       s.y += (ty - s.y) * k;
       ctx.globalAlpha = Math.min(1, DONE_LIFE - s.doneFor);

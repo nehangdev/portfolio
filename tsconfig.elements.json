@@ -1,0 +1,9 @@
+/* Build config for the standalone <nehang-live-chart> bundle. */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/elements",
+    "types": []
+  },
+  "files": ["src/elements/main.ts"]
+}

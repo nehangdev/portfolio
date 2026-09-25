@@ -70,6 +70,37 @@
           "builder": "@angular/build:unit-test"
         }
       }
+    },
+    "live-chart-element": {
+      "projectType": "application",
+      "root": "",
+      "sourceRoot": "src/elements",
+      "prefix": "nehang",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "src/elements/main.ts",
+            "tsConfig": "tsconfig.elements.json",
+            "index": false,
+            "outputPath": {
+              "base": "public/elements",
+              "browser": ""
+            },
+            "outputHashing": "none",
+            "sourceMap": false,
+            "optimization": true,
+            "extractLicenses": true,
+            "budgets": [
+              {
+                "type": "initial",
+                "maximumWarning": "250kB",
+                "maximumError": "350kB"
+              }
+            ]
+          }
+        }
+      }
     }
   }
 }

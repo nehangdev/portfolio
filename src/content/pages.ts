@@ -163,7 +163,10 @@ export const colophon = {
         `Angular ${VERSION.full}, using standalone components, signals, and zoneless change detection.`,
         'Static prerendering with @angular/ssr. Every page is plain HTML at build time, and there is no server at runtime.',
         'RxJS drives the simulation on the home page, bridged to signals with toSignal.',
-        'The simulation is drawn by hand on a canvas. There is no chart or animation library.',
+        'The simulations and the live chart are drawn by hand on a canvas, with no chart library.',
+        'The live chart is a Web Component built with Angular Elements. The case study loads it the way any other site would, and a plain HTML sandbox page proves it needs no framework around it.',
+        'Page changes use the browser’s View Transitions API through the Angular router. Motion animates steps inside two demos and is only downloaded with them.',
+        'The SciChart panel loads SciChart’s free community edition from jsDelivr only when you press its button. That edition shows a watermark and sends SciChart anonymous usage data, including the page address.',
         'Tailwind CSS v4, with colours and type sizes defined as CSS custom properties.',
         'Schibsted Grotesk, self-hosted and limited to the Latin character set.',
       ],
@@ -172,6 +175,7 @@ export const colophon = {
       heading: 'Quality',
       items: [
         'Pages work without JavaScript. Only interactive demos need it, and each has a static fallback.',
+        'Every demo is downloaded only when it scrolls into view, so the home page stays small.',
         'Animation stops when your system asks for reduced motion, and the simulation pauses when the tab is hidden.',
         'Unit tests run on Vitest. End-to-end and accessibility checks run on Playwright with axe.',
         // TODO(phase 5): add Lighthouse CI scores and the CI badge here.

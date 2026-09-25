@@ -174,3 +174,64 @@
     background: var(--paper-raised);
   }
 }
+
+@layer components {
+  /*
+   * <nehang-live-chart> and its static placeholder share a fixed height, so the
+   * element upgrading in place causes no layout shift. The --nlc-* properties
+   * theme the element from outside its shadow root.
+   */
+  .live-chart {
+    height: 25rem;
+  }
+
+  /* Before the element upgrades it is an unknown inline element; give it a box to hold the space. */
+  nehang-live-chart:not(:defined) {
+    display: block;
+  }
+
+  @media (min-width: 40rem) {
+    .live-chart {
+      height: 23rem;
+    }
+  }
+
+  nehang-live-chart {
+    --nlc-bg: var(--paper-raised);
+    --nlc-fg: var(--ink);
+    --nlc-muted: var(--ink-muted);
+    --nlc-line: var(--queue);
+    --nlc-grid: var(--rule);
+  }
+
+  /* Used with Angular's animate.enter / animate.leave on demo panels. */
+  .enter-fade {
+    animation: enter-fade 200ms ease-out;
+  }
+
+  .leave-fade {
+    animation: leave-fade 150ms ease-in forwards;
+  }
+
+  @keyframes enter-fade {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+  }
+
+  @keyframes leave-fade {
+    to {
+      opacity: 0;
+    }
+  }
+}
+
+/* Route changes cross-fade and morph shared titles; skip that entirely for reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

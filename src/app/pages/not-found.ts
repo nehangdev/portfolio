@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { notFound } from '../../content/pages';
-import { work } from '../../content/work';
+import { caseStudies } from '../../content/case-studies';
 
 @Component({
   imports: [RouterLink],
@@ -11,7 +11,7 @@ import { work } from '../../content/work';
       <p class="measure mt-4 text-lg">{{ notFound.body }}</p>
       <ul class="mt-6 space-y-2">
         @for (w of work; track w.slug) {
-          <li><a routerLink="/" fragment="work">{{ w.title }}</a></li>
+          <li><a [routerLink]="'/work/' + w.slug">{{ w.title }}</a></li>
         }
       </ul>
       <p class="mt-8"><a routerLink="/" class="btn">{{ notFound.home }}</a></p>
@@ -20,5 +20,5 @@ import { work } from '../../content/work';
 })
 export class NotFound {
   protected readonly notFound = notFound;
-  protected readonly work = work;
+  protected readonly work = caseStudies;
 }

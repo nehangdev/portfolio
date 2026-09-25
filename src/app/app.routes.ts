@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { seo } from '../content/pages';
+import { caseStudies } from '../content/case-studies';
 
 export const routes: Routes = [
   {
@@ -13,6 +14,12 @@ export const routes: Routes = [
     title: seo.about.title,
     data: seo.about,
   },
+  ...caseStudies.map((cs) => ({
+    path: `work/${cs.slug}`,
+    loadComponent: () => import('./pages/case-study').then((m) => m.CaseStudyPage),
+    title: cs.title,
+    data: { slug: cs.slug, description: cs.description, image: `/og/${cs.slug}.png` },
+  })),
   {
     path: 'colophon',
     loadComponent: () => import('./pages/colophon').then((m) => m.Colophon),

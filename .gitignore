@@ -47,3 +47,6 @@ Thumbs.db
 /test-results
 /playwright-report
 /blob-report
+
+# Built by `npm run build:element`
+/public/elements

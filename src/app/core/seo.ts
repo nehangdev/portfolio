@@ -19,6 +19,7 @@ export class SeoTitleStrategy extends TitleStrategy {
     const description = (route.data['description'] as string | undefined) ?? '';
     const path = snapshot.url.split(/[?#]/)[0];
     const url = profile.siteUrl + (path === '/' ? '/' : path);
+    const image = profile.siteUrl + ((route.data['image'] as string | undefined) ?? '/og/default.png');
 
     this.titleService.setTitle(title);
     for (const [attr, key, content] of [
@@ -27,7 +28,10 @@ export class SeoTitleStrategy extends TitleStrategy {
       ['property', 'og:description', description],
       ['property', 'og:url', url],
       ['property', 'og:type', 'website'],
-      ['name', 'twitter:card', 'summary'],
+      ['property', 'og:image', image],
+      ['property', 'og:image:width', '1200'],
+      ['property', 'og:image:height', '630'],
+      ['name', 'twitter:card', 'summary_large_image'],
     ]) {
       this.meta.updateTag({ [attr]: key, content }, `${attr}="${key}"`);
     }

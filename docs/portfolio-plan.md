@@ -214,7 +214,7 @@ public/   e2e/   docs/{design.md,portfolio-plan.md}   .github/workflows/ci.yml  
 **Phase 2: Home + content pages** ✅ done (content updated to full stack in revision 2)
 **Phase 3: Hero queue simulation** ✅ done
 
-**Phase 4: Case studies + demos**
+**Phase 4: Case studies + demos** ✅ done
 - The four case-study pages and demos (§7), lazy-loaded with static fallbacks.
 - The Angular Elements build and `sandbox.html`.
 - Motion is added as a dependency and used only inside demo chunks.
