@@ -100,7 +100,7 @@ export const home = {
       'At Veloxcore I architect and lead end-to-end delivery, and I lead a sub-team of three. I run sprint planning, review code, mentor the developers on the team, and talk with client stakeholders directly.',
       'I own our Azure DevOps CI/CD, and introduced Docker-based builds so that every project deploys the same way.',
       'Testing is a large part of how I work. I wrote Selenium regression suites early on, and more recently built an internal framework that generates Playwright tests from plain-language scenarios.',
-      'Day to day I work with AI tools such as GitHub Copilot and Claude Code, and pick the model to fit the task.',
+      'Day to day I work with AI tools such as GitHub Copilot, Microsoft Copilot and Claude Code, and pick the model to fit the task.',
     ],
   },
   contact: {
@@ -160,8 +160,8 @@ export const about = {
       heading: 'Backend and architecture',
       paragraphs: [
         'I designed event-driven processing pipelines on Azure Service Bus topics and subscriptions to replace synchronous flows, which improved throughput by about 40%. The same approach runs document ingestion for an insurance platform: hierarchical uploads, multi-level validation, and parallel processing that recovers from failures.',
-        'My .NET work leans on CQRS, microservices, Entity Framework with the repository and unit-of-work patterns, and SQL Server, with Cosmos DB and Elastic Search where they fit.',
-        'On identity, I set up Azure AD B2C single sign-on across several applications, and I have worked with IdentityServer 4, OAuth 2.0 and OpenID Connect. I also led an Umbraco 7 to 13 migration with centralised SSO, which reduced maintenance overhead.',
+        'My .NET work leans on CQRS, microservices, Entity Framework with the repository and unit-of-work patterns, and SQL Server, with Cosmos DB and Elastic Search where they fit. Earlier ERP systems ran on WCF REST APIs.',
+        'On identity, I set up Azure AD B2C single sign-on across several applications, and I have worked with IdentityServer 4, OAuth 2.0 and OpenID Connect. I built a centralised identity service with IdentityServer 4 that secures service-to-service access with the OAuth 2.0 client credentials flow, and I led an Umbraco 7 to 13 migration with centralised SSO, which reduced maintenance overhead.',
         'For a digital marketplace I led NopCommerce development with a custom plugin architecture, and integrated third-party payment and KYC services into onboarding.',
       ],
     },
@@ -179,8 +179,9 @@ export const about = {
       heading: 'Leading a team',
       // TODO(nehang): add a sentence or two in your own words about how you run reviews or mentor.
       paragraphs: [
-        'I lead a sub-team of three engineers. That covers sprint planning, code reviews, mentoring, and communication with client stakeholders.',
-        'I own the Azure DevOps CI/CD pipelines and introduced Docker-based builds so every project deploys the same way.',
+        'I lead a sub-team of three engineers. That covers sprint planning, code reviews, mentoring, and communication with client stakeholders. I own features from the first client conversation through to production.',
+        'I own the Azure DevOps CI/CD pipelines, introduced Docker-based builds so every project deploys the same way, and drove wider Azure adoption across projects.',
+        'On some projects my role is project management and code review, for example a social platform for crypto traders built with agentic AI tooling and subscription payments.',
       ],
     },
     {
@@ -188,6 +189,7 @@ export const about = {
       paragraphs: [
         'Early on I wrote Selenium regression suites for core ERP workflows, and C# console utilities for data migration and batch processing.',
         'More recently I built an AI-driven Playwright framework: reusable AI skills take a scenario description through a 10-phase pipeline, from requirement analysis and project mapping to test cases, page-object discovery and a generated script.',
+        'Day to day I work with GitHub Copilot, Microsoft Copilot and Claude Code, and with MCP and agentic AI tooling.',
       ],
     },
   ],

@@ -8,11 +8,11 @@ import { TopicFanout } from '../demos/event-sim/topic-fanout';
 import { TestPipeline } from '../demos/test-pipeline/test-pipeline';
 import { LiveChartDemo } from '../demos/live-chart/live-chart-demo';
 import { LiveChartDocs } from '../demos/live-chart/live-chart-docs';
-import { SsoFlow } from '../demos/sso-flow/sso-flow';
+import { SequenceFlow } from '../demos/sequence-flow/sequence-flow';
 import { Block, CaseStudy, CaseStudyBody, caseStudies, caseStudyText } from '../../content/case-studies';
 import { caseStudyBodies } from '../../content/case-study-bodies';
 import { pipelineSteps } from '../../content/pipeline-steps';
-import { ssoText } from '../../content/demos';
+import { clientCredentialsText, ssoText } from '../../content/demos';
 
 /** One shape for every block type, so the template needs no type narrowing. */
 interface FlatBlock {
@@ -40,7 +40,7 @@ function flatten(b: Block): FlatBlock {
     TestPipeline,
     LiveChartDemo,
     LiveChartDocs,
-    SsoFlow,
+    SequenceFlow,
   ],
   template: `
     <article class="wrap">
@@ -133,11 +133,26 @@ function flatten(b: Block): FlatBlock {
             }
             @case ('identity') {
               @defer (on viewport) {
-                <app-sso-flow />
+                <app-sequence-flow [flow]="sso" />
               } @placeholder {
                 <div>
                   <ol class="measure list-decimal space-y-3 pl-6">
-                    @for (s of ssoSteps; track $index) {
+                    @for (s of sso.steps; track $index) {
+                      <li><span class="font-semibold">{{ s.title }}.</span> {{ s.detail }}</li>
+                    }
+                  </ol>
+                  <p class="mt-3 text-sm text-ink-muted">{{ text.staticNote }}</p>
+                </div>
+              }
+
+              <h3 class="mt-14 text-lg">{{ clientCredentials.heading }}</h3>
+              <p class="measure mt-1 mb-6">{{ clientCredentials.intro }}</p>
+              @defer (on viewport) {
+                <app-sequence-flow [flow]="clientCredentials" />
+              } @placeholder {
+                <div>
+                  <ol class="measure list-decimal space-y-3 pl-6">
+                    @for (s of clientCredentials.steps; track $index) {
                       <li><span class="font-semibold">{{ s.title }}.</span> {{ s.detail }}</li>
                     }
                   </ol>
@@ -159,7 +174,8 @@ function flatten(b: Block): FlatBlock {
 export class CaseStudyPage {
   protected readonly text = caseStudyText;
   protected readonly pipelineSteps = pipelineSteps;
-  protected readonly ssoSteps = ssoText.steps;
+  protected readonly sso = ssoText;
+  protected readonly clientCredentials = clientCredentialsText;
   protected readonly cs: CaseStudy;
   protected readonly body: CaseStudyBody;
   protected readonly next: CaseStudy;

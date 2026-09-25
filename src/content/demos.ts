@@ -71,7 +71,30 @@ export const sciChartText = {
   stop: 'Stop',
 };
 
-export const ssoText = {
+/** One step of a sequence diagram: an arrow between two lifelines, plus an optional code sample. */
+export interface SequenceStep {
+  from: number;
+  to: number;
+  title: string;
+  detail: string;
+  artifact?: { language: string; label: string; code: string };
+}
+
+export interface SequenceFlowContent {
+  figureLabel: string;
+  lifelines: string[];
+  steps: SequenceStep[];
+}
+
+/** Controls shared by every sequence diagram. */
+export const sequenceControls = {
+  prev: 'Previous step',
+  next: 'Next step',
+  restart: 'Start again',
+  stepOf: (i: number, n: number) => `Step ${i} of ${n}`,
+};
+
+export const ssoText: SequenceFlowContent = {
   lifelines: ['Browser', 'App A', 'Azure AD B2C', 'App B'],
   steps: [
     { from: 0, to: 1, title: 'Open App A', detail: 'Someone opens App A. It has no session for them yet.' },
@@ -113,9 +136,94 @@ export const ssoText = {
       detail: 'B2C sends a code straight back without asking for a password. App B signs them in. That is single sign-on.',
     },
   ],
-  prev: 'Previous step',
-  next: 'Next step',
-  restart: 'Start again',
-  stepOf: (i: number, n: number) => `Step ${i} of ${n}`,
   figureLabel: 'Sequence diagram of single sign-on across two apps with Azure AD B2C',
+};
+
+/**
+ * Service-to-service access with the OAuth 2.0 client credentials flow, as in the centralised
+ * identity service (IdentityServer 4). Every name, host and value below is made up for the demo.
+ */
+export const clientCredentialsText: SequenceFlowContent & { heading: string; intro: string } = {
+  heading: 'Service to service: the client credentials flow',
+  intro:
+    'No person is involved here: one backend service calls another. It proves who it is to the identity service, gets a short-lived token, and presents that token to the API. A recreation with made-up names and values.',
+  figureLabel: 'Sequence diagram of the OAuth 2.0 client credentials flow between two services',
+  lifelines: ['Billing service', 'Identity service', 'Orders API'],
+  steps: [
+    {
+      from: 0,
+      to: 1,
+      title: 'Ask for a token',
+      detail: 'The billing service sends its client ID and secret to the identity service, and asks only for the scope it needs.',
+      artifact: {
+        language: 'http',
+        label: 'Token request',
+        code: `POST /connect/token HTTP/1.1
+Host: identity.example.com
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&client_id=billing-service&client_secret=••••••&scope=orders.read`,
+      },
+    },
+    {
+      from: 1,
+      to: 0,
+      title: 'Receive a short-lived token',
+      detail: 'The identity service checks the client and its allowed scopes, then issues a signed access token that expires within the hour.',
+      artifact: {
+        language: 'json',
+        label: 'Token response',
+        code: `{
+  "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjFGM0Mi…",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "scope": "orders.read"
+}`,
+      },
+    },
+    {
+      from: 0,
+      to: 2,
+      title: 'Call the API with the token',
+      detail: 'The billing service sends the token as a Bearer header. It reuses the same token until it expires.',
+      artifact: {
+        language: 'http',
+        label: 'API request',
+        code: `GET /orders/42 HTTP/1.1
+Host: orders-api.example.com
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjFGM0Mi…`,
+      },
+    },
+    {
+      from: 2,
+      to: 1,
+      title: 'Check the signature',
+      detail: 'The API validates the token against the identity service’s public signing keys, fetched once and cached, then checks issuer, audience, expiry and scope. No round trip per request.',
+      artifact: {
+        language: 'json',
+        label: 'Decoded token claims',
+        code: `{
+  "iss": "https://identity.example.com",
+  "aud": "orders-api",
+  "client_id": "billing-service",
+  "scope": ["orders.read"],
+  "exp": 1790003600
+}`,
+      },
+    },
+    {
+      from: 2,
+      to: 0,
+      title: 'Return the data',
+      detail: 'The token is valid and carries the orders.read scope, so the API answers. A token without that scope would get 403 Forbidden.',
+      artifact: {
+        language: 'http',
+        label: 'API response',
+        code: `HTTP/1.1 200 OK
+Content-Type: application/json
+
+{ "id": 42, "status": "shipped" }`,
+      },
+    },
+  ],
 };

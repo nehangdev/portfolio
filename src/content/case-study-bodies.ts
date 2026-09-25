@@ -146,6 +146,7 @@ await processor.StartProcessingAsync();`,
         heading: 'Context',
         blocks: [
           'I built a real-time financial charting dashboard in Angular 14. Prices stream in continuously, and the charts redraw as they arrive.',
+          'The same approach later ran real-time charting and trading-tools dashboards for crypto trading, on .NET microservices in Docker. I worked on both the backend and the frontend.',
         ],
       },
       {
@@ -194,20 +195,21 @@ await processor.StartProcessingAsync();`,
         blocks: [
           'I set up Azure AD B2C as the identity provider for several applications. Each app sends people to B2C with OpenID Connect. Once someone has signed in to one app, B2C recognises their session, and the next app signs them in without asking again.',
           'I led the upgrade of the Umbraco site from version 7 to 13, and moved it onto the same centralised sign-in.',
+          'Services need identity too. I built a centralised identity service on ASP.NET Core and IdentityServer 4 that secures service-to-service access with the OAuth 2.0 client credentials flow, covering its backend, frontend and test automation with Selenium.',
           'For a digital marketplace, the same B2C sign-in leads into an onboarding flow with KYC and payment steps.',
         ],
       },
       {
         heading: 'Result',
         blocks: [
-          'One sign-in covers several applications, and the Umbraco upgrade reduced maintenance work.',
+          'One sign-in covers several applications, service-to-service calls go through one identity service, and the Umbraco upgrade reduced maintenance work.',
         ],
       },
     ],
     demo: {
       heading: 'Step through it',
       intro:
-        'A simplified sequence of single sign-on with Azure AD B2C and OpenID Connect. Move through it at your own pace.',
+        'Two recreations. First, single sign-on for people across two apps with Azure AD B2C and OpenID Connect. Below it, how one service calls another with the client credentials flow. Move through each at your own pace.',
     },
   },
 };

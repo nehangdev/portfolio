@@ -53,15 +53,15 @@ export const caseStudies: CaseStudy[] = [
       'A streaming financial chart built in Angular 14, packaged as Web Components and reused inside a Blazor WebAssembly app.',
     description:
       'Case study: packaging Angular charting modules as Web Components for a Blazor WebAssembly app, with a live, framework-agnostic chart element.',
-    stack: ['Angular', 'Angular Elements', 'RxJS', 'Web Components', 'Blazor WASM'],
+    stack: ['Angular', 'Angular Elements', 'RxJS', 'Web Components', 'Blazor WASM', '.NET microservices', 'Docker'],
   },
   {
     slug: 'identity',
     title: 'One sign-in across several apps',
     outcome:
-      'Azure AD B2C single sign-on across several applications, including an Umbraco 7 to 13 upgrade with centralised SSO.',
+      'Azure AD B2C single sign-on across several applications, an Umbraco 7 to 13 upgrade with centralised SSO, and an identity service for service-to-service access.',
     description:
-      'Case study: single sign-on across several applications with Azure AD B2C and OpenID Connect, and an Umbraco 7 to 13 upgrade.',
-    stack: ['Azure AD B2C', 'OpenID Connect', 'OAuth 2.0', '.NET', 'Umbraco'],
+      'Case study: single sign-on with Azure AD B2C and OpenID Connect, an Umbraco 7 to 13 upgrade, and service-to-service access with IdentityServer 4 and the OAuth 2.0 client credentials flow.',
+    stack: ['Azure AD B2C', 'OpenID Connect', 'OAuth 2.0', 'IdentityServer 4', '.NET', 'Umbraco'],
   },
 ];

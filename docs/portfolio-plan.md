@@ -236,6 +236,12 @@ public/   e2e/   docs/{design.md,portfolio-plan.md}   .github/workflows/ci.yml  
   - **Ctrl+K / Cmd+K command palette**: a native `<dialog>` with the combobox/listbox pattern, lazy-loaded (2 KB) and reachable from a header button on phones.
   - **The Colophon's build log**: real sizes, test counts and Lighthouse medians, written by `npm run report`, stamped with the date and commit, and readable without JavaScript. Phase 5 CI should regenerate or verify it.
 - Declined: a VS Code-style status bar (permanent chrome).
+- From the global résumé (2026-09-25):
+  - a Projects section on About listing all nine key projects, in the résumé's wording, linked to their case studies;
+  - a client-credentials sequence demo on the identity case study (the IdentityServer 4 service-to-service work), with the HTTP requests and decoded token at each step;
+  - the crypto trading dashboards added to the live-chart case study;
+  - WCF, Microsoft Copilot, MCP and agentic AI added to About.
+  - No demos for projects where the role was project management, or where a demo would need invented details.
 - ✅ 114 e2e tests pass. Lighthouse on mobile scores ≥ 95 (home at 95–96, the thinnest margin).
 
 **Phase 5: Quality + CI**

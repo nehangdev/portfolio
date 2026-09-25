@@ -1,7 +1,9 @@
-// Prism core ships with markup (HTML), CSS, C-like and JavaScript; add the other two languages we show.
+// Prism core ships with markup (HTML), CSS, C-like and JavaScript; add the other languages we show.
 import Prism from 'prismjs';
 import 'prismjs/components/prism-typescript';
 import 'prismjs/components/prism-csharp';
+import 'prismjs/components/prism-json';
+import 'prismjs/components/prism-http';
 
 // We highlight explicitly; stop Prism from scanning the page on its own.
 Prism.manual = true;

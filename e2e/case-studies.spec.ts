@@ -32,7 +32,7 @@ test.describe('without JavaScript', () => {
       for (const h of ['Context', 'Problem', 'What I did', 'Result', 'Stack']) {
         await expect(page.getByRole('heading', { level: 2, name: h })).toBeVisible();
       }
-      await expect(page.getByText('Static preview. The interactive version needs JavaScript.')).toBeVisible();
+      await expect(page.getByText('Static preview. The interactive version needs JavaScript.').first()).toBeVisible();
     });
   }
 });
@@ -73,7 +73,7 @@ test('test pipeline steps through all five phases', async ({ page }) => {
 
 test('SSO flow advances by click and restarts', async ({ page }) => {
   await openDemo(page, 'identity');
-  const demo = page.locator('app-sso-flow');
+  const demo = page.locator('app-sequence-flow').first();
   await expect(demo.getByText('Step 1 of 8')).toBeVisible();
   for (let i = 0; i < 7; i++) await demo.getByRole('button', { name: 'Next step' }).click();
   await expect(demo.getByText('Signed in silently')).toBeVisible();
@@ -134,4 +134,30 @@ test.describe('reduced motion', () => {
     await openDemo(page, 'live-chart');
     await expect(page.locator('nehang-live-chart').getByRole('button', { name: 'Resume' })).toBeVisible();
   });
+});
+
+test('client credentials flow shows the real request, token and response at each step', async ({ page }) => {
+  await openDemo(page, 'identity');
+  // The second diagram loads when it scrolls into view.
+  await page.getByRole('heading', { name: 'Service to service: the client credentials flow' }).scrollIntoViewIfNeeded();
+  const flow = page.locator('app-sequence-flow').nth(1);
+  await expect(flow.getByText('Step 1 of 5')).toBeVisible();
+  await expect(flow.locator('pre')).toContainText('grant_type=client_credentials');
+  await flow.getByRole('button', { name: 'Next step' }).click();
+  await expect(flow.locator('pre')).toContainText('"token_type": "Bearer"');
+  for (let i = 0; i < 2; i++) await flow.getByRole('button', { name: 'Next step' }).click();
+  await expect(flow.getByText('Check the signature')).toBeVisible();
+  await expect(flow.locator('pre')).toContainText('"aud": "orders-api"');
+  // The two diagrams on the page keep separate arrowheads.
+  const markerIds = await page.locator('app-sequence-flow marker').evaluateAll((ms) => ms.map((m) => m.id));
+  expect(new Set(markerIds).size).toBe(markerIds.length);
+});
+
+test('about lists the résumé projects and links the ones with case studies', async ({ page }) => {
+  await page.goto('/about');
+  const section = page.locator('section', { has: page.getByRole('heading', { level: 2, name: 'Projects' }) });
+  await expect(section.getByRole('heading', { level: 3 })).toHaveCount(9);
+  await expect(section.getByText('Electronic document system')).toBeVisible();
+  await section.getByRole('link', { name: 'Read the case study about Financial charts dashboard' }).click();
+  await expect(page).toHaveURL(/\/work\/live-chart$/);
 });
