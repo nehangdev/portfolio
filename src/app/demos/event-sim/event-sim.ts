@@ -1,4 +1,6 @@
 import { Component, ElementRef, computed, effect, inject, signal, untracked, viewChild } from '@angular/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { tablerPlayerPause, tablerPlayerPlay, tablerRefresh } from '@ng-icons/tabler-icons';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Motion } from '../../core/media';
 import { Theme } from '../../core/theme';
@@ -12,6 +14,8 @@ const SERVICE_TIME = 0.8;
 /** The full simulator: live controls for rate, consumers, failures and retries, plus a dead-letter queue. */
 @Component({
   selector: 'app-event-sim',
+  imports: [NgIcon],
+  viewProviders: [provideIcons({ tablerPlayerPause, tablerPlayerPlay, tablerRefresh })],
   template: `
     <div class="grid gap-x-8 gap-y-4 sm:grid-cols-3">
       <div class="grid gap-1">
@@ -43,9 +47,13 @@ const SERVICE_TIME = 0.8;
         {{ t.controls.retry }}
       </label>
       <button type="button" class="btn" (click)="paused.set(!paused())">
+        <ng-icon [name]="paused() ? 'tablerPlayerPlay' : 'tablerPlayerPause'" size="1.1rem" aria-hidden="true" />
         {{ paused() ? t.controls.play : t.controls.pause }}
       </button>
-      <button type="button" class="btn" (click)="reset()">{{ t.controls.reset }}</button>
+      <button type="button" class="btn" (click)="reset()">
+        <ng-icon name="tablerRefresh" size="1.1rem" aria-hidden="true" />
+        {{ t.controls.reset }}
+      </button>
     </div>
 
     <dl class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">

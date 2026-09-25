@@ -6,17 +6,17 @@ import { mkdirSync, readFileSync } from 'node:fs';
 import { caseStudies } from '../src/content/case-studies.ts';
 import { profile } from '../src/content/profile.ts';
 
-const font = 'data:font/woff2;base64,' + readFileSync('public/fonts/schibsted-grotesk-latin.woff2').toString('base64');
+const font = 'data:font/woff2;base64,' + readFileSync('public/fonts/fira-code-latin.woff2').toString('base64');
 const escape = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
 
 const page = (title, lead) => `<!doctype html><html><head><style>
-  @font-face { font-family: S; src: url('${font}') format('woff2'); font-weight: 400 900; }
+  @font-face { font-family: S; src: url('${font}') format('woff2'); font-weight: 300 700; }
   body { margin: 0; width: 1200px; height: 630px; background: #e7ecef; color: #16202e;
     font-family: S, sans-serif; display: flex; flex-direction: column; padding: 72px 80px; box-sizing: border-box; }
-  .who { font-size: 28px; font-weight: 700; }
+  .who { font-size: 24px; font-weight: 700; }
   .who span { font-weight: 400; color: #4a5868; }
-  h1 { font-size: ${title.length > 34 ? 72 : 84}px; line-height: 1; letter-spacing: -0.03em; margin: auto 0 24px; font-weight: 800; max-width: 1000px; }
-  p { font-size: 30px; line-height: 1.35; color: #4a5868; margin: 0; max-width: 960px; }
+  h1 { font-size: ${title.length > 30 ? 60 : 72}px; line-height: 1.05; letter-spacing: -0.02em; margin: auto 0 24px; font-weight: 700; max-width: 1000px; }
+  p { font-size: 26px; line-height: 1.35; color: #4a5868; margin: 0; max-width: 960px; }
   .lane { display: flex; align-items: center; gap: 12px; margin-top: 48px; }
   .lane i { display: block; width: 56px; height: 26px; border-radius: 13px; background: #1f6f78; }
   .lane i.done { background: #d99a1e; }

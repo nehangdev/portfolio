@@ -221,6 +221,15 @@ public/   e2e/   docs/{design.md,portfolio-plan.md}   .github/workflows/ci.yml  
 - View transitions.
 - ✅ Home JS still ≤ 150 KB gzipped, and each case-study route passes Lighthouse ≥ 95 with the SciChart panel not loaded. Each demo has a Playwright test.
 
+**Phase 4.5: UI refinements** ✅ done (requested after Phase 4)
+- Sticky header. On phones, the links move into a native `popover` menu that works without JavaScript. Anchor links land below the header.
+- Fira Code for all text, self-hosted, with the type scale retuned for a monospace face. This replaces Schibsted Grotesk.
+- Tabler icons via `@ng-icons` (tree-shaken) replace text labels for email, copy, LinkedIn, GitHub, source, location, theme, menu and play/pause. Every icon-only control has an accessible name.
+- Motion on the hero buttons: one attention cue after load, a magnetic hover, a press spring and icon nudges. Motion is lazy-loaded, and all of it is skipped under reduced motion.
+- True-black OLED dark theme.
+- Extras: a scroll-driven header divider and reading-progress line, a header that stays put during view transitions, and `theme-color` metadata.
+- ✅ Home JS is 99 KB gzipped initially and 134 KB once everything has loaded at idle (limit 150). Lighthouse is ≥ 96 on mobile. 98 e2e tests pass.
+
 **Phase 5: Quality + CI**
 - Playwright e2e, axe on every route, visual snapshots (light/dark, mobile/desktop), Lighthouse CI and a link checker in GitHub Actions.
 - ✅ CI is green, and the README explains everything.

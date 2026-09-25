@@ -14,14 +14,18 @@
   --color-rule: var(--rule);
 }
 
-/* Type scale: 17px base, major third (1.25). */
+/*
+ * One family for everything: Fira Code. A monospace face runs wide, so the scale
+ * starts at 16px and steps by a minor third (1.2) instead of the usual major third.
+ */
 @theme {
-  --font-sans: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;
-  --text-sm: 0.85rem;
-  --text-base: 1.0625rem;
-  --text-lg: 1.33rem;
-  --text-xl: 1.66rem;
-  --text-2xl: 2.075rem;
-  --text-3xl: 2.6rem;
-  --text-display: clamp(2.75rem, 9vw, 6.25rem);
+  --font-sans: 'Fira Code', ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace;
+  --font-mono: 'Fira Code', ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace;
+  --text-sm: 0.8125rem;
+  --text-base: 1rem;
+  --text-lg: 1.2rem;
+  --text-xl: 1.44rem;
+  --text-2xl: 1.728rem;
+  --text-3xl: 2.074rem;
+  --text-display: clamp(2.5rem, 8.5vw, 5.25rem);
 }

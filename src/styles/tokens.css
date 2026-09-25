@@ -1,5 +1,6 @@
 /*
  * Design tokens. See docs/design.md for the reasoning.
+ * Dark mode is true black for OLED screens, with surfaces raised just enough to separate.
  * Dark values are repeated in two blocks: one for the OS preference, one for the manual toggle.
  * Canvas code reads these with getComputedStyle, so keep them as plain hex (no light-dark()).
  */
@@ -18,25 +19,25 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
-    --paper: #121b26;
-    --paper-raised: #182431;
-    --ink: #dce4e9;
-    --ink-muted: #9fb0bd;
+    --paper: #000000;
+    --paper-raised: #0b1016;
+    --ink: #e4ebf0;
+    --ink-muted: #9aaab6;
     --queue: #5fb3bc;
     --signal: #e3a83a;
-    --fault: #e8806c;
-    --rule: #2f3d4a;
+    --fault: #ee8a76;
+    --rule: #26313c;
   }
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --paper: #121b26;
-  --paper-raised: #182431;
-  --ink: #dce4e9;
-  --ink-muted: #9fb0bd;
+  --paper: #000000;
+  --paper-raised: #0b1016;
+  --ink: #e4ebf0;
+  --ink-muted: #9aaab6;
   --queue: #5fb3bc;
   --signal: #e3a83a;
-  --fault: #e8806c;
-  --rule: #2f3d4a;
+  --fault: #ee8a76;
+  --rule: #26313c;
 }

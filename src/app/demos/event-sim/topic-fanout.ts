@@ -1,4 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { tablerPlayerPause, tablerPlayerPlay } from '@ng-icons/tabler-icons';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Motion } from '../../core/media';
 import { topicText } from '../../../content/demos';
@@ -21,11 +23,16 @@ interface Row {
 /** One topic, three subscriptions: each subscription is its own queue with its own consumers. */
 @Component({
   selector: 'app-topic-fanout',
+  imports: [NgIcon],
+  viewProviders: [provideIcons({ tablerPlayerPause, tablerPlayerPlay })],
   template: `
     <h3 class="text-lg">{{ t.heading }}</h3>
     <p class="measure mt-1">{{ t.intro }}</p>
     <div class="mt-4 flex flex-wrap items-center gap-4">
-      <button type="button" class="btn" (click)="paused.set(!paused())">{{ paused() ? t.play : t.pause }}</button>
+      <button type="button" class="btn" (click)="paused.set(!paused())">
+        <ng-icon [name]="paused() ? 'tablerPlayerPlay' : 'tablerPlayerPause'" size="1.1rem" aria-hidden="true" />
+        {{ paused() ? t.play : t.pause }}
+      </button>
       <p class="font-semibold">{{ t.published(published()) }}</p>
     </div>
     <ul class="mt-4 divide-y divide-rule border-y border-rule">

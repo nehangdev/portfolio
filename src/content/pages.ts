@@ -31,10 +31,15 @@ export const nav = {
   ],
   themeToDark: 'Use dark theme',
   themeToLight: 'Use light theme',
+  openMenu: 'Open menu',
+  closeMenu: 'Close menu',
 };
 
 export const footer = {
-  source: 'Source code on GitHub',
+  github: 'GitHub profile',
+  linkedin: 'LinkedIn profile',
+  source: 'Source code of this site',
+  location: 'Location',
 };
 
 export const home = {
@@ -168,7 +173,7 @@ export const colophon = {
         'Page changes use the browser’s View Transitions API through the Angular router. Motion animates steps inside two demos and is only downloaded with them.',
         'The SciChart panel loads SciChart’s free community edition from jsDelivr only when you press its button. That edition shows a watermark and sends SciChart anonymous usage data, including the page address.',
         'Tailwind CSS v4, with colours and type sizes defined as CSS custom properties.',
-        'Schibsted Grotesk, self-hosted and limited to the Latin character set.',
+        'Fira Code for everything, self-hosted and limited to the Latin character set (36 KB). Icons are Tabler icons through ng-icons, and only the ones used are bundled.',
       ],
     },
     {

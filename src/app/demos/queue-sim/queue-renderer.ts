@@ -132,7 +132,7 @@ export class QueueRenderer {
     ctx.setLineDash([]);
 
     const labelSize = 13;
-    ctx.font = `600 ${labelSize}px 'Schibsted Grotesk', system-ui, sans-serif`;
+    ctx.font = `600 ${labelSize}px 'Fira Code', ui-monospace, monospace`;
     ctx.fillStyle = p.muted;
     ctx.textBaseline = 'alphabetic';
     ctx.textAlign = 'left';
@@ -195,7 +195,7 @@ export class QueueRenderer {
       });
     }
 
-    ctx.font = `600 ${Math.round(msgH * 0.46)}px 'Schibsted Grotesk', system-ui, sans-serif`;
+    ctx.font = `600 ${Math.round(msgH * 0.46)}px 'Fira Code', ui-monospace, monospace`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
@@ -243,7 +243,7 @@ export class QueueRenderer {
     if (hidden > 0) {
       ctx.fillStyle = p.muted;
       ctx.textAlign = 'left';
-      ctx.font = `600 ${labelSize}px 'Schibsted Grotesk', system-ui, sans-serif`;
+      ctx.font = `600 ${labelSize}px 'Fira Code', ui-monospace, monospace`;
       ctx.fillText(`+${hidden}`, PAD, laneY - msgH / 2 - 8);
     }
   }

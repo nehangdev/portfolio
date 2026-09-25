@@ -1,4 +1,6 @@
 import { Component, ElementRef, computed, effect, inject, signal, viewChild } from '@angular/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { tablerPlayerPause, tablerPlayerPlay } from '@ng-icons/tabler-icons';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { map, sampleTime } from 'rxjs';
 import { Motion } from '../../core/media';
@@ -11,7 +13,8 @@ import { injectFrames } from '../sim-loop';
 
 @Component({
   selector: 'app-queue-sim',
-  imports: [QueueDiagram],
+  imports: [QueueDiagram, NgIcon],
+  viewProviders: [provideIcons({ tablerPlayerPause, tablerPlayerPlay })],
   template: `
     @if (motion.reduced()) {
       <app-queue-diagram />
@@ -31,6 +34,7 @@ import { injectFrames } from '../sim-loop';
             }
           </div>
           <button type="button" class="btn min-h-10" (click)="paused.set(!paused())">
+            <ng-icon [name]="paused() ? 'tablerPlayerPlay' : 'tablerPlayerPause'" size="1.1rem" aria-hidden="true" />
             {{ paused() ? t.play : t.pause }}
           </button>
           <p class="ml-auto">
