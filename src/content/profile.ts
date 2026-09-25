@@ -4,7 +4,9 @@ export const profile = {
   tagline: 'Full-stack engineer | .NET and Azure behind it, Angular in front.',
   location: 'Ahmedabad, India',
   siteUrl: 'https://nehang.is-a.dev',
-  resumeUrl: '/resume.pdf', // TODO(nehang): add public/resume.pdf (global version, no phone number)
+  resumeUrl: '/resume.pdf', // Global version, no phone number.
+  /** Filename the browser saves the résumé as. */
+  resumeFileName: 'Nehang-Shah-Resume.pdf',
   links: {
     github: 'https://github.com/nehangdev',
     linkedin: 'https://www.linkedin.com/in/nehangshah',

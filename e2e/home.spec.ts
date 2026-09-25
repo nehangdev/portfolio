@@ -87,3 +87,11 @@ test('no phone number in any page', async ({ request }) => {
     expect(html).not.toMatch(/\+91|tel:|\b\d{5}[\s-]?\d{5}\b/);
   }
 });
+
+test('the résumé is published, is a PDF, and downloads with a clear filename', async ({ page, request }) => {
+  const res = await request.get('/resume.pdf');
+  expect(res.status()).toBe(200);
+  expect((await res.body()).subarray(0, 5).toString()).toBe('%PDF-');
+  await page.goto('/');
+  await expect(page.getByRole('link', { name: 'Download résumé' })).toHaveAttribute('download', 'Nehang-Shah-Resume.pdf');
+});

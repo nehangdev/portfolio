@@ -36,7 +36,7 @@ function shortHash(text: string): string {
             <span data-cta-icon class="inline-flex"><ng-icon name="tablerArrowRight" size="1.2rem" aria-hidden="true" /></span>
             <span data-cta-sheen class="cta-sheen" aria-hidden="true"></span>
           </a>
-          <a [href]="profile.resumeUrl" download class="btn" appCta="download">
+          <a [href]="profile.resumeUrl" [attr.download]="profile.resumeFileName" class="btn" appCta="download">
             <span data-cta-icon class="inline-flex"><ng-icon name="tablerDownload" size="1.2rem" aria-hidden="true" /></span>
             <span>{{ home.actions.resume }}</span>
           </a>
