@@ -4,6 +4,7 @@ import { TitleStrategy, provideRouter, withInMemoryScrolling, withViewTransition
 import { provideClientHydration } from '@angular/platform-browser';
 import { routes } from './app.routes';
 import { SeoTitleStrategy } from './core/seo';
+import { interruptibleViewTransition } from './core/view-transitions';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -11,7 +12,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(
       routes,
       withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' }),
-      withViewTransitions({ skipInitialTransition: true }),
+      withViewTransitions({ skipInitialTransition: true, onViewTransitionCreated: interruptibleViewTransition }),
     ),
     provideClientHydration(),
     { provide: TitleStrategy, useClass: SeoTitleStrategy },

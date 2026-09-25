@@ -102,3 +102,43 @@ test.describe('call-to-action motion', () => {
     });
   });
 });
+
+test.describe('page transitions', () => {
+  // Record how long each view transition takes, from start to finished.
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      const w = window as unknown as { __vt: number[]; __vtStarted: boolean };
+      w.__vt = [];
+      w.__vtStarted = false;
+      const orig = document.startViewTransition?.bind(document);
+      if (!orig) return;
+      document.startViewTransition = ((arg: Parameters<typeof orig>[0]) => {
+        const start = performance.now();
+        w.__vtStarted = true;
+        const vt = orig(arg);
+        vt.finished.then(() => w.__vt.push(performance.now() - start));
+        return vt;
+      }) as typeof document.startViewTransition;
+    });
+  });
+
+  const durations = (page: import('@playwright/test').Page) =>
+    page.evaluate(() => (window as unknown as { __vt: number[] }).__vt);
+
+  test('finish on their own in well under half a second', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('link', { name: 'Event-driven document processing' }).click();
+    await expect.poll(() => durations(page).then((d) => d.length)).toBe(1);
+    expect((await durations(page))[0]).toBeLessThan(400);
+  });
+
+  test('end as soon as the visitor interacts', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('link', { name: 'Event-driven document processing' }).click();
+    await page.waitForFunction(() => (window as unknown as { __vtStarted: boolean }).__vtStarted);
+    await page.keyboard.press('ArrowDown');
+    await expect.poll(() => durations(page).then((d) => d.length)).toBe(1);
+    // The un-interrupted transition runs about 220ms; interrupted, it ends almost at once.
+    expect((await durations(page))[0]).toBeLessThan(150);
+  });
+});
