@@ -1,0 +1,6 @@
+# Never convert line endings in binary files. Some PDFs contain no NUL bytes, so git's
+# own detection can mistake them for text, and a converted PDF is corrupt.
+*.pdf binary
+*.png binary
+*.woff2 binary
+*.ico binary
