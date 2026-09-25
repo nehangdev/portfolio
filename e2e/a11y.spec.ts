@@ -46,6 +46,50 @@ test('every route has one h1, a main landmark and a unique title', async ({ page
   expect(titles.size).toBe(routes.length);
 });
 
+test('keyboard: every page can be tabbed through, and every stop shows a focus ring', async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(isMobile, 'keyboard test');
+  test.setTimeout(120_000);
+  const problems: string[] = [];
+  for (const route of routes) {
+    await page.goto(route);
+    // Load every deferred demo so its controls are walked too.
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.waitForLoadState('networkidle');
+    await page.evaluate(() => window.scrollTo(0, 0));
+
+    const seen = new Set<string>();
+    for (let i = 0; i < 250; i++) {
+      await page.keyboard.press('Tab');
+      const stop = await page.evaluate(() => {
+        // Look inside Web Components' shadow roots for the element that really has focus.
+        let el = document.activeElement as HTMLElement | null;
+        while (el?.shadowRoot?.activeElement) el = el.shadowRoot.activeElement as HTMLElement;
+        if (!el || el === document.body) return null;
+        const hasRing = (n: Element) => {
+          const s = getComputedStyle(n);
+          return (
+            (s.outlineStyle !== 'none' && parseFloat(s.outlineWidth) > 0) || s.boxShadow !== 'none'
+          );
+        };
+        // Selected-work rows draw the ring around the whole row, not the link inside it.
+        const row = el.closest('.work-row');
+        const ring = hasRing(el) || (row !== null && hasRing(row));
+        const id = `${el.tagName.toLowerCase()} "${(el.getAttribute('aria-label') ?? el.textContent ?? '').trim().slice(0, 40)}"`;
+        return { key: el.outerHTML.slice(0, 200), id, ring };
+      });
+      // Back at the start (or out of the page): the whole page has been walked.
+      if (!stop || seen.has(stop.key)) break;
+      seen.add(stop.key);
+      if (!stop.ring) problems.push(`${route}: ${stop.id} has no visible focus`);
+    }
+    if (seen.size < 3) problems.push(`${route}: only ${seen.size} tab stops`);
+  }
+  expect(problems).toEqual([]);
+});
+
 test('skip link moves focus to main content', async ({ page, isMobile }) => {
   test.skip(isMobile, 'keyboard test');
   await page.goto('/about');

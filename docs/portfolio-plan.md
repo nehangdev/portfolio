@@ -268,39 +268,39 @@ public/   e2e/   docs/{design.md,portfolio-plan.md}   .github/workflows/ci.yml  
 - **Selected work:** the whole row is clickable (a stretched link), with a hover arrow.
 - **Colophon numbers** count up. The final values stay in the HTML.
 
-**Phase 6: Deploy + domain**
-- Deploy to Vercel Hobby as a static site (framework preset: Angular; output `dist/portfolio/browser`). Verify the `*.vercel.app` URL.
-- Prepare `docs/is-a-dev.md`.
-- ✅ The pre-launch checklist passes.
+**Phase 6: Deploy + domain** ✅ done on our side (2026-09-25). The domain PR is yours to submit.
+- Deployed on Vercel Hobby (`framework: null`, output `dist/portfolio/browser`, explicit routes in `vercel.json`). Live at https://portfolio-theta-peach-86.vercel.app/.
+- `docs/is-a-dev.md` has the step-by-step registration.
+- ✅ The pre-launch checklist passes (§12).
 
 ---
 
 ## 11. is-a.dev registration (prepare, I'll submit)
 
-`domains/nehang.json`:
+Full steps are in `docs/is-a-dev.md`. On 2026-09-25 `nehang` was free.
 
-```json
-{
-  "owner": { "username": "nehangdev", "email": "nehangshah.dev@outlook.com" },
-  "records": { "CNAME": "cname.vercel-dns.com" }
-}
-```
+The original plan used a CNAME. is-a.dev's Vercel guide says to use the records Vercel assigns, usually an A record, plus a `_vercel.nehang` TXT record that proves ownership. So the order is:
+1. Add the domain in Vercel.
+2. Copy its records into `domains/nehang.json` and `domains/_vercel.nehang.json`.
+3. Open the PR.
+4. After merge, make it the primary domain and redirect the `vercel.app` address to it.
 
-Check first that `nehang` is free. Fill in the PR template honestly, with the `*.vercel.app` preview URL. After merge, add the custom domain in Vercel and redeploy.
+is-a.dev asks that requests aren't written by AI, so write the "Website purpose" yourself.
 
 ---
 
 ## 12. Pre-launch checklist
-- [ ] No phone number anywhere (grep the build output)
-- [ ] No client names, no services or pricing
-- [ ] Every fact traceable to §2
-- [ ] All links work
-- [ ] Lighthouse ≥ 95 in all four categories on mobile (home and one case study)
-- [ ] Keyboard-only walkthrough of every page and demo
-- [ ] Reduced motion: every animation stops or shows its fallback
-- [ ] JS disabled: all text is readable
-- [ ] `resume.pdf` is the global version without a phone number
-- [ ] SciChart panel: the watermark is visible, and a failed CDN load is handled
+All checked on 2026-09-25.
+- [x] No phone number anywhere: the e2e test scans every page, and `resume.pdf` was read in full.
+- [x] No client names, no services or pricing: clients are described by domain only.
+- [x] Every fact traceable to §2 or to the current `resume.pdf` (projects, WCF, MCP, Stripe and Microsoft Copilot come from the newer résumé).
+- [x] All links work: `npm run links` checked 242 internal and 14 external links. LinkedIn answers bots with 999, which is expected.
+- [x] Lighthouse ≥ 95 in all four categories on mobile: home 96/100/100/100, `/work/event-driven` 98/100/100/100.
+- [x] Keyboard-only walkthrough of every page and demo: an a11y e2e test tabs through all 9 routes, including the chart's shadow DOM, and requires a visible focus ring at every stop.
+- [x] Reduced motion: covered by e2e tests.
+- [x] JS disabled: covered by e2e tests.
+- [x] `resume.pdf` is the global version without a phone number.
+- [x] SciChart panel: the watermark is visible on the live site (230,000 points streaming), and a failed CDN load is covered by an e2e test.
 
 ---
 
