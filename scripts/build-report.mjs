@@ -24,6 +24,9 @@ const RUNS = 3;
 const LIGHTHOUSE_FLOOR = 95;
 const HOME_JS_BUDGET_KB = 150;
 const LIGHTHOUSE_DIR = 'reports/lighthouse';
+// GitHub's Ubuntu runners don't allow Chrome's sandbox (Playwright disables it too). Only in CI,
+// on a throwaway VM loading our own local build; local runs keep the sandbox.
+const CHROME_FLAGS = process.env.CI ? '--headless=new --no-sandbox' : '--headless=new';
 
 const sh = (cmd) =>
   execSync(cmd, {
@@ -133,7 +136,7 @@ try {
       sh(
         `npx lighthouse "${ORIGIN}${path}" --quiet --output=json --output=html ` +
           `--output-path=${name} --only-categories=performance,accessibility,best-practices,seo ` +
-          `--chrome-flags="--headless=new"`,
+          `--chrome-flags="${CHROME_FLAGS}"`,
       );
       const c = JSON.parse(readFileSync(`${name}.report.json`, 'utf8')).categories;
       runs.push({
