@@ -12,5 +12,5 @@ export const profile = {
   // Stored reversed so the address never appears in the prerendered HTML.
   // It is assembled in the browser (see the contact section on the home page).
   emailReversed: 'moc.kooltuo@ved.hahsgnahen',
-  repoUrl: 'https://github.com/nehangdev/portfolio', // TODO(nehang): confirm the repo name once it exists
+  repoUrl: 'https://github.com/nehangdev/portfolio',
 };
