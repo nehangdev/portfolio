@@ -1,0 +1,42 @@
+/*
+ * Design tokens. See docs/design.md for the reasoning.
+ * Dark values are repeated in two blocks: one for the OS preference, one for the manual toggle.
+ * Canvas code reads these with getComputedStyle, so keep them as plain hex (no light-dark()).
+ */
+:root {
+  color-scheme: light;
+  --paper: #e7ecef;
+  --paper-raised: #f3f6f8;
+  --ink: #16202e;
+  --ink-muted: #4a5868;
+  --queue: #1f6f78;
+  --signal: #d99a1e;
+  --fault: #b8412f;
+  --rule: #b9c3ca;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --paper: #121b26;
+    --paper-raised: #182431;
+    --ink: #dce4e9;
+    --ink-muted: #9fb0bd;
+    --queue: #5fb3bc;
+    --signal: #e3a83a;
+    --fault: #e8806c;
+    --rule: #2f3d4a;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --paper: #121b26;
+  --paper-raised: #182431;
+  --ink: #dce4e9;
+  --ink-muted: #9fb0bd;
+  --queue: #5fb3bc;
+  --signal: #e3a83a;
+  --fault: #e8806c;
+  --rule: #2f3d4a;
+}

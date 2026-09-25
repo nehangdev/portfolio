@@ -1,59 +1,42 @@
-# Portfolio
+# nehang.is-a.dev
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.0.
+Personal portfolio of Nehang Shah. Angular 22 (standalone, signals, zoneless), prerendered to static HTML with no runtime server.
 
-## Development server
+## Requirements
 
-To start a local development server, run:
+Node 24.15 or newer (see `.nvmrc`). Angular 22 refuses to run on older versions.
 
-```bash
-ng serve
+## Commands
+
+| Command | What it does |
+|---|---|
+| `npm start` | Dev server at http://localhost:4200 |
+| `npm run build` | Static build into `dist/portfolio/browser` (also writes `404.html`) |
+| `npm test` | Unit tests (Vitest) |
+| `npx playwright install chromium` | One-time browser download for e2e |
+| `npm run e2e` | Playwright + axe against the static build. Run `npm run build` first |
+| `npm run serve:dist` | Serve the static build at http://localhost:4300 |
+
+## Updating content
+
+All copy lives in `src/content/`. Components hold no copy.
+
+- `profile.ts`: name, links, email (stored reversed), résumé path
+- `experience.ts`: timeline and education
+- `work.ts`: the selected-work rows
+- `pages.ts`: page copy, SEO titles and descriptions, and simulation labels
+
+Search for `TODO(nehang)` to find what still needs your input.
+
+## Layout
+
 ```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+src/app/core     theme, media-query signals, SEO title strategy
+src/app/ui       lane (section) primitive
+src/app/pages    home, about, colophon, not-found
+src/app/demos    queue-sim (model, canvas renderer, component, static diagram)
+src/content      all copy
+src/styles       tokens.css, base.css
+e2e              Playwright specs
+docs/design.md   design tokens and the reasoning behind them
 ```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

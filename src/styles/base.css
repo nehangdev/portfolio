@@ -1,0 +1,176 @@
+@font-face {
+  font-family: 'Schibsted Grotesk';
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url('/fonts/schibsted-grotesk-latin.woff2') format('woff2');
+}
+
+@layer base {
+  html {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-size: var(--text-base);
+    line-height: 1.55;
+    background: var(--paper);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  a {
+    color: var(--queue);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  a:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--queue);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--queue);
+    color: var(--paper);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Page width and side gutters, shared by header, main and footer. */
+  .wrap {
+    margin-inline: auto;
+    max-width: 76rem;
+    padding-inline: 1rem;
+  }
+
+  @media (min-width: 40rem) {
+    .wrap {
+      padding-inline: 2rem;
+    }
+  }
+
+  /*
+   * The lane grid: a narrow lane for the section heading and a wide lane for content,
+   * separated from the next section by a rule, like lanes on a queue diagram.
+   */
+  .lanes {
+    display: grid;
+    gap: 1rem;
+    padding-block: 3rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  @media (min-width: 60rem) {
+    .lanes {
+      grid-template-columns: 14rem minmax(0, 1fr);
+      column-gap: 3rem;
+      padding-block: 4rem;
+    }
+  }
+
+  .measure {
+    max-width: 66ch;
+  }
+
+  .measure > * + * {
+    margin-top: 1em;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.5rem 1.1rem;
+    border: 1.5px solid var(--ink);
+    border-radius: 3px;
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .btn:hover {
+    background: var(--paper-raised);
+  }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .btn-primary:hover {
+    background: var(--queue);
+    border-color: var(--queue);
+  }
+
+  /* Stack tags. Plain text with a lane-coloured underline, not pills. */
+  .tag {
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+    border-bottom: 2px solid var(--rule);
+    padding-bottom: 1px;
+  }
+}
+
+@layer components {
+  /*
+   * Fixed-height frame shared by the live simulation and its static diagram,
+   * so swapping one for the other never shifts the layout.
+   */
+  .sim-frame {
+    display: flex;
+    flex-direction: column;
+    height: 24rem;
+  }
+
+  @media (min-width: 40rem) {
+    .sim-frame {
+      height: 21rem;
+    }
+  }
+
+  .sim-stage {
+    flex: 1;
+    min-height: 0;
+    margin-top: 0.75rem;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--paper-raised);
+  }
+}

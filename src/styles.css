@@ -1,1 +1,27 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'tailwindcss';
+@import './styles/tokens.css';
+@import './styles/base.css';
+
+/* Expose the design tokens to Tailwind utilities (bg-paper, text-ink, border-rule, ...). */
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-raised: var(--paper-raised);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-queue: var(--queue);
+  --color-signal: var(--signal);
+  --color-fault: var(--fault);
+  --color-rule: var(--rule);
+}
+
+/* Type scale: 17px base, major third (1.25). */
+@theme {
+  --font-sans: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --text-sm: 0.85rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.33rem;
+  --text-xl: 1.66rem;
+  --text-2xl: 2.075rem;
+  --text-3xl: 2.6rem;
+  --text-display: clamp(2.75rem, 9vw, 6.25rem);
+}
