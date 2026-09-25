@@ -1,10 +1,11 @@
-import { Component, DOCUMENT, afterNextRender, inject } from '@angular/core';
+import { Component, DOCUMENT, afterNextRender, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
   tablerBrandGithub,
   tablerBrandLinkedin,
   tablerCode,
+  tablerCommand,
   tablerMapPin,
   tablerMenu2,
   tablerMoon,
@@ -12,17 +13,20 @@ import {
   tablerX,
 } from '@ng-icons/tabler-icons';
 import { Theme } from './core/theme';
-import { consoleGreeting, footer, nav } from '../content/pages';
+import { CommandPalette } from './ui/command-palette';
+import { consoleGreeting, footer, nav, palette } from '../content/pages';
 import { profile } from '../content/profile';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgIcon],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgIcon, CommandPalette],
+  host: { '(document:keydown)': 'onShortcut($event)' },
   viewProviders: [
     provideIcons({
       tablerBrandGithub,
       tablerBrandLinkedin,
       tablerCode,
+      tablerCommand,
       tablerMapPin,
       tablerMenu2,
       tablerMoon,
@@ -62,6 +66,16 @@ import { profile } from '../content/profile';
         </nav>
 
         <div class="flex items-center gap-1">
+          <button
+            type="button"
+            (click)="openPalette()"
+            [attr.aria-label]="palette.open"
+            [title]="palette.open + ' (' + palette.shortcutHint + ')'"
+            aria-keyshortcuts="Control+K Meta+K"
+            class="icon-btn invisible in-[.js]:visible"
+          >
+            <ng-icon name="tablerCommand" size="1.3rem" aria-hidden="true" />
+          </button>
           <button
             type="button"
             (click)="theme.toggle()"
@@ -110,6 +124,11 @@ import { profile } from '../content/profile';
       </ul>
     </nav>
 
+    <!-- The palette's code downloads the first time someone opens it. -->
+    @defer (when paletteRequested()) {
+      <app-command-palette [(open)]="paletteOpen" />
+    }
+
     <main id="main" tabindex="-1" class="outline-none">
       <router-outlet />
     </main>
@@ -150,6 +169,9 @@ export class App {
     matrixParams: 'ignored',
   } as const;
   protected readonly nav = nav;
+  protected readonly palette = palette;
+  protected readonly paletteRequested = signal(false);
+  protected readonly paletteOpen = signal(false);
   protected readonly footer = footer;
   protected readonly profile = profile;
   private readonly doc = inject(DOCUMENT);
@@ -162,6 +184,20 @@ export class App {
         'font: 13px "Fira Code", monospace',
       ),
     );
+  }
+
+  protected openPalette(): void {
+    this.paletteRequested.set(true);
+    this.paletteOpen.set(true);
+  }
+
+  /** Ctrl+K on Windows/Linux, Cmd+K on macOS, like most developer tools. */
+  protected onShortcut(e: KeyboardEvent): void {
+    if ((e.ctrlKey || e.metaKey) && !e.altKey && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      if (this.paletteOpen()) this.paletteOpen.set(false);
+      else this.openPalette();
+    }
   }
 
   protected focusMain(): void {

@@ -14,6 +14,7 @@ Node 24.15 or newer (see `.nvmrc`). Angular 22 refuses to run on older versions.
 | `npm run build` | Builds the `<nehang-live-chart>` element into `public/elements`, then the static site into `dist/portfolio/browser` (also writes `404.html`) |
 | `npm run build:element` | Builds only the Web Component |
 | `npm run og` | Regenerates the share images in `public/og` after titles change. Commit the PNGs |
+| `npm run report` | Builds, measures sizes, runs unit and e2e tests and Lighthouse, then writes `src/content/build-report.ts` for the Colophon's build log. Commit the result |
 | `npm test` | Unit tests (Vitest) |
 | `npx playwright install chromium` | One-time browser download for e2e |
 | `npm run e2e` | Playwright + axe against the static build. Run `npm run build` first |

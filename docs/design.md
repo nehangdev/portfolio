@@ -76,6 +76,10 @@ Each one carries real information, not just decoration:
 - **A terminal-style 404** that echoes the missing path and lists real pages.
   - The cursor is static, because blinking content needs a way to stop it (WCAG 2.2.2).
 - **A one-line greeting in the browser console**, with a link to the source.
+- **A command palette (Ctrl+K / Cmd+K, or the header's ⌘ button):**
+  - search pages, case studies and actions (theme, copy email, links);
+  - built on a native modal `<dialog>`, with its code loaded on first use.
+- **The Colophon's build log:** measured numbers rendered as a terminal session, with a real table for the Lighthouse scores.
 
 ## Simulation
 

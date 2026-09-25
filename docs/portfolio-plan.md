@@ -232,7 +232,9 @@ public/   e2e/   docs/{design.md,portfolio-plan.md}   .github/workflows/ci.yml  
 
 **Phase 4.6: Developer touches** ✅ done
 - "In short" as an editor file; Prism syntax colouring on code samples; the career timeline as `git log`; a before/after diff on the event-driven study; a file-path breadcrumb on case studies; a terminal-style 404; a console greeting.
-- Deferred: the Colophon as a build log (needs Phase 5 CI numbers) and a Ctrl+K command palette.
+- Also added afterwards:
+  - **Ctrl+K / Cmd+K command palette**: a native `<dialog>` with the combobox/listbox pattern, lazy-loaded (2 KB) and reachable from a header button on phones.
+  - **The Colophon's build log**: real sizes, test counts and Lighthouse medians, written by `npm run report`, stamped with the date and commit, and readable without JavaScript. Phase 5 CI should regenerate or verify it.
 - Declined: a VS Code-style status bar (permanent chrome).
 - ✅ 114 e2e tests pass. Lighthouse on mobile scores ≥ 95 (home at 95–96, the thinnest margin).
 

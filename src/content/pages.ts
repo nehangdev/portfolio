@@ -35,6 +35,34 @@ export const nav = {
   closeMenu: 'Close menu',
 };
 
+/** Command palette (Ctrl+K / Cmd+K). */
+export const palette = {
+  label: 'Command palette',
+  open: 'Open command palette',
+  shortcutHint: 'Ctrl K',
+  inputLabel: 'Search pages and actions',
+  placeholder: 'Search pages and actions…',
+  listLabel: 'Results',
+  empty: 'Nothing matches. Try a page name, "theme" or "email".',
+  close: 'Esc',
+  groups: { page: 'Page', caseStudy: 'Case study', action: 'Action', link: 'Link' },
+  commands: {
+    home: 'Home',
+    about: 'About',
+    colophon: 'Colophon',
+    sandbox: 'Live chart sandbox (plain HTML)',
+    toDark: 'Switch to dark theme',
+    toLight: 'Switch to light theme',
+    copyEmail: 'Copy email address',
+    resume: 'Download résumé',
+    github: 'GitHub profile',
+    linkedin: 'LinkedIn profile',
+    source: 'Source code of this site',
+  },
+  copied: 'Email address copied.',
+  copyFailed: 'Could not copy. The address is on the home page under Contact.',
+};
+
 /** Logged once for anyone who opens the browser console. */
 export const consoleGreeting = {
   title: 'Hello, fellow developer.',
@@ -190,8 +218,7 @@ export const colophon = {
         'Pages work without JavaScript. Only interactive demos need it, and each has a static fallback.',
         'Every demo is downloaded only when it scrolls into view, so the home page stays small.',
         'Animation stops when your system asks for reduced motion, and the simulation pauses when the tab is hidden.',
-        'Unit tests run on Vitest. End-to-end and accessibility checks run on Playwright with axe.',
-        // TODO(phase 5): add Lighthouse CI scores and the CI badge here.
+        'Unit tests run on Vitest. End-to-end and accessibility checks run on Playwright with axe, on desktop and mobile.',
       ],
     },
     {
@@ -203,6 +230,30 @@ export const colophon = {
     },
   ],
   source: { heading: 'Source', text: 'The full source is public on GitHub.', link: 'View the repository' },
+  buildLog: {
+    heading: 'Build log',
+    file: 'build.log',
+    intro: 'Real numbers from the last measured build, not claims. The script that produces them is in the repository.',
+    build: 'npm run build',
+    prerendered: (n: number) => `${n} pages prerendered to static HTML`,
+    sizes: [
+      { key: 'homeInitialJs', label: 'Home page, JavaScript before first interaction' },
+      { key: 'homeAllJs', label: 'Home page, all JavaScript once idle' },
+      { key: 'elementJs', label: '<nehang-live-chart> Web Component' },
+      { key: 'css', label: 'Stylesheet' },
+      { key: 'font', label: 'Fira Code, Latin subset' },
+    ] as const,
+    budget: (kb: number) => `budget ${kb} KB`,
+    unitCmd: 'npm test',
+    unit: (n: number) => `${n} unit tests passed`,
+    e2eCmd: 'npx playwright test',
+    e2e: (passed: number, skipped: number) =>
+      `${passed} end-to-end and accessibility checks passed on desktop and mobile` + (skipped ? `, ${skipped} skipped on purpose` : ''),
+    lighthouseCmd: 'lighthouse --preset=mobile   # median of 3 runs',
+    lighthouseLabel: 'Lighthouse scores, mobile',
+    columns: ['Page', 'Performance', 'Accessibility', 'Best practices', 'SEO'],
+    footer: (date: string, commit: string) => `# Measured on ${date} at commit ${commit}. Regenerate with: npm run report`,
+  },
 };
 
 export const notFound = {

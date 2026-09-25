@@ -199,3 +199,74 @@ test.describe('developer touches', () => {
     await expect.poll(() => logs.some((l) => l.includes('Hello, fellow developer.'))).toBe(true);
   });
 });
+
+test.describe('command palette', () => {
+  test('opens with Ctrl+K, filters, and navigates with the keyboard', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'keyboard shortcut; the header button is tested below');
+    await page.goto('/');
+    await page.locator('body').press('Control+k');
+    const dialog = page.getByRole('dialog', { name: 'Command palette' });
+    await expect(dialog).toBeVisible();
+    const input = dialog.getByRole('combobox', { name: 'Search pages and actions' });
+    await expect(input).toBeFocused();
+    await input.fill('chart');
+    await expect(dialog.getByRole('option').first()).toHaveText(/A real-time chart that runs anywhere/);
+    await expect(dialog.getByRole('option').first()).toHaveAttribute('aria-selected', 'true');
+    await input.press('Enter');
+    await expect(page).toHaveURL(/\/work\/live-chart$/);
+    await expect(dialog).toBeHidden();
+  });
+
+  test('arrow keys move the active option and Escape closes', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'keyboard');
+    await page.goto('/about');
+    await page.locator('body').press('Control+k');
+    const dialog = page.getByRole('dialog', { name: 'Command palette' });
+    const input = dialog.getByRole('combobox');
+    await input.press('ArrowDown');
+    await expect(dialog.getByRole('option').nth(1)).toHaveAttribute('aria-selected', 'true');
+    await expect(input).toHaveAttribute('aria-activedescendant', /^cmd-/);
+    await input.press('Escape');
+    await expect(dialog).toBeHidden();
+  });
+
+  test('the header button opens it and actions run from it', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Open command palette' }).click();
+    const dialog = page.getByRole('dialog', { name: 'Command palette' });
+    await dialog.getByRole('combobox').fill('dark');
+    await dialog.getByRole('option', { name: /Switch to dark theme/ }).click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    await expect(dialog).toBeHidden();
+  });
+
+  test('says so when nothing matches', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Open command palette' }).click();
+    const dialog = page.getByRole('dialog', { name: 'Command palette' });
+    await dialog.getByRole('combobox').fill('zzzz');
+    await expect(dialog.getByRole('option')).toHaveCount(0);
+    await expect(dialog.getByText('Nothing matches.')).toBeVisible();
+  });
+
+  test('its code is not downloaded until it is opened', async ({ page }) => {
+    const loaded: string[] = [];
+    page.on('response', (r) => loaded.push(r.url()));
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+    const before = loaded.length;
+    await page.getByRole('button', { name: 'Open command palette' }).click();
+    await expect(page.getByRole('dialog', { name: 'Command palette' })).toBeVisible();
+    expect(loaded.length).toBeGreaterThan(before);
+  });
+});
+
+test('the colophon shows the build log with sizes, tests and Lighthouse scores', async ({ page }) => {
+  await page.goto('/colophon');
+  await expect(page.getByRole('heading', { level: 2, name: 'Build log' })).toBeVisible();
+  await expect(page.getByText(/pages prerendered to static HTML/)).toBeVisible();
+  await expect(page.getByText('Home page, all JavaScript once idle')).toBeVisible();
+  const table = page.getByRole('table', { name: 'Lighthouse scores, mobile' });
+  await expect(table.getByRole('columnheader', { name: 'Accessibility' })).toBeVisible();
+  await expect(table.getByRole('rowheader', { name: '/', exact: true })).toBeVisible();
+});
