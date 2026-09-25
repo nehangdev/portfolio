@@ -109,7 +109,7 @@ export const home = {
     paragraphs: [
       'At Veloxcore I architect and lead end-to-end delivery, and I lead a sub-team of three. I run sprint planning, review code, mentor the developers on the team, and talk with client stakeholders directly.',
       'I own our Azure DevOps CI/CD, and introduced Docker-based builds so that every project deploys the same way.',
-      'Testing is a large part of how I work. I wrote Selenium regression suites early on, and more recently built an internal framework that generates Playwright tests from plain-language scenarios.',
+      'Testing is a large part of how I work. I write Selenium regression suites, and I built an internal framework that generates Playwright tests from plain-language scenarios.',
       'Day to day I work with AI tools such as GitHub Copilot, Microsoft Copilot and Claude Code, and pick the model to fit the task.',
     ],
   },
@@ -199,8 +199,8 @@ export const about = {
     {
       heading: 'Testing and tooling',
       paragraphs: [
-        'Early on I wrote Selenium regression suites for core ERP workflows, and C# console utilities for data migration and batch processing.',
-        'More recently I built an AI-driven Playwright framework: reusable AI skills take a scenario description through a 10-phase pipeline, from requirement analysis and project mapping to test cases, page-object discovery and a generated script.',
+        'At Veloxcore I write Selenium regression suites, and C# console utilities for data migration and batch-processing jobs.',
+        'I also built an AI-driven Playwright framework: reusable AI skills take a scenario description through a 10-phase pipeline, from requirement analysis and project mapping to test cases, page-object discovery and a generated script.',
         'Day to day I work with GitHub Copilot, Microsoft Copilot and Claude Code, and with MCP and agentic AI tooling.',
       ],
     },

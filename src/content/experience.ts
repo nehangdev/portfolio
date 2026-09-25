@@ -16,7 +16,7 @@ export const timeline: TimelineEntry[] = [
     org: 'Soham ERP Solutions',
     lines: [
       'Full-stack ERP modules for HR, inventory and reporting on .NET Framework Web API and Angular v1.4 to v5, including an electronic document system for batch manufacturing records.',
-      'SQL Server queries, views and stored procedures, C# utilities for data migration and batch jobs, and Selenium regression suites.',
+      'Complex SQL Server queries, views and stored procedures behind the ERP reporting modules.',
     ],
   },
   {
@@ -43,6 +43,7 @@ export const timeline: TimelineEntry[] = [
     lines: [
       'I architect and lead delivery of B2B platforms for insurance and digital-marketplace clients on .NET 6–9, Angular 14–16, Blazor and Azure.',
       'I lead a sub-team of three and own the Azure DevOps CI/CD pipelines.',
+      'Selenium regression suites, and C# console utilities for data migration and batch-processing jobs.',
     ],
   },
 ];

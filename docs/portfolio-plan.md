@@ -41,6 +41,7 @@ Use **only** these facts. Do not invent metrics, clients, testimonials, or proje
 - Owns Azure DevOps CI/CD and introduced Docker-based builds to standardise deployments.
 - Leads a sub-team of 3: sprint planning, code reviews, mentoring, client stakeholder communication.
 - Internal AI-driven Playwright framework: reusable AI skills take a scenario description through a 10-phase pipeline. Named phases include requirement analysis, project mapping, manual test-case generation, POM/fixture discovery, and automated script generation.
+- Selenium regression suites, and C# console utilities for data migration and batch-processing jobs (at Veloxcore, not Soham ERP).
 
 **Sufalam Solutions Pvt. Ltd.: Software Developer (Jul 2020 – Apr 2021)**
 - RESTful APIs in ASP.NET Core with Angular SPA front ends.
@@ -50,8 +51,6 @@ Use **only** these facts. Do not invent metrics, clients, testimonials, or proje
 **Soham ERP Solutions Pvt. Ltd.: Junior Software Developer (May 2018 – Jun 2020)**
 - Full-stack ERP modules (HR, inventory, reporting) on .NET Framework Web API and Angular v1.4–v5, including an electronic document system for batch manufacturing records.
 - Complex SQL Server queries, views and stored procedures.
-- C# console utilities for data migration and batch processing.
-- Selenium regression suites for core ERP workflows.
 
 **Career break:** May 2021 – Oct 2021. Show it plainly on the timeline, without explanation.
 
