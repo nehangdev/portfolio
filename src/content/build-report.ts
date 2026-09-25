@@ -2,11 +2,11 @@
 // Sizes are KB gzipped (the font is already compressed).
 export const buildReport = {
   "measuredOn": "2026-09-25",
-  "commit": "7fe46eb",
+  "commit": "edbac29",
   "routes": 8,
   "sizes": {
-    "homeInitialJs": 115.8,
-    "homeAllJs": 140.3,
+    "homeInitialJs": 116,
+    "homeAllJs": 140.5,
     "budget": 150,
     "elementJs": 49.4,
     "css": 7.1,
@@ -16,7 +16,7 @@ export const buildReport = {
     "passed": 8
   },
   "e2e": {
-    "passed": 130,
+    "passed": 150,
     "skipped": 4,
     "flaky": 0
   },
@@ -30,7 +30,7 @@ export const buildReport = {
     },
     {
       "path": "/work/event-driven",
-      "performance": 97,
+      "performance": 98,
       "accessibility": 100,
       "bestPractices": 100,
       "seo": 100
