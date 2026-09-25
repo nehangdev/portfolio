@@ -21,7 +21,9 @@ export const caseStudyText = {
   stackHeading: 'Stack',
   stackLabel: 'Stack',
   next: 'Next case study',
-  all: 'All case studies',
+  breadcrumb: 'Breadcrumb',
+  homeHint: 'home page',
+  workFolder: 'work',
   staticNote: 'Static preview. The interactive version needs JavaScript.',
 };
 

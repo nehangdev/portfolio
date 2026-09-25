@@ -4,6 +4,7 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { tablerArrowRight, tablerDownload } from '@ng-icons/tabler-icons';
 import { Lane } from '../../ui/lane';
 import { CtaMotion } from '../../ui/cta-motion';
+import { MarkupPanel } from '../../ui/markup-panel';
 import { Contact } from './contact';
 import { QueueSim } from '../../demos/queue-sim/queue-sim';
 import { QueueDiagram } from '../../demos/queue-sim/queue-diagram';
@@ -12,8 +13,15 @@ import { profile } from '../../../content/profile';
 import { timeline } from '../../../content/experience';
 import { caseStudies } from '../../../content/case-studies';
 
+/** FNV-1a, first 7 hex digits: stable, commit-looking, and meaningless on purpose. */
+function shortHash(text: string): string {
+  let h = 0x811c9dc5;
+  for (const ch of text) h = Math.imul(h ^ ch.charCodeAt(0), 0x01000193) >>> 0;
+  return h.toString(16).padStart(8, '0').slice(0, 7);
+}
+
 @Component({
-  imports: [RouterLink, NgIcon, Lane, CtaMotion, Contact, QueueSim, QueueDiagram],
+  imports: [RouterLink, NgIcon, Lane, CtaMotion, MarkupPanel, Contact, QueueSim, QueueDiagram],
   viewProviders: [provideIcons({ tablerArrowRight, tablerDownload })],
   template: `
     <div class="wrap">
@@ -48,11 +56,12 @@ import { caseStudies } from '../../../content/case-studies';
       </section>
 
       <section appLane [heading]="home.intro.heading">
-        <div class="measure">
-          @for (p of home.intro.paragraphs; track $index) {
-            <p>{{ p }}</p>
-          }
-        </div>
+        <app-markup-panel
+          [file]="home.intro.editor.file"
+          [tag]="home.intro.editor.tag"
+          [attrs]="home.intro.editor.attrs"
+          [paragraphs]="home.intro.paragraphs"
+        />
       </section>
 
       <section appLane id="work" [heading]="home.work.heading">
@@ -77,28 +86,36 @@ import { caseStudies } from '../../../content/case-studies';
       </section>
 
       <section appLane [heading]="home.timeline.heading">
-        <ol class="ml-1.5 border-l-2 border-rule">
-          @for (e of timeline; track e.start; let last = $last) {
-            <li class="relative pb-9 pl-7 last:pb-0">
-              <span
-                aria-hidden="true"
-                class="absolute -left-[9px] top-1.5 size-4 rounded-full border-2"
-                [class]="
-                  !e.org
-                    ? 'border-rule bg-paper'
-                    : last
-                      ? 'border-queue bg-queue'
-                      : 'border-signal bg-signal'
-                "
-              ></span>
-              <h3 class="text-lg">
-                {{ e.title
-                }}@if (e.org) {<span class="font-normal text-ink-muted">, {{ e.org }}</span>}
-              </h3>
-              <p class="text-sm text-ink-muted"><time [attr.datetime]="e.start">{{ e.period }}</time></p>
-              @for (line of e.lines; track $index) {
-                <p class="measure mt-2">{{ line }}</p>
-              }
+        <!-- Career history styled as \`git log --graph\`: newest first, one commit per role. -->
+        <ol class="gitlog">
+          @for (e of gitLog; track e.start; let first = $first) {
+            <li class="gitlog-item" [class.gitlog-gap]="!e.org">
+              <span class="gitlog-node" aria-hidden="true">{{ e.org ? '*' : '┊' }}</span>
+              <div class="min-w-0">
+                @if (e.org) {
+                  <p class="text-sm" aria-hidden="true">
+                    <span class="syn-type">{{ e.hash }}</span>
+                    @if (first) {
+                      {{ ' ' }}<span class="syn-punct">(</span><span class="syn-tag">HEAD -&gt; </span
+                      ><span class="syn-string">{{ home.timeline.branch }}</span><span class="syn-punct">)</span>
+                    }
+                  </p>
+                  <h3 class="text-lg">
+                    {{ e.title }}<span class="font-normal text-ink-muted">, {{ e.org }}</span>
+                  </h3>
+                } @else {
+                  <h3 class="text-lg font-normal italic text-ink-muted">
+                    <span aria-hidden="true"># </span>{{ e.title }}
+                  </h3>
+                }
+                <p class="text-sm text-ink-muted">
+                  <span aria-hidden="true">{{ home.timeline.dateLabel }} </span
+                  ><time [attr.datetime]="e.start">{{ e.period }}</time>
+                </p>
+                @for (line of e.lines; track $index) {
+                  <p class="measure mt-2">{{ line }}</p>
+                }
+              </div>
             </li>
           }
         </ol>
@@ -123,7 +140,8 @@ export class Home {
   protected readonly home = home;
   protected readonly hero = hero;
   protected readonly work = caseStudies;
-  protected readonly timeline = timeline;
+  /** Newest first, like `git log`, each with a short hash derived from its dates. */
+  protected readonly gitLog = [...timeline].reverse().map((e) => ({ ...e, hash: shortHash(e.start + e.title) }));
 
   constructor() {
     // JSON-LD Person schema, home page only.

@@ -8,7 +8,7 @@ import { highlight } from './highlight';
     <figure class="min-w-0">
       <pre
         tabindex="0"
-        [attr.aria-label]="label() || language() + ' code'"
+        [attr.aria-label]="label() || caption() || language() + ' code'"
         class="code overflow-x-auto rounded border border-rule bg-paper-raised p-4 font-mono text-sm leading-relaxed"
       ><code [innerHTML]="highlighted()"></code></pre>
       @if (caption()) {

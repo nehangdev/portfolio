@@ -22,6 +22,22 @@ export const caseStudyBodies: Record<CaseStudy['slug'], CaseStudyBody> = {
         heading: 'What I did',
         blocks: [
           'I moved the processing onto Azure Service Bus. Receiving a document now means publishing a message and returning. The work happens in consumers that read from the bus.',
+          {
+            lang: 'diff-csharp',
+            caption: 'The shape of the change, simplified and written for this page. Not client code.',
+            code: ` [HttpPost("documents")]
+ public async Task<IActionResult> Upload(DocumentUploaded document)
+ {
+-    // The caller waits while every step runs, one after another.
+-    await validator.ValidateAsync(document);
+-    await indexer.IndexAsync(document);
+-    await notifier.NotifyAsync(document);
+-    return Ok();
++    // Publish once and return. Each subscription on the topic does its part in parallel.
++    await sender.SendMessageAsync(new ServiceBusMessage(BinaryData.FromObjectAsJson(document)));
++    return Accepted();
+ }`,
+          },
           'Topics and subscriptions let one uploaded document feed several independent steps. Each subscription gets its own copy of the message and its own consumers, so a slow step does not hold up a fast one.',
           'Consumers run in parallel, so throughput grows with the number of consumers. Service Bus redelivers a message that fails. One that keeps failing moves to the dead-letter queue, where it can be inspected instead of lost.',
           'On the .NET side the design follows CQRS. Commands that change state go through the bus, and queries read along their own path.',

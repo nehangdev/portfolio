@@ -1,4 +1,4 @@
-import { Component, DOCUMENT, inject } from '@angular/core';
+import { Component, DOCUMENT, afterNextRender, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
@@ -12,7 +12,7 @@ import {
   tablerX,
 } from '@ng-icons/tabler-icons';
 import { Theme } from './core/theme';
-import { footer, nav } from '../content/pages';
+import { consoleGreeting, footer, nav } from '../content/pages';
 import { profile } from '../content/profile';
 
 @Component({
@@ -153,6 +153,16 @@ export class App {
   protected readonly footer = footer;
   protected readonly profile = profile;
   private readonly doc = inject(DOCUMENT);
+
+  constructor() {
+    afterNextRender(() =>
+      console.log(
+        `%c${consoleGreeting.title}%c\n${consoleGreeting.body}\n${profile.repoUrl}`,
+        'font: 700 15px "Fira Code", monospace; color: #5fb3bc',
+        'font: 13px "Fira Code", monospace',
+      ),
+    );
+  }
 
   protected focusMain(): void {
     this.doc.getElementById('main')?.focus();

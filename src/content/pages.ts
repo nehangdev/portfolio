@@ -35,6 +35,12 @@ export const nav = {
   closeMenu: 'Close menu',
 };
 
+/** Logged once for anyone who opens the browser console. */
+export const consoleGreeting = {
+  title: 'Hello, fellow developer.',
+  body: 'You opened the console, so you might like the source: every line of this site is public.',
+};
+
 export const footer = {
   github: 'GitHub profile',
   linkedin: 'LinkedIn profile',
@@ -46,6 +52,8 @@ export const home = {
   actions: { work: 'Read the case studies', resume: 'Download résumé' },
   intro: {
     heading: 'In short',
+    /** The intro is shown as an editor file. See ui/markup-panel.ts. */
+    editor: { file: 'in-short.html', tag: 'section', attrs: [['class', 'intro'], ['lang', 'en']] as [string, string][] },
     paragraphs: [
       'I have spent 8.5 years designing and building enterprise web applications end to end. On the backend that means .NET and Azure. On the front, Angular is my main tool, alongside React and Blazor WebAssembly and Server, with Umbraco and NopCommerce when a project needs a CMS or a commerce platform.',
       'Most of my recent work is on insurance and digital-marketplace platforms: event-driven processing on Azure Service Bus, single sign-on with Azure AD B2C, real-time dashboards, and test automation.',
@@ -57,7 +65,7 @@ export const home = {
     stackLabel: 'Stack',
     note: 'Client work is described by domain. Every demo on this site uses synthetic data.',
   },
-  timeline: { heading: 'Experience' },
+  timeline: { heading: 'Experience', branch: 'main', dateLabel: 'Date:' },
   howIWork: {
     heading: 'How I work',
     paragraphs: [
@@ -200,5 +208,13 @@ export const colophon = {
 export const notFound = {
   heading: 'This page does not exist',
   body: 'The address may be mistyped, or the page may have moved. These might be what you were after:',
-  home: 'Go to the home page',
+  terminal: {
+    label: 'Terminal',
+    prompt: 'nehang@portfolio:~$',
+    error: (path: string) => `bash: cd: ${path}: No such file or directory`,
+    listing: 'ls ~/work',
+    pagesLabel: 'Pages you can open',
+    home: 'cd ~',
+    homeHint: 'home page',
+  },
 };

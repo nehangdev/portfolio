@@ -452,3 +452,181 @@
     color: var(--ink-muted);
   }
 }
+
+@layer components {
+  /* Prose shown as an editor file (the home intro): see ui/markup-panel.ts. */
+  .editor {
+    max-width: calc(66ch + 6ch);
+    overflow: hidden;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    background: var(--paper-raised);
+  }
+
+  .editor-tab {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    font-size: var(--text-sm);
+    color: var(--ink);
+    border-right: 1px solid var(--rule);
+    border-bottom: 2px solid var(--syn-tag);
+  }
+
+  .editor-body {
+    counter-reset: ln;
+    padding: 0.9rem 1rem 1rem 0;
+    border-top: 1px solid var(--rule);
+    margin-top: -1px;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+  }
+
+  .editor-row {
+    display: grid;
+    grid-template-columns: 4ch minmax(0, 1fr);
+    column-gap: 1.5ch;
+    counter-increment: ln;
+  }
+
+  /* Line numbers, right-aligned in the gutter like an editor. */
+  .editor-ln::before {
+    content: counter(ln);
+    display: block;
+    text-align: right;
+    color: var(--ink-muted);
+    opacity: 0.7;
+  }
+
+  .editor-text {
+    padding-left: 4ch;
+    color: var(--ink);
+  }
+
+  .syn-tag {
+    color: var(--syn-tag);
+  }
+
+  .syn-attr {
+    color: var(--syn-attr);
+    font-style: italic;
+  }
+
+  .syn-string {
+    color: var(--syn-string);
+  }
+
+  .syn-keyword {
+    color: var(--syn-keyword);
+  }
+
+  .syn-punct {
+    color: var(--ink-muted);
+  }
+}
+
+@layer components {
+  /* Experience as `git log --graph`: a graph gutter with a line joining each commit. */
+  .gitlog-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2ch minmax(0, 1fr);
+    column-gap: 1.5ch;
+    padding-bottom: 2.25rem;
+  }
+
+  .gitlog-item:last-child {
+    padding-bottom: 0;
+  }
+
+  .gitlog-item::before {
+    content: '';
+    position: absolute;
+    top: 1.6em;
+    bottom: 0.2em;
+    left: calc(1ch - 1px);
+    border-left: 2px solid var(--syn-tag);
+  }
+
+  .gitlog-item:last-child::before {
+    display: none;
+  }
+
+  /* The career break: no commits, so the branch line runs dashed. */
+  .gitlog-gap::before {
+    border-left-style: dashed;
+    border-color: var(--ink-muted);
+  }
+
+  .gitlog-node {
+    color: var(--syn-tag);
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .gitlog-gap .gitlog-node {
+    color: var(--ink-muted);
+  }
+}
+
+@layer components {
+  /* Diff lines inside code samples (language "diff-<lang>"). The +/- marker carries the meaning; colour backs it up. */
+  .code:has(.diff-line) code {
+    display: inline-block;
+    min-width: 100%;
+  }
+
+  .diff-line {
+    display: block;
+    padding-inline: 0.25rem;
+  }
+
+  .diff-mark {
+    display: inline-block;
+    width: 2ch;
+    color: var(--ink-muted);
+    user-select: none;
+  }
+
+  .diff-add {
+    background: color-mix(in srgb, var(--syn-string) 14%, transparent);
+  }
+
+  .diff-add .diff-mark {
+    color: var(--syn-string);
+  }
+
+  .diff-del {
+    background: color-mix(in srgb, var(--fault) 14%, transparent);
+  }
+
+  .diff-del .diff-mark {
+    color: var(--fault);
+  }
+}
+
+@layer components {
+  /* A solid block cursor. Deliberately static: blinking content needs a way to stop it (WCAG 2.2.2). */
+  .terminal-cursor {
+    display: inline-block;
+    width: 0.6em;
+    height: 1.1em;
+    margin-left: 0.5ch;
+    vertical-align: text-bottom;
+    background: var(--ink);
+  }
+}
+
+@layer components {
+  /* Breadcrumb as a file path: ~ / work / slug.md, with the slashes drawn in CSS. */
+  .crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .crumbs li + li::before {
+    content: '/';
+    padding-inline: 0.5ch;
+    color: var(--ink-muted);
+  }
+}

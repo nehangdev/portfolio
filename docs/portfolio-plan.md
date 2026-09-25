@@ -230,6 +230,12 @@ public/   e2e/   docs/{design.md,portfolio-plan.md}   .github/workflows/ci.yml  
 - Extras: a scroll-driven header divider and reading-progress line, a header that stays put during view transitions, and `theme-color` metadata.
 - ✅ Home JS is 99 KB gzipped initially and 134 KB once everything has loaded at idle (limit 150). Lighthouse is ≥ 96 on mobile. 98 e2e tests pass.
 
+**Phase 4.6: Developer touches** ✅ done
+- "In short" as an editor file; Prism syntax colouring on code samples; the career timeline as `git log`; a before/after diff on the event-driven study; a file-path breadcrumb on case studies; a terminal-style 404; a console greeting.
+- Deferred: the Colophon as a build log (needs Phase 5 CI numbers) and a Ctrl+K command palette.
+- Declined: a VS Code-style status bar (permanent chrome).
+- ✅ 114 e2e tests pass. Lighthouse on mobile scores ≥ 95 (home at 95–96, the thinnest margin).
+
 **Phase 5: Quality + CI**
 - Playwright e2e, axe on every route, visual snapshots (light/dark, mobile/desktop), Lighthouse CI and a link checker in GitHub Actions.
 - ✅ CI is green, and the README explains everything.

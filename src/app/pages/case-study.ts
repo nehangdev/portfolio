@@ -45,7 +45,16 @@ function flatten(b: Block): FlatBlock {
   template: `
     <article class="wrap">
       <header class="py-10 sm:py-14">
-        <a routerLink="/" fragment="work" class="text-sm">{{ text.all }}</a>
+        <!-- Breadcrumb styled as a file path: ~/work/<slug>.md -->
+        <nav [attr.aria-label]="text.breadcrumb" class="text-sm">
+          <ol class="crumbs">
+            <li>
+              <a routerLink="/" class="syn-tag">~<span class="sr-only"> ({{ text.homeHint }})</span></a>
+            </li>
+            <li><a routerLink="/" fragment="work">{{ text.workFolder }}</a></li>
+            <li aria-current="page" class="syn-string">{{ cs.slug }}.md</li>
+          </ol>
+        </nav>
         <h1 class="mt-3 text-3xl sm:text-[3.5rem]" [style.view-transition-name]="'cs-' + cs.slug">{{ cs.title }}</h1>
         <p class="measure mt-4 text-lg">{{ cs.outcome }}</p>
       </header>

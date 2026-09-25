@@ -149,3 +149,53 @@ test.describe('page transitions', () => {
     expect(endedAt - pressedAt).toBeLessThan(150);
   });
 });
+
+test.describe('developer touches', () => {
+  test('In short reads as an editor file but screen readers get just the paragraphs', async ({ page }) => {
+    await page.goto('/');
+    const panel = page.locator('app-markup-panel');
+    await expect(panel.getByText('in-short.html')).toBeVisible();
+    await expect(panel.locator('p')).toHaveCount(3);
+    await expect(panel.locator('.editor-row[aria-hidden="true"]')).not.toHaveCount(0);
+  });
+
+  test('experience reads as git log: newest first, HEAD on the current role', async ({ page }) => {
+    await page.goto('/');
+    const titles = page.locator('.gitlog h3');
+    await expect(titles.first()).toContainText('Senior Software Engineer');
+    await expect(titles.last()).toContainText('Junior Software Developer');
+    await expect(page.locator('.gitlog-item').first()).toContainText('HEAD');
+    await expect(page.locator('.gitlog-gap h3')).toContainText('Career break');
+  });
+
+  test('the event-driven change is shown as a diff with +/- markers', async ({ page }) => {
+    await page.goto('/work/event-driven');
+    await expect(page.locator('.diff-del')).not.toHaveCount(0);
+    await expect(page.locator('.diff-add')).not.toHaveCount(0);
+    await expect(page.locator('.diff-add .diff-mark').first()).toHaveText('+');
+    await expect(page.locator('.diff-del .diff-mark').first()).toHaveText('-');
+  });
+
+  test('case studies have a file-path breadcrumb', async ({ page }) => {
+    await page.goto('/work/identity');
+    const crumbs = page.getByRole('navigation', { name: 'Breadcrumb' });
+    await expect(crumbs.locator('[aria-current="page"]')).toHaveText('identity.md');
+    await crumbs.getByRole('link', { name: 'work' }).click();
+    await expect(page).toHaveURL(/\/#work$/);
+  });
+
+  test('the 404 terminal echoes the missing path and lists real pages', async ({ page }) => {
+    await page.goto('/nowhere/at-all');
+    await expect(page.getByText('bash: cd: /nowhere/at-all: No such file or directory')).toBeVisible();
+    const list = page.getByRole('list', { name: 'Pages you can open' });
+    await list.getByRole('link', { name: 'live-chart/' }).click();
+    await expect(page).toHaveURL(/\/work\/live-chart$/);
+  });
+
+  test('greets developers in the console', async ({ page }) => {
+    const logs: string[] = [];
+    page.on('console', (m) => logs.push(m.text()));
+    await page.goto('/');
+    await expect.poll(() => logs.some((l) => l.includes('Hello, fellow developer.'))).toBe(true);
+  });
+});

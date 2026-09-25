@@ -47,7 +47,9 @@ wrap (max 76rem, 16px gutter on phones)
 - Everything is left-aligned. Below 60rem the two lanes stack.
 - Selected work is a list of rows separated by rules, not cards. Stack tags are underlined text, not pills.
 - **Shape encodes meaning.** The pill shape is kept for messages (in the simulation and its static diagram). Buttons have a 3px radius and the stage has 4px. Nothing else is rounded.
-- The timeline markers encode state with the same colours as the simulation: amber for past roles (processed), teal for the current role (in flight), and hollow for the career break.
+- The career timeline reads as `git log --graph`, newest first:
+  - each role is a commit with a short hash, and the current role carries `(HEAD -> main)`;
+  - the career break is a `#` comment on a dashed stretch of the branch line.
 
 ## Motion
 
@@ -58,6 +60,22 @@ wrap (max 76rem, 16px gutter on phones)
 - **Sticky header:** a divider and a reading-progress line appear as you scroll. Both use CSS scroll-driven animation, so there is no JavaScript scroll listener, and they move only when the reader scrolls.
 - The simulation stops when you pause it, when the tab is hidden, or when the system asks for reduced motion. With reduced motion it is replaced by the static diagram.
 - The static diagram is also the prerendered placeholder and the no-JavaScript view. It shares a fixed-height frame with the live simulation, so swapping one for the other causes no layout shift.
+
+## Developer touches (Phase 4.6)
+
+Each one carries real information, not just decoration:
+
+- **"In short" as an editor file** (`in-short.html`):
+  - line numbers, and the paragraphs wrapped in syntax-coloured HTML tags;
+  - screen readers get only the paragraphs.
+- **Syntax colouring (Prism)** on every code sample. The colours are applied at build time, so they also work without JavaScript.
+  - Palette: One Dark in dark mode, darker equivalents in light mode, all at least 5:1 contrast.
+- **A before/after diff** of the synchronous-to-Service-Bus change, shown on the event-driven case study.
+  - `+`/`-` markers carry the meaning; colour only backs them up.
+- **A file-path breadcrumb** (`~ / work / slug.md`) on case studies. Each part is a working link.
+- **A terminal-style 404** that echoes the missing path and lists real pages.
+  - The cursor is static, because blinking content needs a way to stop it (WCAG 2.2.2).
+- **A one-line greeting in the browser console**, with a link to the source.
 
 ## Simulation
 
