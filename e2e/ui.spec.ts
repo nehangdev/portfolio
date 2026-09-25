@@ -86,14 +86,35 @@ test('site text is set in Fira Code', async ({ page }) => {
 });
 
 test.describe('call-to-action motion', () => {
-  test('plays the one-time attention cue on the primary button', async ({ page, isMobile }) => {
-    test.skip(isMobile, 'cue is the same on mobile; checked once');
+  test('the case-studies button pulses when in view and stops within 5 seconds', async ({
+    page,
+  }) => {
     await page.goto('/');
     const cta = page.getByRole('link', { name: 'Read the case studies' });
-    // Motion writes an inline transform while the cue plays.
-    await expect
-      .poll(() => cta.evaluate((el) => (el as HTMLElement).style.transform), { timeout: 4000 })
-      .toMatch(/scale/);
+    await expect(cta).toHaveClass(/cta-pulse/);
+    // Three beats of 1.4s; the class is removed when the animation ends (WCAG 2.2.2).
+    await expect(cta).not.toHaveClass(/cta-pulse/, { timeout: 6000 });
+  });
+
+  test('pressing a call to action draws a ripple', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'pointer press; the header icon button is checked on desktop');
+    await page.goto('/');
+    const cta = page.getByRole('link', { name: 'Read the case studies' });
+    const box = (await cta.boundingBox())!;
+    await page.mouse.move(box.x + 20, box.y + box.height / 2);
+    await page.waitForTimeout(1500); // Motion loads after the page is interactive
+    await page.mouse.down();
+    await expect(page.locator('.cta-ripple')).toHaveCount(1);
+    await page.mouse.up();
+    await expect(page.locator('.cta-ripple')).toHaveCount(0, { timeout: 2000 });
+  });
+
+  test('the résumé is one click away in the header on every page', async ({ page }) => {
+    await page.goto('/work/identity');
+    const resume = page.locator('header').getByRole('link', { name: 'Download résumé' });
+    await expect(resume).toBeVisible();
+    await expect(resume).toHaveAttribute('href', '/resume.pdf');
+    await expect(resume).toHaveAttribute('download', 'Nehang-Shah-Resume.pdf');
   });
 
   test.describe('with reduced motion', () => {
@@ -103,9 +124,32 @@ test.describe('call-to-action motion', () => {
       await page.goto('/');
       await page.waitForTimeout(2500);
       const cta = page.getByRole('link', { name: 'Read the case studies' });
+      await expect(cta).not.toHaveClass(/cta-pulse/);
       expect(await cta.evaluate((el) => (el as HTMLElement).style.transform)).toBe('');
     });
   });
+});
+
+test('the email and its copy button share one line on a 360px phone', async ({ browser }) => {
+  const ctx = await browser.newContext({ viewport: { width: 360, height: 800 } });
+  const page = await ctx.newPage();
+  await page.goto('/');
+  const email = page.locator('app-contact a[href^="mailto:"]');
+  await email.scrollIntoViewIfNeeded();
+  const copy = page.getByRole('button', { name: 'Copy address' });
+  const [e, c] = [(await email.boundingBox())!, (await copy.boundingBox())!];
+  expect(e.height).toBeLessThan(26); // one line of text
+  expect(Math.abs(e.y + e.height / 2 - (c.y + c.height / 2))).toBeLessThan(6); // same row
+  await ctx.close();
+});
+
+test('the command palette has one scrollbar: its list', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Open command palette' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Command palette' });
+  await expect(dialog).toBeVisible();
+  const [scroll, client] = await dialog.evaluate((e) => [e.scrollHeight, e.clientHeight]);
+  expect(scroll).toBeLessThanOrEqual(client);
 });
 
 test.describe('page transitions', () => {

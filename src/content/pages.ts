@@ -31,6 +31,8 @@ export const nav = {
   ],
   themeToDark: 'Use dark theme',
   themeToLight: 'Use light theme',
+  resume: 'Résumé',
+  resumeLabel: 'Download résumé',
   openMenu: 'Open menu',
   closeMenu: 'Close menu',
 };
@@ -77,7 +79,7 @@ export const footer = {
 };
 
 export const home = {
-  actions: { work: 'Read the case studies', resume: 'Download résumé' },
+  actions: { work: 'Read the case studies' },
   intro: {
     heading: 'In short',
     /** The intro is shown as an editor file. See ui/markup-panel.ts. */

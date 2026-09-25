@@ -6,6 +6,7 @@ import {
   tablerBrandLinkedin,
   tablerCode,
   tablerCommand,
+  tablerDownload,
   tablerMapPin,
   tablerMenu2,
   tablerMoon,
@@ -14,12 +15,13 @@ import {
 } from '@ng-icons/tabler-icons';
 import { Theme } from './core/theme';
 import { CommandPalette } from './ui/command-palette';
+import { CtaMotion } from './ui/cta-motion';
 import { consoleGreeting, footer, nav, palette } from '../content/pages';
 import { profile } from '../content/profile';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgIcon, CommandPalette],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgIcon, CommandPalette, CtaMotion],
   host: { '(document:keydown)': 'onShortcut($event)' },
   viewProviders: [
     provideIcons({
@@ -27,6 +29,7 @@ import { profile } from '../content/profile';
       tablerBrandLinkedin,
       tablerCode,
       tablerCommand,
+      tablerDownload,
       tablerMapPin,
       tablerMenu2,
       tablerMoon,
@@ -66,6 +69,31 @@ import { profile } from '../content/profile';
         </nav>
 
         <div class="flex items-center gap-1">
+          <!-- Résumé: a labelled outlined button from md up, an icon button on phones. -->
+          <a
+            [href]="profile.resumeUrl"
+            [attr.download]="profile.resumeFileName"
+            [attr.aria-label]="nav.resumeLabel"
+            class="btn btn-cta mr-2 hidden min-h-9 px-3 py-1 text-sm md:inline-flex"
+            appCta="download"
+          >
+            <span data-cta-icon class="inline-flex"
+              ><ng-icon name="tablerDownload" size="1.1rem" aria-hidden="true"
+            /></span>
+            <span>{{ nav.resume }}</span>
+          </a>
+          <a
+            [href]="profile.resumeUrl"
+            [attr.download]="profile.resumeFileName"
+            [attr.aria-label]="nav.resumeLabel"
+            [title]="nav.resumeLabel"
+            class="icon-btn relative overflow-hidden md:hidden"
+            appCta="download"
+          >
+            <span data-cta-icon class="inline-flex"
+              ><ng-icon name="tablerDownload" size="1.35rem" aria-hidden="true"
+            /></span>
+          </a>
           <button
             type="button"
             (click)="openPalette()"

@@ -1,7 +1,7 @@
 import { Component, DOCUMENT, DestroyRef, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { tablerArrowRight, tablerDownload } from '@ng-icons/tabler-icons';
+import { tablerArrowRight } from '@ng-icons/tabler-icons';
 import { Lane } from '../../ui/lane';
 import { CtaMotion } from '../../ui/cta-motion';
 import { MarkupPanel } from '../../ui/markup-panel';
@@ -22,7 +22,7 @@ function shortHash(text: string): string {
 
 @Component({
   imports: [RouterLink, NgIcon, Lane, CtaMotion, MarkupPanel, Contact, QueueSim, QueueDiagram],
-  viewProviders: [provideIcons({ tablerArrowRight, tablerDownload })],
+  viewProviders: [provideIcons({ tablerArrowRight })],
   template: `
     <div class="wrap">
       <section aria-labelledby="h-hero" class="pb-14 pt-8 sm:pt-14">
@@ -31,29 +31,11 @@ function shortHash(text: string): string {
         </h1>
         <p class="mt-4 text-lg text-ink-muted sm:text-xl">{{ profile.tagline }}</p>
         <div class="mt-8 flex flex-wrap gap-3">
-          <a
-            routerLink="/"
-            fragment="work"
-            class="btn btn-primary relative overflow-hidden"
-            appCta="arrow"
-            ctaAttention
-          >
+          <a routerLink="/" fragment="work" class="btn btn-cta" appCta="arrow" ctaPulse>
             <span>{{ home.actions.work }}</span>
             <span data-cta-icon class="inline-flex"
               ><ng-icon name="tablerArrowRight" size="1.2rem" aria-hidden="true"
             /></span>
-            <span data-cta-sheen class="cta-sheen" aria-hidden="true"></span>
-          </a>
-          <a
-            [href]="profile.resumeUrl"
-            [attr.download]="profile.resumeFileName"
-            class="btn"
-            appCta="download"
-          >
-            <span data-cta-icon class="inline-flex"
-              ><ng-icon name="tablerDownload" size="1.2rem" aria-hidden="true"
-            /></span>
-            <span>{{ home.actions.resume }}</span>
           </a>
         </div>
 

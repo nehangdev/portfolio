@@ -19,11 +19,13 @@ import { profile } from '../../../content/profile';
   template: `
     <p class="measure text-lg">{{ c.lead }}</p>
     <ul class="mt-6 grid gap-4">
-      <li class="flex flex-wrap items-center gap-x-3 gap-y-2">
+      <!-- Icon, address, copy button on one row at every width; the status line goes below. -->
+      <li class="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1">
         <ng-icon name="tablerMail" size="1.5rem" class="flex-none text-queue" aria-hidden="true" />
-        <span class="sr-only">{{ c.emailLabel }}:</span>
         @if (email(); as address) {
-          <a [href]="'mailto:' + address" class="break-all">{{ address }}</a>
+          <a [href]="'mailto:' + address" class="text-sm break-all sm:text-base"
+            ><span class="sr-only">{{ c.emailLabel }}: </span>{{ address }}</a
+          >
           <button
             type="button"
             class="icon-btn border-[1.5px] border-rule"
@@ -37,9 +39,13 @@ import { profile } from '../../../content/profile';
               aria-hidden="true"
             />
           </button>
-          <span role="status" class="text-sm text-ink-muted">{{ status() }}</span>
+          <span role="status" class="col-start-2 col-end-4 text-sm text-ink-muted">{{
+            status()
+          }}</span>
         } @else {
-          <span class="text-sm text-ink-muted">{{ c.noScript }}</span>
+          <span class="col-start-2 col-end-4 text-sm text-ink-muted"
+            ><span class="sr-only">{{ c.emailLabel }}: </span>{{ c.noScript }}</span
+          >
         }
       </li>
       <li class="flex items-center gap-3">

@@ -255,6 +255,12 @@ public/   e2e/   docs/{design.md,portfolio-plan.md}   .github/workflows/ci.yml  
 - Playwright e2e, axe on every route, visual snapshots (light/dark, mobile/desktop), Lighthouse CI and a link checker in GitHub Actions.
 - ✅ CI is green, and the README explains everything.
 
+**Phase 5.5: UI fixes** ✅ done (requested after Phase 5)
+- **Résumé in the navbar:** an outlined "Résumé" button from md up, an icon button on phones, with a Motion ripple on press. It was removed from the hero.
+- **"Read the case studies":** outlined, with a left-to-right hover fill (after achiraa.com's hero button), a Motion ripple, and a border pulse. The pulse is three beats (4.2s) each time the button scrolls into view, kept under 5 seconds so it needs no pause control (WCAG 2.2.2), and off under reduced motion. It replaces the magnetic pull and sheen.
+- **The email's copy button** stays on the same line on phones (a grid row; the address steps down a size below sm).
+- **The command palette** lost its second, outer scrollbar: only the results list scrolls.
+
 **Phase 6: Deploy + domain**
 - Deploy to Vercel Hobby as a static site (framework preset: Angular; output `dist/portfolio/browser`). Verify the `*.vercel.app` URL.
 - Prepare `docs/is-a-dev.md`.
