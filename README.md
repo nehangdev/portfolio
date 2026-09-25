@@ -26,7 +26,6 @@ All copy lives in `src/content/`. Components hold no copy.
 
 - `profile.ts`: name, links, email (stored reversed), résumé path
 - `experience.ts`: timeline and education
-- `work.ts`: the selected-work rows
 - `pages.ts`: page copy, SEO titles and descriptions, and hero simulation labels
 - `case-studies.ts`: titles, outcomes and stack tags (home rows, routes, share images)
 - `case-study-bodies.ts`: the Context / Problem / What I did / Result write-ups
