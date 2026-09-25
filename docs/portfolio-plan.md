@@ -245,6 +245,13 @@ public/   e2e/   docs/{design.md,portfolio-plan.md}   .github/workflows/ci.yml  
 - ✅ 114 e2e tests pass. Lighthouse on mobile scores ≥ 95 (home at 95–96, the thinnest margin).
 
 **Phase 5: Quality + CI** ✅ done
+- Built:
+  - GitHub Actions CI on every push and pull request: formatting (Prettier), `npm run report` (build, unit, e2e, axe, screenshot tests, Lighthouse median of 3, JavaScript budget), and `npm run links`;
+  - a CI badge on the Colophon.
+- Decisions, made with Nehang after the first CI runs:
+  - **Lighthouse performance is a warning in CI, not a gate.** GitHub's shared runners score the same commit 93–96; paint times match, only CPU-bound blocking time moves. Accessibility, best practices and SEO stay hard gates at 95, and performance is still a hard gate for local `npm run report` (96–98 there).
+  - **Screenshot baselines are Linux-only,** made by the "Visual baselines" workflow; visual tests run in CI only.
+  - **Vercel deploys `main` by itself,** independent of CI. `vercel.json` serves the site as static files with real 404s: the Angular preset had been answering unknown paths with the home page and a 200.
 - Playwright e2e, axe on every route, visual snapshots (light/dark, mobile/desktop), Lighthouse CI and a link checker in GitHub Actions.
 - ✅ CI is green, and the README explains everything.
 
