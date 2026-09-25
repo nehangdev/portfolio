@@ -16,7 +16,7 @@ This is the full brief for the portfolio. Read it end to end before writing code
 
 **Goal:** a fast, distinctive, statically hosted portfolio that proves senior full-stack skill by *being* a piece of engineering, not by listing skills. It will be served at `nehang.is-a.dev`.
 
-**Audience:** hiring managers and senior engineers at product companies worldwide. The site isn't tied to one country. I'm open to relocating with visa sponsorship. They skim for 30–60 seconds, then open one or two case studies if something catches their eye.
+**Audience:** hiring managers and senior engineers at product companies worldwide. The site isn't tied to one country. They skim for 30–60 seconds, then open one or two case studies if something catches their eye.
 
 **What they should conclude:** "This person designs and builds whole systems: .NET and Azure backends (event-driven, CQRS, SSO), serious Angular/TypeScript front ends, and the CI/CD and testing around them."
 
@@ -28,8 +28,8 @@ Use **only** these facts. Do not invent metrics, clients, testimonials, or proje
 
 - **Name:** Nehang Shah
 - **Title:** Senior Full-Stack Engineer (.NET, Azure, Angular)
-- **Location:** Ahmedabad, India. Open to relocating (visa sponsorship required). Don't name a specific country on the site.
-- **Experience:** 8.5+ years designing, building and architecting enterprise web applications on .NET and Azure, with Angular, Blazor and React on the front end.
+- **Location:** Ahmedabad, India. Do not mention relocation, visa sponsorship or job-seeking anywhere on the site.
+- **Experience:** 8+ years designing, building and architecting enterprise web applications on .NET and Azure, with Angular, Blazor and React on the front end.
 - **Angular:** v1.4 (AngularJS) through v16. Working knowledge of React and Next.js.
 
 **Veloxcore Pvt. Ltd.: Senior Software Engineer (Nov 2021 – present)**
@@ -93,7 +93,7 @@ Use **only** these facts. Do not invent metrics, clients, testimonials, or proje
 - Never publish the phone number.
 - Obfuscate the email in the HTML (assembled at runtime, with a copy button).
 - No client names, screenshots of client systems, or real data. All demos use synthetic data and are labelled "simulation" or "recreation".
-- The public `resume.pdf` is a global version with no phone number and no country-specific relocation line.
+- The public `resume.pdf` is a global version with no phone number and no relocation or visa line.
 
 ### Quality floor
 - Lighthouse ≥ 95 in all four categories (mobile), enforced in CI.
@@ -307,5 +307,5 @@ Check first that `nehang` is free. Fill in the PR template honestly, with the `*
 2. Pipeline: build on the five named phases; add the rest later.
 3. Photo: none.
 4. Repo public, linked from the Colophon.
-5. Positioning: Senior Full-Stack Engineer, open to relocation globally.
+5. Positioning: Senior Full-Stack Engineer. No relocation or visa mentions.
 6. SciChart: used in real-time dashboards; Syncfusion used across projects.

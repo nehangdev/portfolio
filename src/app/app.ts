@@ -2,6 +2,7 @@ import { Component, DOCUMENT, afterNextRender, inject, signal } from '@angular/c
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
+  tablerArrowUp,
   tablerBrandGithub,
   tablerBrandLinkedin,
   tablerCode,
@@ -25,6 +26,7 @@ import { profile } from '../content/profile';
   host: { '(document:keydown)': 'onShortcut($event)' },
   viewProviders: [
     provideIcons({
+      tablerArrowUp,
       tablerBrandGithub,
       tablerBrandLinkedin,
       tablerCode,
@@ -170,6 +172,27 @@ import { profile } from '../content/profile';
       <router-outlet />
     </main>
 
+    <!--
+      Back to top: a zero-height sticky rail between main and the footer. While you scroll the
+      button rides the bottom-right corner; at the end of the page it rests above the footer.
+      It fades in once the page has scrolled (CSS scroll-driven animation, see base.css).
+    -->
+    <div class="back-to-top-rail wrap">
+      <a
+        [routerLink]="[]"
+        fragment="main"
+        (click)="backToTop($event)"
+        [attr.aria-label]="nav.backToTop"
+        [title]="nav.backToTop"
+        class="back-to-top"
+        appCta="up"
+      >
+        <span data-cta-icon class="inline-flex"
+          ><ng-icon name="tablerArrowUp" size="1.35rem" aria-hidden="true"
+        /></span>
+      </a>
+    </div>
+
     <footer class="wrap mt-8">
       <div
         class="flex flex-wrap items-center justify-between gap-4 border-t border-rule py-8 text-sm text-ink-muted"
@@ -254,6 +277,15 @@ export class App {
       if (this.paletteOpen()) this.paletteOpen.set(false);
       else this.openPalette();
     }
+  }
+
+  /** Scroll to the top (smoothly unless reduced motion) and hand focus back to the content. */
+  protected backToTop(e: Event): void {
+    e.preventDefault();
+    const win = this.doc.defaultView;
+    const reduced = win?.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    win?.scrollTo({ top: 0, behavior: reduced ? 'instant' : 'smooth' });
+    this.doc.getElementById('main')?.focus({ preventScroll: true });
   }
 
   protected focusMain(): void {

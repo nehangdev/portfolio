@@ -20,7 +20,9 @@ import { profile } from '../../../content/profile';
     <p class="measure text-lg">{{ c.lead }}</p>
     <ul class="mt-6 grid gap-4">
       <!-- Icon, address, copy button on one row at every width; the status line goes below. -->
-      <li class="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1">
+      <li
+        class="grid grid-cols-[auto_minmax(0,max-content)_auto] items-center justify-start gap-x-3 gap-y-1"
+      >
         <ng-icon name="tablerMail" size="1.5rem" class="flex-none text-queue" aria-hidden="true" />
         @if (email(); as address) {
           <a [href]="'mailto:' + address" class="text-sm break-all sm:text-base"

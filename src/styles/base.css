@@ -386,7 +386,7 @@
 @layer components {
   /*
    * Outlined call to action (after the reference): the fill sweeps in from the left on hover or
-   * focus and the text inverts. CtaMotion adds the press ripple and the border pulse.
+   * focus and the text inverts. CtaMotion adds the press ripple.
    */
   .btn-cta {
     position: relative;
@@ -430,25 +430,6 @@
     border-radius: 50%;
     background: currentColor;
     pointer-events: none;
-  }
-
-  /* Three beats (4.2s): the border flicks to teal while a ring radiates out. */
-  .cta-pulse {
-    animation: cta-pulse 1.4s ease-out 3;
-  }
-
-  @keyframes cta-pulse {
-    0% {
-      border-color: var(--queue);
-      box-shadow: 0 0 0 0 color-mix(in srgb, var(--queue) 55%, transparent);
-    }
-    70% {
-      box-shadow: 0 0 0 10px transparent;
-    }
-    100% {
-      border-color: var(--ink);
-      box-shadow: 0 0 0 0 transparent;
-    }
   }
 }
 
@@ -792,5 +773,77 @@
   .palette-status:not(:empty) {
     padding-block: 0.6rem;
     border-top: 1px solid var(--rule);
+  }
+}
+
+@layer components {
+  /* The sticky rail needs a block-level parent that spans the whole page. */
+  app-root {
+    display: block;
+  }
+
+  /* Zero-height rail just before the footer: sticky at the viewport bottom, resting above the footer. */
+  .back-to-top-rail {
+    position: sticky;
+    bottom: 1.25rem;
+    z-index: 30;
+    height: 0;
+    pointer-events: none;
+  }
+
+  .back-to-top {
+    position: absolute;
+    right: 1rem;
+    bottom: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    overflow: hidden;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    background: var(--paper);
+    color: var(--ink);
+    pointer-events: auto;
+  }
+
+  @media (min-width: 40rem) {
+    .back-to-top {
+      right: 2rem;
+    }
+  }
+
+  .back-to-top:hover {
+    background: var(--paper-raised);
+  }
+
+  /* Reveal once the page has scrolled; until then it is hidden and out of the tab order. */
+  @supports (animation-timeline: scroll()) {
+    .back-to-top {
+      animation: back-to-top-reveal linear both;
+      animation-timeline: scroll(root);
+      animation-range: 30vh 60vh;
+    }
+  }
+
+  @keyframes back-to-top-reveal {
+    from {
+      opacity: 0;
+      visibility: hidden;
+      translate: 0 0.5rem;
+    }
+    to {
+      opacity: 1;
+      visibility: visible;
+      translate: 0 0;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Scroll-linked, so it only moves as the reader scrolls. */
+  .back-to-top {
+    animation-duration: auto !important;
   }
 }

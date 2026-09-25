@@ -31,7 +31,7 @@ function shortHash(text: string): string {
         </h1>
         <p class="mt-4 text-lg text-ink-muted sm:text-xl">{{ profile.tagline }}</p>
         <div class="mt-8 flex flex-wrap gap-3">
-          <a routerLink="/" fragment="work" class="btn btn-cta" appCta="arrow" ctaPulse>
+          <a routerLink="/" fragment="work" class="btn btn-cta" appCta="arrow">
             <span>{{ home.actions.work }}</span>
             <span data-cta-icon class="inline-flex"
               ><ng-icon name="tablerArrowRight" size="1.2rem" aria-hidden="true"

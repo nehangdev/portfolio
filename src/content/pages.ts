@@ -4,7 +4,7 @@ import { VERSION } from '@angular/core';
 export const seo = {
   home: {
     description:
-      'Nehang Shah is a senior full-stack engineer in Ahmedabad, India, building .NET and Azure backends and Angular, React and Blazor front ends for B2B platforms. Open to relocation.',
+      'Nehang Shah is a senior full-stack engineer in Ahmedabad, India, building .NET and Azure backends and Angular, React and Blazor front ends for B2B platforms.',
   },
   about: {
     title: 'About',
@@ -33,6 +33,7 @@ export const nav = {
   themeToLight: 'Use light theme',
   resume: 'Résumé',
   resumeLabel: 'Download résumé',
+  backToTop: 'Back to top',
   openMenu: 'Open menu',
   closeMenu: 'Close menu',
 };
@@ -92,9 +93,9 @@ export const home = {
       ] as [string, string][],
     },
     paragraphs: [
-      'I have spent 8.5 years designing and building enterprise web applications end to end. On the backend that means .NET and Azure. On the front, Angular is my main tool, alongside React and Blazor WebAssembly and Server, with Umbraco and NopCommerce when a project needs a CMS or a commerce platform.',
+      'I have spent 8+ years designing and building enterprise web applications end to end. On the backend that means .NET and Azure. On the front, Angular is my main tool, alongside React and Blazor WebAssembly and Server, with Umbraco and NopCommerce when a project needs a CMS or a commerce platform.',
       'Most of my recent work is on insurance and digital-marketplace platforms: event-driven processing on Azure Service Bus, single sign-on with Azure AD B2C, real-time dashboards, and test automation.',
-      'I live in Ahmedabad, India, and I am open to relocating, with visa sponsorship.',
+      'I live and work in Ahmedabad, India.',
     ],
   },
   work: {
@@ -163,8 +164,8 @@ export const about = {
     {
       heading: 'Background',
       paragraphs: [
-        'I am a senior full-stack engineer in Ahmedabad, India. For 8.5 years I have designed, built and architected enterprise web applications on .NET and Azure, with Angular, Blazor and React on the front end.',
-        'Today I work at Veloxcore, where I architect and lead delivery of B2B platforms for insurance and digital-marketplace clients, using .NET 6–9, Angular 14–16, Blazor and Azure PaaS. I am open to relocating, with visa sponsorship.',
+        'I am a senior full-stack engineer in Ahmedabad, India. For 8+ years I have designed, built and architected enterprise web applications on .NET and Azure, with Angular, Blazor and React on the front end.',
+        'Today I work at Veloxcore, where I architect and lead delivery of B2B platforms for insurance and digital-marketplace clients, using .NET 6–9, Angular 14–16, Blazor and Azure PaaS.',
       ],
     },
     {

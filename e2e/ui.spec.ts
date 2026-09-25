@@ -86,16 +86,6 @@ test('site text is set in Fira Code', async ({ page }) => {
 });
 
 test.describe('call-to-action motion', () => {
-  test('the case-studies button pulses when in view and stops within 5 seconds', async ({
-    page,
-  }) => {
-    await page.goto('/');
-    const cta = page.getByRole('link', { name: 'Read the case studies' });
-    await expect(cta).toHaveClass(/cta-pulse/);
-    // Three beats of 1.4s; the class is removed when the animation ends (WCAG 2.2.2).
-    await expect(cta).not.toHaveClass(/cta-pulse/, { timeout: 6000 });
-  });
-
   test('pressing a call to action draws a ripple', async ({ page, isMobile }) => {
     test.skip(isMobile, 'pointer press; the header icon button is checked on desktop');
     await page.goto('/');
@@ -124,7 +114,6 @@ test.describe('call-to-action motion', () => {
       await page.goto('/');
       await page.waitForTimeout(2500);
       const cta = page.getByRole('link', { name: 'Read the case studies' });
-      await expect(cta).not.toHaveClass(/cta-pulse/);
       expect(await cta.evaluate((el) => (el as HTMLElement).style.transform)).toBe('');
     });
   });
@@ -331,4 +320,29 @@ test('the colophon shows the build log with sizes, tests and Lighthouse scores',
   const table = page.getByRole('table', { name: 'Lighthouse scores, mobile' });
   await expect(table.getByRole('columnheader', { name: 'Accessibility' })).toBeVisible();
   await expect(table.getByRole('rowheader', { name: '/', exact: true })).toBeVisible();
+});
+
+test.describe('back to top', () => {
+  test('is hidden at the top, appears after scrolling, and returns to the top', async ({
+    page,
+  }) => {
+    await page.goto('/about');
+    const button = page.getByRole('link', { name: 'Back to top' });
+    await expect(button).toBeHidden();
+    await page.mouse.wheel(0, 2500);
+    await expect(button).toBeVisible();
+    await button.click();
+    await expect.poll(() => page.evaluate(() => scrollY), { timeout: 5000 }).toBe(0);
+    await expect(page.locator('main')).toBeFocused();
+  });
+
+  test('rests just above the footer at the end of the page', async ({ page }) => {
+    await page.goto('/about');
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    const button = page.getByRole('link', { name: 'Back to top' });
+    await expect(button).toBeVisible();
+    const b = (await button.boundingBox())!;
+    const footer = (await page.locator('footer').boundingBox())!;
+    expect(b.y + b.height).toBeLessThanOrEqual(footer.y + 1);
+  });
 });
