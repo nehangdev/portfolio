@@ -35,11 +35,12 @@ Every push to `main` and every pull request runs [`.github/workflows/ci.yml`](.g
    - the home-page JavaScript budget (150 KB gzipped).
 3. `npm run links`
 
-The Lighthouse reports and the built site are uploaded as artifacts. Failed tests also upload their screenshots and diffs.
+The Lighthouse reports are uploaded as artifacts. Failed tests also upload their screenshots and diffs.
 
-**Screenshot baselines** are stored per operating system in `e2e/visual.spec.ts-snapshots/`:
-- After an intended visual change, run `npx playwright test e2e/visual.spec.ts --update-snapshots` locally for the Windows baselines.
-- For the Linux ones CI uses, run **Actions > Visual baselines > Run workflow** on GitHub.
+- **Lighthouse:** accessibility, best practices and SEO below 95 fail the run. In CI, performance below 95 is a warning only, because GitHub's shared runners score the same commit anywhere from 93 to 96. Locally it's still a hard gate.
+- **Deployment:** Vercel deploys every push to `main` by itself, whether or not CI passes.
+
+**Screenshot baselines** live in `e2e/visual.spec.ts-snapshots/`. They are Linux-only, so the visual tests run in CI and are skipped locally. After an intended visual change, run **Actions > Visual baselines > Run workflow** on GitHub; it regenerates the screenshots and commits them.
 
 ## Updating content
 

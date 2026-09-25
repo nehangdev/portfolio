@@ -10,6 +10,9 @@
 // Quality gates (checked after the report is written; the run exits non-zero if any fails):
 //   - every Lighthouse category's median score is at least 95
 //   - the home page's JavaScript, all of it once idle, stays within the budget
+// In CI, Lighthouse performance is a warning instead: shared runners have slow, noisy CPUs, so
+// the same commit scores 93 to 96 there (paint times match; only blocking time moves). The
+// deterministic categories (accessibility, best practices, SEO) stay hard gates everywhere.
 // Full Lighthouse reports are saved to reports/lighthouse/ (CI uploads them).
 import { execSync, spawn } from 'node:child_process';
 import { mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
@@ -183,12 +186,18 @@ sh('npm run build');
 
 // 9. Quality gates
 const failures = [];
+const warnings = [];
 for (const { path, ...scores } of report.lighthouse) {
   for (const [category, score] of Object.entries(scores)) {
-    if (score < LIGHTHOUSE_FLOOR) {
-      failures.push(`Lighthouse ${category} on ${path} is ${score}, below ${LIGHTHOUSE_FLOOR}`);
-    }
+    if (score >= LIGHTHOUSE_FLOOR) continue;
+    const message = `Lighthouse ${category} on ${path} is ${score}, below ${LIGHTHOUSE_FLOOR}`;
+    if (category === 'performance' && process.env.CI) warnings.push(message);
+    else failures.push(message);
   }
+}
+for (const message of warnings) {
+  // Shows as an annotation on the GitHub Actions run.
+  console.log(`::warning title=Lighthouse performance::${message}`);
 }
 if (report.sizes.homeAllJs > HOME_JS_BUDGET_KB) {
   failures.push(

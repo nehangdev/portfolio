@@ -2,7 +2,9 @@ name: CI
 
 # Every push to main and every pull request runs the full quality bar:
 # formatting, build, unit tests, end-to-end + accessibility + visual tests,
-# Lighthouse (median of 3, every category >= 95), the JavaScript budget, and links.
+# Lighthouse (median of 3; accessibility, best practices and SEO >= 95, performance
+# reported as a warning), the JavaScript budget, and links.
+# Deployment is separate: Vercel builds and deploys every push to main itself.
 on:
   push:
     branches: [main]
@@ -73,10 +75,3 @@ jobs:
           name: playwright-results
           path: test-results
           if-no-files-found: ignore
-
-      # The static site, built with this run's measured numbers in the Colophon.
-      - name: Upload the built site
-        uses: actions/upload-artifact@v7
-        with:
-          name: site
-          path: dist/portfolio/browser
