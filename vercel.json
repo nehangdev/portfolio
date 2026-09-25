@@ -3,5 +3,9 @@
   "framework": null,
   "buildCommand": "npm run build",
   "outputDirectory": "dist/portfolio/browser",
-  "trailingSlash": false
+  "routes": [
+    { "src": "/(.+)/", "status": 308, "headers": { "Location": "/$1" } },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "status": 404, "dest": "/404.html" }
+  ]
 }
