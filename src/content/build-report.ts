@@ -2,7 +2,7 @@
 // Sizes are KB gzipped (the font is already compressed).
 export const buildReport = {
   "measuredOn": "2026-09-25",
-  "commit": "024ada9",
+  "commit": "c262384",
   "routes": 8,
   "sizes": {
     "homeInitialJs": 115.2,
