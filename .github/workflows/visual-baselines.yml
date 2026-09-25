@@ -1,0 +1,47 @@
+name: Visual baselines
+
+# Screenshots render slightly differently on each operating system, so Linux baselines have to
+# be made on Linux. Run this by hand (Actions > Visual baselines > Run workflow) after an
+# intended visual change; it regenerates the linux screenshots and commits them.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    name: Regenerate Linux screenshots
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Build
+        run: npm run build
+
+      - name: Regenerate the visual baselines
+        run: npx playwright test e2e/visual.spec.ts --update-snapshots
+
+      - name: Commit the new baselines
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add e2e/visual.spec.ts-snapshots
+          if git diff --cached --quiet; then
+            echo 'Baselines unchanged.'
+          else
+            git commit -m 'Update Linux visual baselines'
+            git push
+          fi

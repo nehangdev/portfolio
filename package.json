@@ -16,7 +16,8 @@
     "og": "node scripts/og.mjs",
     "report": "node scripts/build-report.mjs",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "links": "node scripts/check-links.mjs"
   },
   "private": true,
   "packageManager": "npm@11.19.0",

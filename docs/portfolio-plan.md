@@ -244,7 +244,7 @@ public/   e2e/   docs/{design.md,portfolio-plan.md}   .github/workflows/ci.yml  
   - No demos for projects where the role was project management, or where a demo would need invented details.
 - ✅ 114 e2e tests pass. Lighthouse on mobile scores ≥ 95 (home at 95–96, the thinnest margin).
 
-**Phase 5: Quality + CI**
+**Phase 5: Quality + CI** ✅ done
 - Playwright e2e, axe on every route, visual snapshots (light/dark, mobile/desktop), Lighthouse CI and a link checker in GitHub Actions.
 - ✅ CI is green, and the README explains everything.
 

@@ -19,6 +19,27 @@ Node 24.15 or newer (see `.nvmrc`). Angular 22 refuses to run on older versions.
 | `npx playwright install chromium` | One-time browser download for e2e |
 | `npm run e2e` | Playwright + axe against the static build. Run `npm run build` first |
 | `npm run serve:dist` | Serve the static build at http://localhost:4300 |
+| `npm run links` | Checks every internal link and `#anchor` in the build (fails on broken ones) and reports external links |
+| `npm run format` / `npm run format:check` | Prettier: fix or check formatting |
+
+## Continuous integration
+
+Every push to `main` and every pull request runs [`.github/workflows/ci.yml`](.github/workflows/ci.yml):
+
+1. `npm run format:check`
+2. `npm run report`:
+   - build;
+   - unit tests;
+   - end-to-end, accessibility (axe) and screenshot tests on desktop and mobile;
+   - Lighthouse on mobile (median of 3 runs; every category must be at least 95);
+   - the home-page JavaScript budget (150 KB gzipped).
+3. `npm run links`
+
+The Lighthouse reports and the built site are uploaded as artifacts. Failed tests also upload their screenshots and diffs.
+
+**Screenshot baselines** are stored per operating system in `e2e/visual.spec.ts-snapshots/`:
+- After an intended visual change, run `npx playwright test e2e/visual.spec.ts --update-snapshots` locally for the Windows baselines.
+- For the Linux ones CI uses, run **Actions > Visual baselines > Run workflow** on GitHub.
 
 ## Updating content
 

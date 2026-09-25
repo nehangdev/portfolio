@@ -23,6 +23,17 @@ import { buildReport } from '../../content/build-report';
       }
       <section appLane [heading]="log.heading">
         <p class="measure">{{ log.intro }}</p>
+        <p class="mt-3 flex flex-wrap items-center gap-3">
+          <a [href]="profile.ciUrl">
+            <img
+              [src]="profile.ciUrl + '/badge.svg'"
+              [alt]="log.ciBadgeAlt"
+              width="104"
+              height="20"
+            />
+          </a>
+          <a [href]="profile.ciUrl" class="text-sm">{{ log.ciLink }}</a>
+        </p>
         <figure class="editor mt-5 max-w-none">
           <div class="editor-tab" aria-hidden="true">{{ log.file }}</div>
           <div class="editor-body space-y-1 px-4 text-sm">

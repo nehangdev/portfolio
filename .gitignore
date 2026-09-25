@@ -50,3 +50,9 @@ Thumbs.db
 
 # Built by `npm run build:element`
 /public/elements
+
+# Lighthouse reports from npm run report
+/reports
+
+# Lighthouse reports from npm run report
+/reports

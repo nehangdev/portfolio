@@ -15,4 +15,5 @@ export const profile = {
   // It is assembled in the browser (see the contact section on the home page).
   emailReversed: 'moc.kooltuo@ved.hahsgnahen',
   repoUrl: 'https://github.com/nehangdev/portfolio',
+  ciUrl: 'https://github.com/nehangdev/portfolio/actions/workflows/ci.yml',
 };

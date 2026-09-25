@@ -229,7 +229,8 @@ export const colophon = {
         'Pages work without JavaScript. Only interactive demos need it, and each has a static fallback.',
         'Every demo is downloaded only when it scrolls into view, so the home page stays small.',
         'Animation stops when your system asks for reduced motion, and the simulation pauses when the tab is hidden.',
-        'Unit tests run on Vitest. End-to-end and accessibility checks run on Playwright with axe, on desktop and mobile.',
+        'Unit tests run on Vitest. End-to-end, accessibility (axe) and screenshot comparison tests run on Playwright, on desktop and mobile, in light and dark.',
+        'Every push runs the same checks in GitHub Actions: formatting, the tests above, Lighthouse with every category at 95 or above, a JavaScript budget for the home page, and a check of every link. Any failure fails the build.',
       ],
     },
     {
@@ -249,7 +250,9 @@ export const colophon = {
     heading: 'Build log',
     file: 'build.log',
     intro:
-      'Real numbers from the last measured build, not claims. The script that produces them is in the repository.',
+      'Real numbers from the last measured build, not claims. The script that produces them is in the repository, and CI runs it on every push.',
+    ciBadgeAlt: 'Status of the latest CI run',
+    ciLink: 'See every CI run on GitHub',
     build: 'npm run build',
     prerendered: (n: number) => `${n} pages prerendered to static HTML`,
     sizes: [

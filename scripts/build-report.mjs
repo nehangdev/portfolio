@@ -6,8 +6,13 @@
 // Steps: build, serve the static output, measure JS/CSS/font sizes, run the unit and e2e tests,
 // run Lighthouse (mobile, median of 3) on two pages, write the report, then rebuild so the
 // Colophon includes it. Refuses to write a report if any test fails.
+//
+// Quality gates (checked after the report is written; the run exits non-zero if any fails):
+//   - every Lighthouse category's median score is at least 95
+//   - the home page's JavaScript, all of it once idle, stays within the budget
+// Full Lighthouse reports are saved to reports/lighthouse/ (CI uploads them).
 import { execSync, spawn } from 'node:child_process';
-import { readFileSync, readdirSync, writeFileSync, statSync } from 'node:fs';
+import { mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { gzipSync } from 'node:zlib';
 import { chromium } from '@playwright/test';
 
@@ -16,6 +21,9 @@ const PORT = 4300;
 const ORIGIN = `http://localhost:${PORT}`;
 const LIGHTHOUSE_PAGES = ['/', '/work/event-driven'];
 const RUNS = 3;
+const LIGHTHOUSE_FLOOR = 95;
+const HOME_JS_BUDGET_KB = 150;
+const LIGHTHOUSE_DIR = 'reports/lighthouse';
 
 const sh = (cmd) =>
   execSync(cmd, {
@@ -28,6 +36,14 @@ const kb = (bytes) => Math.round((bytes / 1024) * 10) / 10;
 const gz = (path) => gzipSync(readFileSync(path)).length;
 const median = (xs) => [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)];
 const log = (msg) => console.log(`[report] ${msg}`);
+
+/** Titles of failing specs in a Playwright JSON report. */
+function failedSpecs(suite, trail = []) {
+  const here = (suite.specs ?? [])
+    .filter((spec) => !spec.ok)
+    .map((spec) => [...trail, spec.title].filter(Boolean).join(' › '));
+  return here.concat((suite.suites ?? []).flatMap((s) => failedSpecs(s, [...trail, s.title])));
+}
 
 // 1. Build
 log('building');
@@ -54,6 +70,7 @@ for (let i = 0; i < 60; i++) {
   }
 }
 
+let report;
 try {
   // 3. Sizes (gzipped)
   log('measuring sizes');
@@ -82,8 +99,9 @@ try {
   log('running unit tests');
   const unitOut = strip(sh('npx ng test portfolio --watch=false'));
   const unitPassed = Number(/Tests\s+(\d+) passed/.exec(unitOut)?.[1] ?? 0);
-  if (/failed/.test(/Tests\s+[^\n]*/.exec(unitOut)?.[0] ?? ''))
+  if (/failed/.test(/Tests\s+[^\n]*/.exec(unitOut)?.[0] ?? '')) {
     throw new Error('unit tests failed');
+  }
 
   // 5. End-to-end tests (reuses the server above)
   log('running end-to-end tests');
@@ -91,7 +109,12 @@ try {
   try {
     e2eJson = sh('npx playwright test --reporter=json');
   } catch (err) {
-    throw new Error(`e2e tests failed:\n${strip(String(err.stdout ?? err)).slice(0, 2000)}`);
+    let failed = [];
+    try {
+      failed = failedSpecs(JSON.parse(err.stdout));
+    } catch {}
+    const detail = failed.join('\n  ') || strip(String(err.stdout ?? err)).slice(0, 2000);
+    throw new Error(`e2e tests failed:\n  ${detail}`);
   }
   const stats = JSON.parse(e2eJson).stats;
   if (stats.unexpected > 0) throw new Error(`${stats.unexpected} e2e tests failed`);
@@ -99,16 +122,20 @@ try {
   // 6. Lighthouse, mobile, median of 3 runs per page
   // Lighthouse drives the same Chromium that Playwright installed.
   process.env.CHROME_PATH = chromium.executablePath();
+  mkdirSync(LIGHTHOUSE_DIR, { recursive: true });
   const lighthouse = [];
   for (const path of LIGHTHOUSE_PAGES) {
     const runs = [];
+    const slug = path === '/' ? 'home' : path.slice(1).replaceAll('/', '-');
     for (let i = 0; i < RUNS; i++) {
       log(`lighthouse ${path} run ${i + 1}/${RUNS}`);
-      const out = sh(
-        `npx lighthouse "${ORIGIN}${path}" --quiet --output=json --output-path=stdout ` +
-          `--only-categories=performance,accessibility,best-practices,seo --chrome-flags="--headless=new"`,
+      const name = `${LIGHTHOUSE_DIR}/${slug}-run${i + 1}`;
+      sh(
+        `npx lighthouse "${ORIGIN}${path}" --quiet --output=json --output=html ` +
+          `--output-path=${name} --only-categories=performance,accessibility,best-practices,seo ` +
+          `--chrome-flags="--headless=new"`,
       );
-      const c = JSON.parse(out).categories;
+      const c = JSON.parse(readFileSync(`${name}.report.json`, 'utf8')).categories;
       runs.push({
         performance: Math.round(c.performance.score * 100),
         accessibility: Math.round(c.accessibility.score * 100),
@@ -126,11 +153,11 @@ try {
   }
 
   // 7. Write the report
-  const report = {
+  report = {
     measuredOn: new Date().toISOString().slice(0, 10),
     commit: sh('git rev-parse --short HEAD').trim(),
     routes,
-    sizes: { homeInitialJs, homeAllJs, budget: 150, elementJs, css, font },
+    sizes: { homeInitialJs, homeAllJs, budget: HOME_JS_BUDGET_KB, elementJs, css, font },
     unit: { passed: unitPassed },
     e2e: { passed: stats.expected, skipped: stats.skipped, flaky: stats.flaky },
     lighthouse,
@@ -150,4 +177,24 @@ try {
 // 8. Rebuild so the Colophon includes the new numbers
 log('rebuilding with the report');
 sh('npm run build');
+
+// 9. Quality gates
+const failures = [];
+for (const { path, ...scores } of report.lighthouse) {
+  for (const [category, score] of Object.entries(scores)) {
+    if (score < LIGHTHOUSE_FLOOR) {
+      failures.push(`Lighthouse ${category} on ${path} is ${score}, below ${LIGHTHOUSE_FLOOR}`);
+    }
+  }
+}
+if (report.sizes.homeAllJs > HOME_JS_BUDGET_KB) {
+  failures.push(
+    `Home JavaScript is ${report.sizes.homeAllJs} KB, over the ${HOME_JS_BUDGET_KB} KB budget`,
+  );
+}
+if (failures.length) {
+  console.error(`\n[report] quality gates failed:\n  ${failures.join('\n  ')}`);
+  process.exit(1);
+}
+log('all quality gates passed');
 log('done');
