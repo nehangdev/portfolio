@@ -267,9 +267,12 @@ public/   e2e/   docs/{design.md,portfolio-plan.md}   .github/workflows/ci.yml  
 - **Selected work:** the whole row is clickable (a stretched link), with a hover arrow.
 - **Colophon numbers** count up. The final values stay in the HTML.
 
-**Phase 6: Deploy + domain** ✅ done on our side (2026-09-25). The domain PR is yours to submit.
-- Deployed on Vercel Hobby (`framework: null`, output `dist/portfolio/browser`, explicit routes in `vercel.json`). Live at https://portfolio-theta-peach-86.vercel.app/.
-- `docs/is-a-dev.md` has the step-by-step registration.
+**Phase 6: Deploy + domain** ✅ done (2026-09-28). **Live at https://nehang.is-a.dev.**
+- Deployed on Vercel Hobby (`framework: null`, output `dist/portfolio/browser`, explicit routes in `vercel.json`).
+- is-a.dev PR [#53881](https://github.com/is-a-dev/register/pull/53881) merged, with an A record to `216.198.79.1` and a `_vercel` TXT record for verification. HTTPS is valid, and every sitemap page returns 200.
+- `portfolio-theta-peach-86.vercel.app` redirects to `nehang.is-a.dev` with a 308, keeping the path and query.
+- Vercel shows "Proxy Status Unknown" on the domain. It's harmless, because responses come straight from Vercel with no proxy in front.
+- `docs/is-a-dev.md` has the registration steps.
 - ✅ The pre-launch checklist passes (§12).
 
 ---

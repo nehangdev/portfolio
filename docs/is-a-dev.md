@@ -1,5 +1,7 @@
 # Registering nehang.is-a.dev
 
+> **Done.** PR [#53881](https://github.com/is-a-dev/register/pull/53881) was merged, and the site went live at https://nehang.is-a.dev on 2026-09-28. The steps below are kept for reference. To change the records later, open a new PR that edits `domains/nehang.json` in the fork.
+
 Checked on 2026-09-25: `domains/nehang.json` does not exist in [is-a-dev/register](https://github.com/is-a-dev/register) and no PR asks for it. (The name resolves in DNS, but so does any made-up name: is-a.dev has a wildcard.)
 
 The site already uses `https://nehang.is-a.dev` for canonical URLs, the sitemap, `robots.txt` and the résumé, so nothing in the code changes when the domain goes live.
